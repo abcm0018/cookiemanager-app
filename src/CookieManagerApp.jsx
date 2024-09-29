@@ -1,3 +1,5 @@
+import { AppRoutes } from "./routes/AppRoutes"
+
 export const CookieManagerApp = () => {
-  return <div>CookieManagerApp</div>;
+  return <AppRoutes></AppRoutes>
 };
