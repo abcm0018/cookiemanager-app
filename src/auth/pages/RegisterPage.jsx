@@ -1,104 +1,105 @@
 import {
   Button,
   Checkbox,
+  FormControl,
   FormControlLabel,
   FormGroup,
   Grid2,
+  InputLabel,
+  Link,
+  MenuItem,
+  Select,
   TextField,
-  Typography,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import { AuthLayout } from "../../layout/AuthLayout";
 
 export const RegisterPage = () => {
   return (
-    <Grid2
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      sx={{ minHeight: "100vh", backgroundColor: "primary.main", padding: 4 }}
+    <AuthLayout
+      title="Iniciar sesión"
+      description="Introduce tu email y contraseña para iniciar sesión en tu cuenta"
+      size={480}
     >
-      <Grid2 sx={{ backgroundColor: "white", padding: 3, borderRadius: 2 }}>
-        <Typography variant="h5" sx={{ mb: 1 }} align="center" color="#79747E">
-          Registro
-        </Typography>
-        <form>
-          <Grid2 container spacing={2}>
-            <Grid2 item xs={6} sx={{ minWidth: "250px" }}>
-              <TextField
-                label="Nombre"
-                type="text"
-                placeholder="Nombre*"
-                fullWidth
-              />
-            </Grid2>
-            <Grid2 item xs={6} sx={{ minWidth: "250px" }}>
-              <TextField
-                label="Apellidos"
-                type="text"
-                placeholder="Apellidos*"
-                fullWidth
-              />
-            </Grid2>
+      <form>
+        <Grid2 container>
+          <Grid2 container size={12}>
+            <TextField
+              label="Nombre"
+              type="text"
+              placeholder="Nombre*"
+              size="medium"
+              required
+              sx={{ mr: 0.5 }}
+            />
+            <TextField
+              label="Apellidos"
+              type="text"
+              placeholder="Apellidos*"
+              size="medium"
+              required
+            />
           </Grid2>
-          <Grid2 container>
-            <Grid2 size={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Correo electrónico"
-                type="email"
-                placeholder="Correo electrónico*"
-                fullWidth
-              />
-            </Grid2>
+        </Grid2>
+        <Grid2 size={12} sx={{ mr: 1, mt: 1 }}>
+          <TextField
+            label="Correo electrónico"
+            type="email"
+            placeholder="Correo electrónico*"
+            fullWidth
+            size="medium"
+            required
+          />
+          <TextField
+            label="Contraseña"
+            type="password"
+            placeholder="Contraseña*"
+            fullWidth
+            size="medium"
+            required
+            sx={{ mt: 1 }}
+          />
+          <FormControl fullWidth sx={{ mt: 1 }} size="medium">
+            <InputLabel id="select-label">Plan</InputLabel>
+            <Select label="Plan de suscripción">
+              <MenuItem value="Starter">Starter</MenuItem>
+              <MenuItem value="Basic">Basic</MenuItem>
+              <MenuItem value="Business">Business</MenuItem>
+              <MenuItem value="Enterprise">Enterprise</MenuItem>
+            </Select>
+          </FormControl>
+          <FormGroup sx={{ mt: 1 }}>
+            <FormControlLabel
+              required
+              control={<Checkbox />}
+              label="Acepto las condiciones de Servicio y la Política de Privacidad"
+              sx={{ color: "secondary.main" }}
+            />
+          </FormGroup>
+        </Grid2>
+        <Grid2 container spacing={2} sx={{ mb: 2, mt: 4, mr: 1, ml: 1 }}>
+          <Grid2 size={12}>
+            <Button
+              variant="contained"
+              fullWidth
+              size="large"
+              sx={{ height: 52, bgcolor: "secondary.main" }}
+            >
+              CREAR CUENTA
+            </Button>
           </Grid2>
-          <Grid2 container>
-            <Grid2 size={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Contraseña"
-                type="password"
-                placeholder="Contraseña*"
-                fullWidth
-              />
-            </Grid2>
-          </Grid2>
-          <Grid2 container>
-            <Grid2 size={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Compañía"
-                type="text"
-                placeholder="Compañía*"
-                fullWidth
-              />
-            </Grid2>
-          </Grid2>
-          <Grid2 container>
-            <Grid2 size={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Plan de subscripción"
-                type="text"
-                placeholder="Elige un plan de subscripción*"
-                fullWidth
-              />
-            </Grid2>
-          </Grid2>
-          <Grid2>
-            <FormGroup>
-              <FormControlLabel
-                required
-                control={<Checkbox />}
-                label="Acepto las Condiciones de Servicio y la Política de Privacidad"
-              />
-            </FormGroup>
-          </Grid2>
-          <Grid2>
-            <Grid2 container spacing={2} sx={{ mb: 2, mt: 1 }}>
-              <Button variant="contained" color="primary" fullWidth>
-                Crear cuenta
-              </Button>
-            </Grid2>
-          </Grid2>
-        </form>
-      </Grid2>
-    </Grid2>
+        </Grid2>
+        <Grid2 container direction="row" justifyContent="center" sx={{ mb: 3 }}>
+          <Link
+            to="/auth/login"
+            component={RouterLink}
+            underline="none"
+            sx={{ color: "secondary.main" }}
+          >
+            ¿Ya tienes una cuenta? Iniciar sesión
+          </Link>
+        </Grid2>
+      </form>
+    </AuthLayout>
   );
 };

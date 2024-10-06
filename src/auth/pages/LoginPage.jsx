@@ -1,52 +1,75 @@
-import { Button, Grid2, TextField, Typography } from "@mui/material";
+import { Button, Grid2, Link, TextField } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import { AuthLayout } from "../../layout/AuthLayout";
 
 export const LoginPage = () => {
   return (
-    <Grid2
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      sx={{ minHeight: "100vh", backgroundColor: "primary.main", padding: 4 }}
+    <AuthLayout
+      title="Iniciar sesión"
+      description="Introduce tu email y contraseña para iniciar sesión en tu cuenta"
+      size={420}
     >
-      <Grid2 sx={{ backgroundColor: "white", padding: 3, borderRadius: 2 }}>
-        <Typography variant="h5" sx={{ mb: 1 }} align="center" color="#79747E">
-          Iniciar Sesión
-        </Typography>
-        <Typography variant="body2" sx={{mb:1}} align="center" color="#79747E">
-          Introduzca el email y la contraseña para iniciar sesión
-        </Typography>
-        <form>
-          <Grid2 container>
-            <Grid2 size={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Correo electrónico"
-                type="email"
-                placeholder="Correo electrónico*"
-                fullWidth
-              />
+      <form>
+        <Grid2 container>
+          <Grid2 size={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Correo electrónico"
+              type="email"
+              placeholder="Correo electrónico"
+              fullWidth
+              size="medium"
+              required
+            />
+          </Grid2>
+          <Grid2 size={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Contraseña"
+              type="password"
+              placeholder="Contraseña"
+              fullWidth
+              size="medium"
+              required
+            />
+            <Grid2
+              container
+              direction="row"
+              justifyContent="end"
+              sx={{ mt: 1, mb: 1 }}
+            >
+              <Link
+                to="/auth/recovery-password"
+                component={RouterLink}
+                underline="none"
+                sx={{ color: "secondary.main" }}
+              >
+                ¿Has olvidado la contraseña?
+              </Link>
             </Grid2>
           </Grid2>
-          <Grid2 container>
-            <Grid2 size={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Contraseña"
-                type="password"
-                placeholder="Contraseña*"
-                fullWidth
-              />
-            </Grid2>
+        </Grid2>
+        <Grid2 container spacing={2} sx={{ mb: 1, mt: 2 }}>
+          <Grid2 size={12}>
+            <Button
+              variant="contained"
+              fullWidth
+              size="large"
+              sx={{ height: 52, bgcolor: "secondary.main" }}
+            >
+              INICIAR SESIÓN
+            </Button>
           </Grid2>
-          <Grid2>
-            <Grid2 container spacing={2} sx={{ mb: 2, mt: 1 }}>
-              <Button variant="contained" color="primary" fullWidth>
-                Login
-              </Button>
-            </Grid2>
-          </Grid2>
-        </form>
-      </Grid2>
-    </Grid2>
+        </Grid2>
+        <Grid2 container direction="row" justifyContent="center" sx={{ mb: 3 }}>
+          <Link
+            to="/auth/register"
+            component={RouterLink}
+            underline="none"
+            sx={{ color: "secondary.main" }}
+          >
+            ¿No tienes una cuenta? Registrarse
+          </Link>
+        </Grid2>
+      </form>
+    </AuthLayout>
   );
 };
