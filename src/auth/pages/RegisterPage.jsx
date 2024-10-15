@@ -16,11 +16,7 @@ import { AuthLayout } from "../../layout/AuthLayout";
 
 export const RegisterPage = () => {
   return (
-    <AuthLayout
-      title="Iniciar sesión"
-      description="Introduce tu email y contraseña para iniciar sesión en tu cuenta"
-      size={480}
-    >
+    <AuthLayout title="Registro" size={480}>
       <form>
         <Grid2 container>
           <Grid2 container size={12}>

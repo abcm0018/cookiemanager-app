@@ -36,7 +36,7 @@ export const NavBar = () => {
             "&:hover": {
               bgcolor: "white",
               color: "secondary.main",
-              borderColor: "seconfary.main",
+              borderColor: "secondary.main",
             },
           }}
         >

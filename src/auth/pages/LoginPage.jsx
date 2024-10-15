@@ -53,6 +53,7 @@ export const LoginPage = () => {
               variant="contained"
               fullWidth
               size="large"
+              href="/domain"
               sx={{ height: 52, bgcolor: "secondary.main" }}
             >
               INICIAR SESIÓN
