@@ -2,22 +2,23 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import {
   LoginPage,
   LogoutPage,
-  PasswordRecovery,
+  PasswordRecoveryPage,
   RegisterPage,
 } from "../pages";
 
 export const AuthRoutes = () => {
   return (
     <Routes>
-      {/** Ruta página para login */}
+      {/** Ruta login*/}
       <Route path="login" element={<LoginPage />} />
-      {/** Ruta página para registro */}
+      {/** Ruta register*/}
       <Route path="register" element={<RegisterPage />} />
-      {/** Ruta página para recuperar contraseña */}
-      <Route path="recovery-password" element={<PasswordRecovery />} />
-      {/** Ruta página para cerrar sesión */}
+      {/** Ruta logout*/}
       <Route path="logout" element={<LogoutPage />} />
-      {/** Ruta página por defecto */}
+      {/** Ruta para recuperar la contraseña*/}
+      <Route path="recovery-password" element={<PasswordRecoveryPage />} />
+
+      {/**Routa por defecto */}
       <Route path="/*" element={<Navigate to="/auth/login" />} />
     </Routes>
   );

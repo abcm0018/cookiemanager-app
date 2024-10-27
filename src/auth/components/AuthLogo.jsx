@@ -1,7 +1,7 @@
 import { CookieRounded } from "@mui/icons-material";
 import { Grid2, Typography } from "@mui/material";
 
-export const Logo = () => {
+export const AuthLogo = () => {
   return (
     <Grid2 container>
       <CookieRounded

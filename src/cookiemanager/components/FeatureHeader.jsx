@@ -9,11 +9,11 @@ export const FeatureHeader = () => {
           textAlign: "center",
           fontWeight: 700,
           fontStyle: "normal",
-          fontSize: "40 px",
+          fontSize: "40px",
         }}
       >
-        CookieManager te ayuda a gestionar las cookies y rastreadores en tu
-        sitio web para poder cumplir con la privacidad.
+        CookieManager te ayuda a gestionar las cookies y rastradores en tu sitio
+        web para poder cumplir con la privacidad
       </Typography>
     </Grid2>
   );

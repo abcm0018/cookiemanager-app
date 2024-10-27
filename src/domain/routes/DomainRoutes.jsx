@@ -1,20 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Domain } from "../pages/Domain";
-import { DomainDetails } from "../pages/DomainDetails";
-import { AddDomain } from "../pages/AddDomain";
-import { ModifyDomain } from "../pages/ModifyDomain";
+import { DomainAddPage, DomainDetailsPage, DomainPage } from "../pages";
 
-export const DomainRoutes = () => {
+export const DomainsRoutes = () => {
   return (
     <Routes>
-      {/** Ruta para la página de Domain */}
-      <Route path="/" element={<Domain />} />
-      {/** Ruta para la página de Domain-Details */}
-      <Route path="details" element={<DomainDetails />} />
-      {/** Ruta para añadir dominio */}
-      <Route path="add-domain" element={<AddDomain />} />
-      {/** Ruta para modificar dominio */}
-      <Route path="modify-domain" element={<ModifyDomain />} />
+      {/**<Route path="/" element={<DomainPage />} /> */}
+
+      <Route path="" element={<DomainPage />} />
+      <Route path="details" element={<DomainDetailsPage />} />
+      <Route path="add" element={<DomainAddPage />} />
 
       <Route path="/*" element={<Navigate to="/domains" />} />
     </Routes>

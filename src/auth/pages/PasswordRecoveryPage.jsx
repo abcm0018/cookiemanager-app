@@ -1,12 +1,13 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { AuthLayout } from "../../layout/AuthLayout";
+import { AuthLayout } from "../layout/AuthLayout";
 
-export const PasswordRecovery = () => {
+export const PasswordRecoveryPage = () => {
   return (
     <AuthLayout
       title="Recuperar contraseña"
-      description="Introduce tu correo electrónico y te enviaremos un enlace para resetear tu contraseña"
+      description="Introduce tu correo electrónico y te enviaremos un enlace para
+          resetear tu contraseña"
       size={420}
     >
       <form>

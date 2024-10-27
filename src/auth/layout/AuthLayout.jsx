@@ -1,5 +1,5 @@
 import { Grid2, Typography } from "@mui/material";
-import { Logo } from "../auth/components/Logo";
+import { AuthLogo } from "../components/AuthLogo";
 
 export const AuthLayout = ({
   children,
@@ -16,7 +16,7 @@ export const AuthLayout = ({
       justifyContent="center"
       sx={{ minHeight: "100vh", backgroundColor: "primary.main", padding: 4 }}
     >
-      <Logo />
+      <AuthLogo />
       <Grid2
         className="box-shadow"
         sx={{

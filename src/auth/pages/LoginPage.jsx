@@ -1,6 +1,6 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { AuthLayout } from "../../layout/AuthLayout";
+import { AuthLayout } from "../layout/AuthLayout";
 
 export const LoginPage = () => {
   return (
@@ -47,13 +47,13 @@ export const LoginPage = () => {
             </Grid2>
           </Grid2>
         </Grid2>
-        <Grid2 container spacing={2} sx={{ mb: 1, mt: 2 }}>
+        <Grid2 container spacing={2} sx={{ mb: 1, mt: 1 }}>
           <Grid2 size={12}>
             <Button
               variant="contained"
               fullWidth
               size="large"
-              href="/domain"
+              href="/domains"
               sx={{ height: 52, bgcolor: "secondary.main" }}
             >
               INICIAR SESIÓN

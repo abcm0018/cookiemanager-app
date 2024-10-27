@@ -16,7 +16,7 @@ import {
 import { useState } from "react";
 
 export const NavBar = () => {
-  const pages = ["Mis dominios", "Ayuda", "Soporte", "FAQ"];
+  const pages = ["Mis dominios", "Soporte", "FAQ"];
   const settings = [
     { title: "Settings", icon: "Setting" },
     { title: "Logout", icon: "Logout" },

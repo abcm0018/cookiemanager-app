@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { AuthLayout } from "../../layout/AuthLayout";
+import { AuthLayout } from "../layout/AuthLayout";
 
 export const RegisterPage = () => {
   return (
