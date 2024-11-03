@@ -14,9 +14,14 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export const NavBar = () => {
-  const pages = ["Mis dominios", "Soporte", "FAQ"];
+  const pages = [
+    { label: "Mis dominios", route: "/domains" },
+    { label: "Soporte", route: "/support" },
+    { label: "FAQs", route: "/faq" },
+  ];
   const settings = [
     { title: "Settings", icon: "Setting" },
     { title: "Logout", icon: "Logout" },
@@ -24,6 +29,9 @@ export const NavBar = () => {
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -40,6 +48,15 @@ export const NavBar = () => {
     setAnchorElUser(null);
   };
 
+  const handleMenuClick = (setting) => {
+    if (setting.title === "Settings") {
+      navigate("/profile");
+    } else if (setting.title === "Logout") {
+      navigate("/login");
+    }
+    handleCloseUserMenu();
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Container>
@@ -49,33 +66,53 @@ export const NavBar = () => {
           sx={{ backgroundColor: "white" }}
         >
           <Toolbar disableGutters>
-            <CookieRounded
-              fontSize="large"
-              sx={{ color: "secondary.main", rotate: "45deg" }}
-            />
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ color: "secondary.main" }}
+            <Link
+              to="/domains"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+              }}
             >
-              Cookie
-            </Typography>
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ flexGrow: 0.1, color: "primary.main" }}
-            >
-              Manager
-            </Typography>
+              <CookieRounded
+                fontSize="large"
+                sx={{ color: "secondary.main", rotate: "45deg" }}
+              />
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{ color: "secondary.main" }}
+              >
+                Cookie
+              </Typography>
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{ flexGrow: 0.1, color: "primary.main" }}
+              >
+                Manager
+              </Typography>
+            </Link>
+
+            <Box sx={{ flexGrow: 0.08 }} />
 
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <Button
-                  key={page}
+                  key={page.label}
+                  component={Link}
+                  to={page.route}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "primary.main", display: "block" }}
+                  sx={{
+                    my: 2,
+                    color: "primary.main",
+                    display: "block",
+                    backgroundColor: location.pathname.includes(page.route)
+                      ? "secondary.light"
+                      : "transparent",
+                  }}
                 >
-                  {page}
+                  {page.label}
                 </Button>
               ))}
             </Box>
@@ -132,7 +169,7 @@ export const NavBar = () => {
                 {settings.map((setting) => (
                   <MenuItem
                     key={setting.title}
-                    onClick={handleCloseUserMenu}
+                    onClick={() => handleMenuClick(setting)}
                     sx={{ color: "secondary.main" }}
                   >
                     <ListItemIcon>

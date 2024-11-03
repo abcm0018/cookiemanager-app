@@ -34,6 +34,7 @@ export const RegisterPage = () => {
               placeholder="Apellidos*"
               size="medium"
               required
+              sx={{ ml: 0.75 }}
             />
           </Grid2>
         </Grid2>

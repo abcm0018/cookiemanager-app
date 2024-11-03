@@ -7,7 +7,7 @@ import {
   CRegionalSettingsField,
 } from "../components";
 
-export const SettingPage = () => {
+export const SettingView = () => {
   return (
     <Grid2 container sx={{ pb: 10, pt: 4, pl: 10, pr: 10 }}>
       <Box>

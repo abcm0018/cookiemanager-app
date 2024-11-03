@@ -90,7 +90,7 @@ export const CAddDomainDialog = ({
                   id="name"
                   name="Pais"
                   label="Pais"
-                  type="email"
+                  type="text"
                   sx={{ width: 378 }}
                 />
               </Box>

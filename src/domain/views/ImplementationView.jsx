@@ -1,6 +1,6 @@
 import { Box, Grid2, TextField, Typography } from "@mui/material";
 
-export const ImplementationPage = () => {
+export const ImplementationView = () => {
   const code = `helm install --set-string long_int=1234567890 myredis ./redis
 `;
   return (

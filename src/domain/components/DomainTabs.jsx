@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import {
-  ImplementationPage,
-  SettingPage,
-  ScannerCookiePage,
-  CookieListPage,
-  StatisticsCookiesPage,
-} from "../pages";
-import { DomainDescriptionTabView } from "../views";
+  DomainDescriptionTabView,
+  CookieListView,
+  ImplementationView,
+  SettingView,
+  ScannerCookieView,
+  StatisticsCookiesView,
+} from "../views";
+import { CDeleteDomainDialog } from "./CDeleteDomainDialog";
 
 const cards = [
   {
@@ -15,6 +16,7 @@ const cards = [
     title: "Plan básico",
     description: "Descripción del plan básico",
     buttonTitle: "Actualizar plan",
+    bgcolor: "#F0F4FF",
   },
   {
     id: 2,
@@ -22,26 +24,21 @@ const cards = [
     description:
       "66 cookies se instalan antes del consentimiento del usuario o aún no se han categorizado",
     buttonTitle: "Gestionar cookies",
+    bgcolor: "#FFF5E6",
   },
   {
     id: 3,
-    title: "¿Qué quieres hacer?",
-    description:
-      "- Customizar el cookie banner.\n" +
-      "\n\r" +
-      "- Cambiar los ajustes y la región.\n" +
-      "\n\r" +
-      "- Configurar el idioma.\n" +
-      "\n\r" +
-      "- Implementar en mi sitio web.\n" +
-      "\n\r" +
-      "- Gestionar cookies.",
-  },
-  {
-    id: 4,
     title: "Último escaneo de cookies:",
     description: "107 cookies encontradas en 50 páginas",
     buttonTitle: "Escanear",
+    bgcolor: "#E6FAF1",
+  },
+  {
+    id: 4,
+    title: "Utilización",
+    description: "Sesiones totales en el periodo mensual.",
+    buttonTitle: "Ver informes",
+    bgcolor: "#FFF9E6",
   },
   {
     id: 5,
@@ -49,15 +46,29 @@ const cards = [
     description:
       "Esto borrará tu dominio incluyendo cualquier personalidzaión y registro de consentimiento. Tenga en cuenta que esta acción NO se podrá revertir",
     buttonTitle: "Borrar dominio",
+    bgcolor: "#FFE6E6",
   },
 ];
 
 export const DomainTabs = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
+  const [openDeleteDomainDialog, setOpenDeleteDomainDialog] = useState(false);
 
   const handleChange = (event, tabIndex) => {
     console.log(tabIndex);
     setCurrentTabIndex(tabIndex);
+  };
+
+  const handleOpenDeleteDomainDialog = () => {
+    setOpenDeleteDomainDialog(true);
+  };
+
+  const handleCloseDeleteDomainDialog = () => {
+    setOpenDeleteDomainDialog(false);
+  };
+
+  const goToCookieListTab = () => {
+    setCurrentTabIndex(4);
   };
 
   return (
@@ -70,12 +81,26 @@ export const DomainTabs = () => {
         <Tab label="Cookies" />
         <Tab label="Informes" />
       </Tabs>
-      {currentTabIndex === 0 && <DomainDescriptionTabView cards={cards} />}
-      {currentTabIndex === 1 && <ImplementationPage />}
-      {currentTabIndex === 2 && <SettingPage />}
-      {currentTabIndex === 3 && <ScannerCookiePage />}
-      {currentTabIndex === 4 && <CookieListPage />}
-      {currentTabIndex === 5 && <StatisticsCookiesPage />}
+      {currentTabIndex === 0 && (
+        <DomainDescriptionTabView
+          cards={cards}
+          setCurrentTabIndex={setCurrentTabIndex}
+          handleOpenDeleteDomainDialog={handleOpenDeleteDomainDialog}
+        />
+      )}
+      {currentTabIndex === 1 && <ImplementationView />}
+      {currentTabIndex === 2 && <SettingView />}
+      {currentTabIndex === 3 && (
+        <ScannerCookieView onDetailClick={goToCookieListTab} />
+      )}
+      {currentTabIndex === 4 && <CookieListView />}
+      {currentTabIndex === 5 && <StatisticsCookiesView />}
+
+      <CDeleteDomainDialog
+        domainName="randomName"
+        openDeleteDomainDialog={openDeleteDomainDialog}
+        handleCloseDeleteDomainDialog={handleCloseDeleteDomainDialog}
+      />
     </Box>
   );
 };

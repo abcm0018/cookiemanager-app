@@ -12,6 +12,8 @@ export const CardDetail = ({
   title = "",
   description = "",
   buttonTitle = "",
+  bgcolor = "#F5F5F7",
+  onButtonClick,
 }) => {
   return (
     <Card
@@ -20,7 +22,11 @@ export const CardDetail = ({
         width: 300,
         mr: 3,
         mt: 2,
-        bgcolor: "#F5F5F7",
+        bgcolor: bgcolor,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        minHeight: 150,
       }}
     >
       <CardActionArea>
@@ -34,7 +40,7 @@ export const CardDetail = ({
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
+      <CardActions sx={{ justifyContent: "flex-end" }}>
         <Button
           size="small"
           sx={{
@@ -46,6 +52,7 @@ export const CardDetail = ({
             },
           }}
           variant="text"
+          onClick={onButtonClick}
         >
           {buttonTitle}
         </Button>
@@ -58,5 +65,7 @@ CardDetail.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   buttonTitle: PropTypes.string,
+  bgcolor: PropTypes.string,
   actions: PropTypes.array,
+  onButtonClick: PropTypes.func,
 };

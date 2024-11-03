@@ -12,18 +12,30 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { CEditDomainDialog } from "./CEditDomainDialog";
+import { CDeleteDomainDialog } from "./CDeleteDomainDialog";
 
 export const DomainTable = ({ dominios = [] }) => {
   const [openEditDomainDialog, setOpenEditDomainDialog] = useState(false);
+  const [openDeleteDomainDialog, setOpenDeleteDomainDialog] = useState(false);
 
   const handleEditDomain = () => {
     console.log("Abriendo el dialogo para editar dominio");
     setOpenEditDomainDialog(true);
   };
 
+  const handleDeleteDomain = () => {
+    console.log("Abriendo el dialogo para editar dominio");
+    setOpenDeleteDomainDialog(true);
+  };
+
   const handleCloseEditDomainDialog = () => {
     console.log("Cerrando dialogo de editar dominio");
     setOpenEditDomainDialog(false);
+  };
+
+  const handleCloseDeleteDomainDialog = () => {
+    console.log("Cerrando dialogo de editar dominio");
+    setOpenDeleteDomainDialog(false);
   };
 
   return (
@@ -69,7 +81,11 @@ export const DomainTable = ({ dominios = [] }) => {
                   <Button variant="text" onClick={handleEditDomain}>
                     Editar
                   </Button>
-                  <Button variant="text" color="error">
+                  <Button
+                    variant="text"
+                    color="error"
+                    onClick={handleDeleteDomain}
+                  >
                     Eliminar
                   </Button>
                 </ButtonGroup>
@@ -79,8 +95,14 @@ export const DomainTable = ({ dominios = [] }) => {
         </TableBody>
       </Table>
       <CEditDomainDialog
+        domainName="marca.com"
         openEditDomainDialog={openEditDomainDialog}
         handleCloseEditDomainDialog={handleCloseEditDomainDialog}
+      />
+      <CDeleteDomainDialog
+        domainName="marca.com"
+        openDeleteDomainDialog={openDeleteDomainDialog}
+        handleCloseDeleteDomainDialog={handleCloseDeleteDomainDialog}
       />
     </Box>
   );

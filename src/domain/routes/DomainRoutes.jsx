@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { DomainAddPage, DomainDetailsPage, DomainPage } from "../pages";
+import { DomainDetailsPage, DomainPage } from "../pages";
 
 export const DomainsRoutes = () => {
   return (
@@ -8,7 +8,6 @@ export const DomainsRoutes = () => {
 
       <Route path="" element={<DomainPage />} />
       <Route path="details" element={<DomainDetailsPage />} />
-      <Route path="add" element={<DomainAddPage />} />
 
       <Route path="/*" element={<Navigate to="/domains" />} />
     </Routes>

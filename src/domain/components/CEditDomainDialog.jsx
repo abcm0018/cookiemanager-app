@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 export const CEditDomainDialog = ({
-  domainName = "randomName",
+  domainName = "",
   openEditDomainDialog,
   handleCloseEditDomainDialog,
 }) => {
@@ -82,7 +82,7 @@ export const CEditDomainDialog = ({
                   name="Pais"
                   label="Pais"
                   value="España"
-                  type="email"
+                  type="text"
                   sx={{ width: 378 }}
                 />
               </Box>
@@ -164,7 +164,7 @@ export const CEditDomainDialog = ({
 };
 
 CEditDomainDialog.propTypes = {
-  domainName: PropTypes.string.isRequired,
+  domainName: PropTypes.string,
   openEditDomainDialog: PropTypes.bool,
   handleCloseEditDomainDialog: PropTypes.func,
 };
