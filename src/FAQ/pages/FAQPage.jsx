@@ -1,7 +1,4 @@
-import { Footer } from "../components/Footer";
-import { HeadSection } from "../components/HeadSection";
-import { MainSection } from "../components/MainSection";
-import { NavBar } from "../components/NavBar";
+import { Footer, HeadSection, MainSection, NavBar } from "../components";
 
 export const FAQPage = () => {
   return (

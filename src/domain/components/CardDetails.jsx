@@ -66,6 +66,5 @@ CardDetail.propTypes = {
   description: PropTypes.string,
   buttonTitle: PropTypes.string,
   bgcolor: PropTypes.string,
-  actions: PropTypes.array,
   onButtonClick: PropTypes.func,
 };

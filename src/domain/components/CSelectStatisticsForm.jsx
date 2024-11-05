@@ -26,10 +26,10 @@ export const CSelectStatisticsForm = () => {
         <FormControl fullWidth size="medium">
           <InputLabel id="select-label-idioma">País de acceso</InputLabel>
           <Select label="País de acceso">
-            <MenuItem value="Esenciales">Francia</MenuItem>
-            <MenuItem value="Opcionales">España</MenuItem>
-            <MenuItem value="Terceros">Italia</MenuItem>
-            <MenuItem value="Terceros">Alemania</MenuItem>
+            <MenuItem value="Francia">Francia</MenuItem>
+            <MenuItem value="España">España</MenuItem>
+            <MenuItem value="Italia">Italia</MenuItem>
+            <MenuItem value="Alemania">Alemania</MenuItem>
           </Select>
         </FormControl>
       </Box>
