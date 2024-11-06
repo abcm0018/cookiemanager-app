@@ -1,14 +1,43 @@
-import {
-  Box,
-  Button,
-  Container,
-  Grid2,
-  InputBase,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid2 } from "@mui/material";
 import { CardsSubscription } from "./CardsSuscription";
+import { SubscriptionHeader } from "./SubscriptionHeader";
 
 export const MainSection = () => {
+  const subscriptions = [
+    {
+      id: 1,
+      title: "Basic",
+      description: "Para pequeñas empresas y nuevas empresas",
+      price: "9.99 €/mes",
+      characteristic1: "600 páginas por escaneo",
+      characteristic2: "100.000 páginas vistas/mes",
+    },
+    {
+      id: 2,
+      title: "Business",
+      description: "Para medianas empresas con tráfico creciente",
+      price: "19.99 €/mes",
+      characteristic1: "4000 páginas por escaneo",
+      characteristic2: "300.000 páginas vistas/mes",
+    },
+    {
+      id: 3,
+      title: "Enterprise",
+      description: "Para grandes empresas con mucho tráfico",
+      price: "39.99 €/mes",
+      characteristic1: "8000 páginas por escaneo",
+      characteristic2: "Ilimitado de páginas vistas/mes",
+    },
+    {
+      id: 4,
+      title: "Starter",
+      description: "Para blogs y sitios web profesionales",
+      price: "0.00 €/mes",
+      characteristic1: "100 páginas por escaneo",
+      characteristic2: "25.000 páginas vistas/mes",
+    },
+  ];
+
   return (
     <>
       <Grid2
@@ -24,56 +53,9 @@ export const MainSection = () => {
               padding: 4,
             }}
           >
-            <Grid2 container sx={{ pb: 6 }} justifyContent="space-between">
-              <Grid2 xs={12} sm={6}>
-                <Typography variant="h6" sx={{ mb: 1 }}>
-                  Plan de suscripción
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 3 }}>
-                  Plan de suscripción actual: Basic
-                </Typography>
-              </Grid2>
-              <Grid2
-                item
-                xs={12}
-                sm="auto"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  mt: { xs: 2, sm: 0 },
-                }}
-              >
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  Código de descuento:
-                </Typography>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <InputBase
-                    sx={{
-                      border: "1px solid #ccc",
-                      padding: "4px 12px",
-                      width: "150px",
-                    }}
-                    placeholder="Descuento"
-                  />
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "secondary.main",
-                      color: "white",
-                      borderRadius: "0 4px 4px 0",
-                      paddingX: 2,
-                      height: "41px",
-                      minWidth: "32px",
-                    }}
-                  >
-                    Aplicar
-                  </Button>
-                </Box>
-              </Grid2>
-            </Grid2>
+            <SubscriptionHeader currentPlan="Basic" />
             <Grid2>
-              <CardsSubscription />
+              <CardsSubscription subscriptions={subscriptions} />
             </Grid2>
           </Box>
         </Container>

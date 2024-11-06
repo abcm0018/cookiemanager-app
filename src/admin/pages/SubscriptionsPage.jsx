@@ -1,7 +1,9 @@
-import { Footer } from "../components/Footer";
-import { HeadSectionSubscriptions } from "../components/HeadSectionSubscriptions";
-import { MainSectionSubscriptions } from "../components/MainSectionSubscriptions";
-import { NavBarAdmin } from "../components/NavBarAdmin";
+import {
+  Footer,
+  HeadSectionSubscriptions,
+  MainSectionSubscriptions,
+  NavBarAdmin,
+} from "../components";
 
 export const SubscriptionsPage = () => {
   return (

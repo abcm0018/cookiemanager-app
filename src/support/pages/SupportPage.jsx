@@ -1,4 +1,4 @@
-import { Footer, HeadSection, MainSection, NavBar } from "../../FAQ/components";
+import { Footer, HeadSection, MainSection, NavBar } from "../components";
 
 export const SupportPage = () => {
   return (
