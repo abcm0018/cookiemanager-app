@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import {
   IconButton,
   Stack,
@@ -10,7 +12,6 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { CDeleteUserDialog } from "./CDeleteUserDialog";
-import PropTypes from "prop-types";
 import { useState } from "react";
 
 export const UserTable = ({ users = [] }) => {
@@ -85,6 +86,6 @@ export const UserTable = ({ users = [] }) => {
   );
 };
 
-UserTable.propType = {
-  users: PropTypes.array,
+UserTable.propTypes = {
+  users: PropTypes.array.isRequired,
 };

@@ -18,7 +18,7 @@ export const CInfoCookieDialog = ({
   return (
     <Box>
       <Dialog
-        maxWidth="md"
+        maxWidth="lg"
         open={openInfoCookieDialog}
         onClose={handleCloseInfoCookieDialog}
         PaperProps={{
@@ -52,7 +52,7 @@ export const CInfoCookieDialog = ({
                 </Box>
               </Grid2>
               <Grid2 xs={6}>
-                <Box sx={{ width: 378, mt: 2 }}>
+                <Box sx={{ width: 378, mt: 2, ml: 35 }}>
                   <Typography>
                     <Typography
                       component="span"
@@ -80,7 +80,7 @@ export const CInfoCookieDialog = ({
                 </Box>
               </Grid2>
               <Grid2 xs={6}>
-                <Box sx={{ width: 378, mt: 2 }}>
+                <Box sx={{ width: 378, mt: 2, ml: 35 }}>
                   <Typography>
                     <Typography
                       component="span"
@@ -108,7 +108,7 @@ export const CInfoCookieDialog = ({
                 </Box>
               </Grid2>
               <Grid2 xs={6}>
-                <Box sx={{ width: 378, mt: 2 }}>
+                <Box sx={{ width: 378, mt: 2, ml: 35 }}>
                   <Typography>
                     <Typography
                       component="span"
@@ -136,7 +136,7 @@ export const CInfoCookieDialog = ({
                 </Box>
               </Grid2>
               <Grid2 xs={6}>
-                <Box sx={{ width: 378, mt: 2 }}>
+                <Box sx={{ width: 378, mt: 2, ml: 35 }}>
                   <Typography>
                     <Typography
                       component="span"

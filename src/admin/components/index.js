@@ -3,6 +3,7 @@ export * from "./CAddSubscriptionDialog";
 export * from "./CDeleteSubscriptionDialog";
 export * from "./CDeleteUserDialog";
 export * from "./CEditAdminDialog";
+export * from "./CEditAdminDialog";
 export * from "./CUpdateSubscriptionDialog";
 export * from "./CardsControl";
 export * from "./CardsSuscription";

@@ -18,7 +18,7 @@ export const CAddSubscriptionDialog = ({
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
+      maxWidth="lg"
       open={openAddSubscriptionDialog}
       onClose={handleCloseAddSubscriptionDialog}
       PaperProps={{
@@ -49,7 +49,6 @@ export const CAddSubscriptionDialog = ({
                 label="Plan de subscripción"
                 type="text"
                 fullWidth
-                sx={{ maxWidth: 378 }}
               />
             </Grid2>
             <Grid2 xs={12}>
@@ -62,7 +61,6 @@ export const CAddSubscriptionDialog = ({
                 multiline
                 minRows={4}
                 fullWidth
-                sx={{ maxWidth: 378 }}
               />
             </Grid2>
             <Grid2 xs={12}>
@@ -73,7 +71,6 @@ export const CAddSubscriptionDialog = ({
                 label="Precio"
                 type="text"
                 fullWidth
-                sx={{ maxWidth: 378 }}
               />
             </Grid2>
           </Grid2>

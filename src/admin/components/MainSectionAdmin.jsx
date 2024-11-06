@@ -1,4 +1,5 @@
-import { Box, Container, Grid2, Typography } from "@mui/material";
+import { Box, Container, Grid2 } from "@mui/material";
+import { CGeneralAdminInfo } from "./CGeneralAdminInfo";
 
 export const MainSectionAdmin = () => {
   return (
@@ -15,43 +16,7 @@ export const MainSectionAdmin = () => {
               boxShadow: 3,
             }}
           >
-            <Grid2 container sx={{ pb: 10, pt: 4, pl: 8, pr: 8 }}>
-              <Box>
-                <Typography variant="h6" sx={{ mb: 3 }}>
-                  Información general
-                </Typography>
-                <Grid2 container direction="row" spacing={2}>
-                  <Grid2 xs={6}>
-                    <Box sx={{ width: 400, mt: 2 }}>
-                      <Typography sx={{ ml: 2 }}>
-                        <Typography
-                          component="span"
-                          fontWeight="bold"
-                          variant="body1"
-                        >
-                          Nombre:
-                        </Typography>{" "}
-                        Ana Belén
-                      </Typography>
-                    </Box>
-                  </Grid2>
-                  <Grid2 xs={6}>
-                    <Box sx={{ width: 400, mt: 2 }}>
-                      <Typography sx={{ ml: 2 }}>
-                        <Typography
-                          component="span"
-                          fontWeight="bold"
-                          variant="body1"
-                        >
-                          Email:
-                        </Typography>{" "}
-                        ana@gmail.com
-                      </Typography>
-                    </Box>
-                  </Grid2>
-                </Grid2>
-              </Box>
-            </Grid2>
+            <CGeneralAdminInfo />
           </Box>
         </Container>
       </Grid2>

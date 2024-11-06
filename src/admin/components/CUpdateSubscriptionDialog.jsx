@@ -19,7 +19,7 @@ export const CUpdateSubscriptionDialog = ({
     <Box>
       <Dialog
         fullWidth
-        maxWidth="sm"
+        maxWidth="lg"
         open={openUpdateSubscriptionDialog}
         onClose={handleCloseUpdateSubscriptionDialog}
         PaperProps={{
@@ -52,7 +52,6 @@ export const CUpdateSubscriptionDialog = ({
                   type="text"
                   value="Basic"
                   fullWidth
-                  sx={{ maxWidth: 378 }}
                 />
               </Grid2>
               <Grid2 xs={12}>
@@ -66,7 +65,6 @@ export const CUpdateSubscriptionDialog = ({
                   multiline
                   minRows={4}
                   fullWidth
-                  sx={{ maxWidth: 378 }}
                 />
               </Grid2>
               <Grid2 item xs={12}>
@@ -78,7 +76,6 @@ export const CUpdateSubscriptionDialog = ({
                   type="text"
                   value="9.99 €/mes"
                   fullWidth
-                  sx={{ maxWidth: 378 }}
                 />
               </Grid2>
             </Grid2>
