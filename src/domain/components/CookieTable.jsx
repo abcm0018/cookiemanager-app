@@ -4,10 +4,7 @@ import {
   Chip,
   IconButton,
   Stack,
-  Table,
-  TableBody,
   TableCell,
-  TableHead,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -18,8 +15,18 @@ import { CEditCookieDialog } from "./CEditCookieDialog";
 import { useState } from "react";
 import { CInfoCookieDialog } from "./CInfoCookieDialog";
 import { CDeleteCookieDialog } from "./CDeleteCookieDialog";
+import { TableLayout } from "../layout/TableLayout";
 
 export const CookieTable = ({ cookies = [] }) => {
+  const headers = [
+    "Nombre",
+    "Tipo",
+    "Proveedor",
+    "Duración",
+    "Etiquetas",
+    "Acción",
+  ];
+
   const [openEditCookieDialog, setOpenEditCookieDialog] = useState(false);
   const [openInfoCookieDialog, setOpenInfoCookieDialog] = useState(false);
   const [openDeleteCookieDialog, setOpenDeleteCookieDialog] = useState(false);
@@ -55,76 +62,64 @@ export const CookieTable = ({ cookies = [] }) => {
 
   return (
     <>
-      <Table sx={{ width: 990 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Nombre</TableCell>
-            <TableCell>Tipo</TableCell>
-            <TableCell>Proveedor</TableCell>
-            <TableCell>Duracion</TableCell>
-            <TableCell>Etiquetas</TableCell>
-            <TableCell>Acción</TableCell>
+      <TableLayout headers={headers}>
+        {cookies.map((cookie) => (
+          <TableRow
+            key={cookie.nombre}
+            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+          >
+            <TableCell sx={{ pl: 2 }} padding="none">
+              <Typography variant="body1">{cookie.nombre}</Typography>
+            </TableCell>
+            <TableCell sx={{ pl: 2 }} padding="none">
+              <Typography variant="body1">{cookie.tipo}</Typography>
+            </TableCell>
+            <TableCell sx={{ pl: 2 }} padding="none">
+              <Typography variant="body1">{cookie.proveedor}</Typography>
+            </TableCell>
+            <TableCell sx={{ pl: 2 }} padding="none">
+              <Typography variant="body1">{cookie.duracion}</Typography>
+            </TableCell>
+            <TableCell sx={{ pl: 2 }} padding="none">
+              <Stack direction="row" spacing={1}>
+                {cookie.etiquetas.map((etiqueta) => (
+                  <Box key={etiqueta.id} disablePadding dense>
+                    <Chip label={etiqueta.nombre} size="small" />
+                  </Box>
+                ))}
+              </Stack>
+            </TableCell>
+            <TableCell>
+              <Stack direction="row" spacing={1}>
+                <IconButton
+                  aria-label="info"
+                  size="small"
+                  color="secondary"
+                  onClick={handleInfoCookie}
+                >
+                  <InfoIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  aria-label="edit"
+                  size="small"
+                  color="primary"
+                  onClick={handleEditCookie}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  color="error"
+                  onClick={handleDeleteCookie}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Stack>
+            </TableCell>
           </TableRow>
-        </TableHead>
-        <TableBody>
-          {cookies.map((cookie) => (
-            <TableRow
-              key={cookie.nombre}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell sx={{ pl: 2 }} padding="none">
-                <Typography variant="body1">{cookie.nombre}</Typography>
-              </TableCell>
-              <TableCell sx={{ pl: 2 }} padding="none">
-                <Typography variant="body1">{cookie.tipo}</Typography>
-              </TableCell>
-              <TableCell sx={{ pl: 2 }} padding="none">
-                <Typography variant="body1">{cookie.proveedor}</Typography>
-              </TableCell>
-              <TableCell sx={{ pl: 2 }} padding="none">
-                <Typography variant="body1">{cookie.duracion}</Typography>
-              </TableCell>
-              <TableCell sx={{ pl: 2 }} padding="none">
-                <Stack direction="row" spacing={1}>
-                  {cookie.etiquetas.map((etiqueta) => (
-                    <Box key={etiqueta.id} disablePadding dense>
-                      <Chip label={etiqueta.nombre} size="small" />
-                    </Box>
-                  ))}
-                </Stack>
-              </TableCell>
-              <TableCell>
-                <Stack direction="row" spacing={1}>
-                  <IconButton
-                    aria-label="info"
-                    size="small"
-                    color="secondary"
-                    onClick={handleInfoCookie}
-                  >
-                    <InfoIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    aria-label="edit"
-                    size="small"
-                    color="primary"
-                    onClick={handleEditCookie}
-                  >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    size="small"
-                    color="error"
-                    onClick={handleDeleteCookie}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Stack>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+        ))}
+      </TableLayout>
       <CInfoCookieDialog
         openInfoCookieDialog={openInfoCookieDialog}
         handleCloseInfoCookieDialog={handleCloseInfoCookieDialog}

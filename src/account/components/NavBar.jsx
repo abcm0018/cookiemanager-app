@@ -23,7 +23,7 @@ export const NavBar = () => {
     { label: "FAQs", route: "/faq" },
   ];
   const settings = [
-    { title: "Settings", icon: "Setting" },
+    { title: "Mi perfil", icon: "Setting" },
     { title: "Logout", icon: "Logout" },
   ];
 
@@ -49,7 +49,7 @@ export const NavBar = () => {
   };
 
   const handleMenuClick = (setting) => {
-    if (setting.title === "Settings") {
+    if (setting.title === "Mi perfil") {
       navigate("/profile");
     } else if (setting.title === "Logout") {
       navigate("/login");

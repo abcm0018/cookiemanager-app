@@ -7,6 +7,7 @@ export * from "./CDeleteDomainDialog";
 export * from "./CEditCookieDialog";
 export * from "./CEditDomainDialog";
 export * from "./CGeneralSettingsField";
+export * from "./CLogo";
 export * from "./CRegionalSettingsField";
 export * from "./CLanguageSettingsField";
 export * from "./CardDetails";

@@ -1,6 +1,7 @@
 export * from "./CCancelSubscriptionDialog";
 export * from "./CUpdateSubscriptionDialog";
 export * from "./CardsSuscription";
+export * from "./CLogo";
 export * from "./DiscountCodeInputSubscription";
 export * from "./Footer";
 export * from "./HeadSection";

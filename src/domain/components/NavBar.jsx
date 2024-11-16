@@ -1,4 +1,4 @@
-import { CookieRounded, Logout, Settings } from "@mui/icons-material";
+import { Logout, Settings } from "@mui/icons-material";
 import {
   AppBar,
   Avatar,
@@ -11,10 +11,10 @@ import {
   MenuItem,
   Toolbar,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { CLogo } from "./CLogo";
 
 export const NavBar = () => {
   const pages = [
@@ -23,7 +23,7 @@ export const NavBar = () => {
     { label: "FAQs", route: "/faq" },
   ];
   const settings = [
-    { title: "Settings", icon: "Setting" },
+    { title: "Mi perfil", icon: "Setting" },
     { title: "Logout", icon: "Logout" },
   ];
 
@@ -49,7 +49,7 @@ export const NavBar = () => {
   };
 
   const handleMenuClick = (setting) => {
-    if (setting.title === "Settings") {
+    if (setting.title === "Mi perfil") {
       navigate("/profile");
     } else if (setting.title === "Logout") {
       navigate("/login");
@@ -66,33 +66,7 @@ export const NavBar = () => {
           sx={{ backgroundColor: "white" }}
         >
           <Toolbar disableGutters>
-            <Link
-              to="/domains"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                textDecoration: "none",
-              }}
-            >
-              <CookieRounded
-                fontSize="large"
-                sx={{ color: "secondary.main", rotate: "45deg" }}
-              />
-              <Typography
-                variant="h5"
-                component="div"
-                sx={{ color: "secondary.main" }}
-              >
-                Cookie
-              </Typography>
-              <Typography
-                variant="h5"
-                component="div"
-                sx={{ flexGrow: 0.1, color: "primary.main" }}
-              >
-                Manager
-              </Typography>
-            </Link>
+            <CLogo />
 
             <Box sx={{ flexGrow: 0.08 }} />
 
