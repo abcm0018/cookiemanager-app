@@ -19,8 +19,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 export const NavBar = () => {
   const pages = [
     { label: "Mis dominios", route: "/domains" },
-    { label: "Soporte", route: "/support" },
-    { label: "FAQs", route: "/faq" },
+    { label: "Soporte", route: "/contact-support" },
+    { label: "FAQs", route: "/quick-answers" },
   ];
   const settings = [
     { title: "Mi perfil", icon: "Setting" },

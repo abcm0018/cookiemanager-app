@@ -8,12 +8,14 @@ import {
   DialogTitle,
 } from "@mui/material";
 
+import PropTypes from "prop-types";
+
 export const DialogLayout = ({
   title = "",
   children,
   description1 = "",
   description2 = "",
-  maxWidth = "null",
+  maxWidth = "",
   open,
   onClose,
   funcion,
@@ -81,4 +83,9 @@ export const DialogLayout = ({
       </Box>
     </>
   );
+};
+
+DialogLayout.propTypes = {
+  title: PropTypes.string.isRequired,
+  cookies: PropTypes.array.isRequired,
 };

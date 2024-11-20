@@ -13,7 +13,7 @@ export const DomainDescriptionTabView = ({
   const handleButtonClick = (buttonTitle) => {
     switch (buttonTitle) {
       case "Actualizar plan":
-        navigate("/subscription");
+        navigate("/manage-subscriptions");
         break;
       case "Escanear":
         setCurrentTabIndex(3);

@@ -1,5 +1,5 @@
 import { Box, Container, Grid2 } from "@mui/material";
-import { CardsSubscription } from "./CardsSuscription";
+import { CardsSubscription } from "./CardsSubscription";
 import { SubscriptionHeader } from "./SubscriptionHeader";
 
 export const MainSection = () => {

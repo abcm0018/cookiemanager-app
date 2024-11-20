@@ -19,9 +19,10 @@ import { CLogo } from "./CLogo";
 export const NavBar = () => {
   const pages = [
     { label: "Mis dominios", route: "/domains" },
-    { label: "Soporte", route: "/support" },
-    { label: "FAQs", route: "/faq" },
+    { label: "Soporte", route: "/contact-support" },
+    { label: "FAQs", route: "/quick-answers" },
   ];
+
   const settings = [
     { title: "Mi perfil", icon: "Setting" },
     { title: "Logout", icon: "Logout" },
@@ -81,15 +82,17 @@ export const NavBar = () => {
                     my: 2,
                     color: "primary.main",
                     display: "block",
-                    backgroundColor: location.pathname.includes(page.route)
-                      ? "secondary.light"
-                      : "transparent",
+                    backgroundColor:
+                      location.pathname === page.route
+                        ? "secondary.light"
+                        : "transparent",
                   }}
                 >
                   {page.label}
                 </Button>
               ))}
             </Box>
+
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Ver mi perfil">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

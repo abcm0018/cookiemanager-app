@@ -1,9 +1,9 @@
-import { NavBar, MainInfo, Features } from "../components";
+import { MainInfo, Features, NavBarIntro } from "../components";
 
 export const HomePage = () => {
   return (
     <>
-      <NavBar />
+      <NavBarIntro />
       <MainInfo />
       <Features />
     </>
