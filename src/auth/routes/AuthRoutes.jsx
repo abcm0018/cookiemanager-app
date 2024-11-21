@@ -5,12 +5,15 @@ import {
   PasswordRecoveryPage,
   RegisterPage,
 } from "../pages";
+import { LoginAdmin } from "../pages/LoginAdmin";
 
 export const AuthRoutes = () => {
   return (
     <Routes>
       {/** Ruta login*/}
       <Route path="login" element={<LoginPage />} />
+      {/** Ruta administrador login*/}
+      <Route path="admin/login" element={<LoginAdmin />} />
       {/** Ruta register*/}
       <Route path="register" element={<RegisterPage />} />
       {/** Ruta logout*/}

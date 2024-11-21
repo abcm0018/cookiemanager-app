@@ -17,11 +17,11 @@ export const AppRoutes = () => {
           <Route path="/auth/*" element={<AuthRoutes />} />
           {/**Cookie Manager Home Page */}
           <Route path="/*" element={<CookieManagerRoutes />} />
-          {/** Admin routes */}
-          <Route path="/admin/*" element={<AdminRoutes />} />
         </>
       ) : (
         <>
+          {/** Admin routes */}
+          <Route path="/admin/*" element={<AdminRoutes />} />
           {/** User routes */}
           <Route path="/profile/*" element={<UserRoutes />} />
           {/** Domain routes */}

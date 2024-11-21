@@ -1,24 +1,47 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
+import { useAuthStore, useForm } from "../../hooks";
+
+const loginFormFields = {
+  loginEmail: "",
+  loginPassword: "",
+};
 
 export const LoginAdmin = () => {
+  const { startLoginAdmin } = useAuthStore();
+
+  const {
+    loginEmail,
+    loginPassword,
+    onInputChange: onLoginInputChange,
+  } = useForm(loginFormFields);
+
+  // Para enviar los datos del formulario
+  const loginSubmit = (event) => {
+    event.preventDefault();
+    //console.log({ loginEmail, loginPassword });
+    startLoginAdmin({ email: loginEmail, password: loginPassword });
+  };
   return (
     <AuthLayout
       title="Iniciar sesión"
       description="Introduce tu email y contraseña para iniciar sesión en tu cuenta"
       size={420}
     >
-      <form>
+      <form onSubmit={loginSubmit}>
         <Grid2 container>
           <Grid2 size={12} sx={{ mt: 2 }}>
             <TextField
               label="Correo electrónico"
               type="email"
               placeholder="Correo electrónico"
+              name="loginEmail"
+              value={loginEmail}
               fullWidth
               size="medium"
               required
+              onChange={onLoginInputChange}
             />
           </Grid2>
           <Grid2 size={12} sx={{ mt: 2 }}>
@@ -26,9 +49,12 @@ export const LoginAdmin = () => {
               label="Contraseña"
               type="password"
               placeholder="Contraseña"
+              name="loginPassword"
+              value={loginPassword}
               fullWidth
               size="medium"
               required
+              onChange={onLoginInputChange}
             />
             <Grid2
               container
@@ -50,10 +76,11 @@ export const LoginAdmin = () => {
         <Grid2 container spacing={2} sx={{ mb: 1, mt: 1 }}>
           <Grid2 size={12}>
             <Button
+              type="submit"
               variant="contained"
               fullWidth
               size="large"
-              href="/admin/control"
+              //href="/admin/control"
               sx={{ height: 52, bgcolor: "secondary.main" }}
             >
               INICIAR SESIÓN

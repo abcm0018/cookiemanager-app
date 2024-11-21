@@ -18,6 +18,19 @@ export const useAuthStore = () => {
       console.log({ error });
     }
   };
+
+  const startLoginAdmin = async ({ email, password }) => {
+    console.log({ email, password });
+    try {
+      const responseAdmin = await cookieManagerApi.post("auth/admin/login", {
+        email,
+        password,
+      });
+      console.log({ responseAdmin });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
   return {
     //* Propiedades
     errorMessage,
@@ -25,5 +38,6 @@ export const useAuthStore = () => {
     user,
     //* Metodos
     startLogin,
+    startLoginAdmin,
   };
 };
