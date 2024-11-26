@@ -2,6 +2,8 @@ import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useAuthStore, useForm } from "../../hooks";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 const loginFormFields = {
   loginEmail: "",
@@ -9,7 +11,7 @@ const loginFormFields = {
 };
 
 export const LoginPage = () => {
-  const { startLogin } = useAuthStore();
+  const { startLogin, errorMessage } = useAuthStore();
 
   const {
     loginEmail,
@@ -23,6 +25,12 @@ export const LoginPage = () => {
     //console.log({ loginEmail, loginPassword });
     startLogin({ email: loginEmail, password: loginPassword });
   };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error en la autenticación", errorMessage, "error");
+    }
+  }, [errorMessage]);
   return (
     <AuthLayout
       title="Iniciar sesión"
@@ -63,7 +71,7 @@ export const LoginPage = () => {
               sx={{ mt: 1, mb: 1 }}
             >
               <Link
-                to="/auth/recovery-password"
+                to="/auth/resetPassword"
                 component={RouterLink}
                 underline="none"
                 sx={{ color: "secondary.main" }}

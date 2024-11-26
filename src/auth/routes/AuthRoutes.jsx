@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import {
   LoginPage,
   LogoutPage,
+  PasswordRecoveryAdmin,
   PasswordRecoveryPage,
   RegisterPage,
 } from "../pages";
@@ -20,6 +21,11 @@ export const AuthRoutes = () => {
       <Route path="logout" element={<LogoutPage />} />
       {/** Ruta para recuperar la contraseña*/}
       <Route path="recovery-password" element={<PasswordRecoveryPage />} />
+      {/** Ruta administrador recuperar contraseña*/}
+      <Route
+        path="admin/recovery-password"
+        element={<PasswordRecoveryAdmin />}
+      />
 
       {/**Routa por defecto */}
       <Route path="/*" element={<Navigate to="/auth/login" />} />

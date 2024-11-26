@@ -18,6 +18,25 @@ export const authSlide = createSlice({
       state.user = payload;
       state.errorMessage = undefined;
     },
+    onRegister: (state, { payload }) => {
+      state.status = "registered";
+      state.user = payload;
+      state.errorMessage = undefined;
+    },
+    onRecovery: (state, { payload }) => {
+      state.status = "recovery";
+      state.user = payload;
+      state.errorMessage = undefined;
+    },
+    onLogout: (state, { payload }) => {
+      state.status = "not-authenticated";
+      state.user = {};
+      state.errorMessage = payload;
+    },
+    clearErrorMessage: (state) => {
+      state.errorMessage = undefined;
+    },
   },
 });
-export const { checking } = authSlide.actions;
+export const { onChecking, onLogin, onRegister, onLogout, clearErrorMessage } =
+  authSlide.actions;

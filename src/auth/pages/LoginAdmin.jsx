@@ -2,6 +2,8 @@ import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useAuthStore, useForm } from "../../hooks";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 const loginFormFields = {
   loginEmail: "",
@@ -9,7 +11,7 @@ const loginFormFields = {
 };
 
 export const LoginAdmin = () => {
-  const { startLoginAdmin } = useAuthStore();
+  const { startLoginAdmin, errorMessage } = useAuthStore();
 
   const {
     loginEmail,
@@ -23,6 +25,12 @@ export const LoginAdmin = () => {
     //console.log({ loginEmail, loginPassword });
     startLoginAdmin({ email: loginEmail, password: loginPassword });
   };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error en la autenticación", errorMessage, "error");
+    }
+  }, [errorMessage]);
   return (
     <AuthLayout
       title="Iniciar sesión"

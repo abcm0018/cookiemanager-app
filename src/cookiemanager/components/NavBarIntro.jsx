@@ -7,7 +7,7 @@ export const NavBarIntro = () => {
   const pages = [
     { label: "Soporte", route: "/support" },
     { label: "FAQs", route: "/faq" },
-    { label: "Subscripciones", route: "/subscriptions" },
+    { label: "Planes de suscripción", route: "/subscriptions" },
     { label: "Ayuda", route: "/help" },
   ];
 

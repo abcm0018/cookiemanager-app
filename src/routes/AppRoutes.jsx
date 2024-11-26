@@ -7,12 +7,22 @@ import { SubscriptionPage } from "../subscription/pages/SubscriptionPage";
 import { AdminRoutes } from "../admin/routes/AdminRoutes";
 import { SupportPage } from "../support/pages/SupportPage";
 import { FAQPage } from "../FAQ/pages/FAQPage";
+import { useAuthStore } from "../hooks";
+import { useEffect } from "react";
 
 export const AppRoutes = () => {
-  const authStatus = "not-authenticated";
+  const { status, checkAuthToken } = useAuthStore();
+
+  useEffect(() => {
+    checkAuthToken();
+  }, []);
+
+  if (status === "checking") {
+    return <h3>Cargando...</h3>;
+  }
   return (
     <Routes>
-      {authStatus === "not-authenticated" ? (
+      {status === "not-authenticated" ? (
         <>
           <Route path="/auth/*" element={<AuthRoutes />} />
           {/**Cookie Manager Home Page */}

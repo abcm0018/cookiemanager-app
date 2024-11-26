@@ -35,6 +35,18 @@ export const CEditAdminDialog = ({
             <TextField
               autoFocus
               required
+              id="surname"
+              name="Apellidos"
+              label="Apellidos"
+              value="Cabello Martínez"
+              type="text"
+              sx={{ width: 378, mr: 2 }}
+            />
+          </Box>
+          <Box sx={{ width: 775, mt: 2 }}>
+            <TextField
+              autoFocus
+              required
               id="name"
               name="email"
               label="Correo electrónico"

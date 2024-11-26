@@ -44,7 +44,7 @@ export const AuthLayout = ({
 
 AuthLayout.propTypes = {
   title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   size: PropTypes.number.isRequired,
   children: PropTypes.node,
 };

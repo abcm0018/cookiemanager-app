@@ -1,8 +1,38 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
+import { useAuthStore, useForm } from "../../hooks";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+
+const recoveryFormFields = {
+  recoveryEmail: "",
+  recoveryPassword: "",
+};
 
 export const PasswordRecoveryPage = () => {
+  const { startRecoveryPassword, errorMessage } = useAuthStore();
+
+  const {
+    recoveryEmail,
+    recoveryPassword,
+    onInputChange: onInputRecoveryChange,
+  } = useForm(recoveryFormFields);
+
+  // Para enviar los datos del formulario
+  const recoverySubmit = (event) => {
+    event.preventDefault();
+    startRecoveryPassword({
+      email: recoveryEmail,
+      password: recoveryPassword,
+    });
+  };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error en la autenticación", errorMessage, "error");
+    }
+  }, [errorMessage]);
   return (
     <AuthLayout
       title="Recuperar contraseña"
@@ -10,7 +40,7 @@ export const PasswordRecoveryPage = () => {
           resetear tu contraseña"
       size={420}
     >
-      <form>
+      <form onSubmit={recoverySubmit}>
         <Grid2 container>
           <Grid2 size={12} sx={{ mt: 2 }}>
             <TextField
@@ -18,14 +48,31 @@ export const PasswordRecoveryPage = () => {
               type="email"
               placeholder="Correo electrónico"
               fullWidth
+              name="recoveryEmail"
+              value={recoveryEmail}
               size="medium"
               required
+              onChange={onInputRecoveryChange}
+            />
+          </Grid2>
+          <Grid2 size={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Nueva contraseña"
+              type="password"
+              placeholder="Nueva contraseña"
+              name="recoveryPassword"
+              value={recoveryPassword}
+              fullWidth
+              size="medium"
+              required
+              onChange={onInputRecoveryChange}
             />
           </Grid2>
         </Grid2>
         <Grid2 container spacing={2} sx={{ mb: 2, mt: 4 }}>
           <Grid2 size={12}>
             <Button
+              type="submit"
               variant="contained"
               fullWidth
               size="large"

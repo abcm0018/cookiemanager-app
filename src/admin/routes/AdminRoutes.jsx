@@ -3,12 +3,10 @@ import { SubscriptionsPage } from "../pages/SubscriptionsPage";
 import { AdminProfilePage } from "../pages/AdminProfilePage";
 import { UsersPage } from "../pages/UsersPages";
 import { ControlPanelPage } from "../pages/ControlPanelPage";
-import { PasswordRecoveryAdmin } from "../pages/PasswordRecoveryAdmin";
 
 export const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path="/recovery-password" element={<PasswordRecoveryAdmin />} />
       <Route path="/subscriptions" element={<SubscriptionsPage />} />
       <Route path="/profile" element={<AdminProfilePage />} />
       <Route path="/users" element={<UsersPage />} />
