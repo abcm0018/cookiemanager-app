@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import {
   Box,
   Button,
@@ -8,14 +10,12 @@ import {
   DialogTitle,
 } from "@mui/material";
 
-import PropTypes from "prop-types";
-
 export const DialogLayout = ({
   title = "",
   children,
   description1 = "",
   description2 = "",
-  maxWidth = "",
+  maxWidth = "null",
   open,
   onClose,
   funcion,
@@ -33,14 +33,8 @@ export const DialogLayout = ({
           PaperProps={{
             component: "form",
             onSubmit: (event) => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const formJson = Object.fromEntries(formData.entries());
-              const email = formJson.email;
-              console.log(email);
-              {
-                funcion;
-              }
+              funcion(event);
+              onClose;
             },
           }}
         >
@@ -74,7 +68,7 @@ export const DialogLayout = ({
             <Button
               variant="outlined"
               sx={{ bgcolor: "primary.main", color: "white" }}
-              onClick={funcion}
+              onClick={onClose}
             >
               {titleButton2}
             </Button>
@@ -87,5 +81,13 @@ export const DialogLayout = ({
 
 DialogLayout.propTypes = {
   title: PropTypes.string.isRequired,
-  cookies: PropTypes.array.isRequired,
+  description1: PropTypes.string,
+  description2: PropTypes.string,
+  maxWidth: PropTypes.string.isRequired,
+  open: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  funcion: PropTypes.func.isRequired,
+  titleButton1: PropTypes.string,
+  titleButton2: PropTypes.string,
+  children: PropTypes.node,
 };

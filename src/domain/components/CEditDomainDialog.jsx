@@ -9,12 +9,77 @@ import {
   Typography,
 } from "@mui/material";
 import { DialogLayout } from "../layout/DialogLayout";
+import { useDomainStore, useForm } from "../../hooks";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+
+const domainFormField = {
+  editDomainId: "",
+  editDomainName: "",
+  editDomainDescription: "",
+  editDomainStatus: "",
+  editDomainOwner: "",
+  email: "",
+  editDomainCountryOrigin: "",
+};
 
 export const CEditDomainDialog = ({
   domainName = "",
   openEditDomainDialog,
   handleCloseEditDomainDialog,
+  domain,
 }) => {
+  const { startUpdatingDomain, errorMessage } = useDomainStore();
+
+  const {
+    editDomainId,
+    editDomainName,
+    editDomainDescription,
+    editDomainStatus,
+    editDomainOwner,
+    email,
+    editDomainCountryOrigin,
+    onInputChange: onEditDomainChange,
+    setFormState,
+  } = useForm(domainFormField);
+
+  // Prellenar los datos del formulario cuando el diálogo se abre
+  useEffect(() => {
+    if (openEditDomainDialog && domain?.id) {
+      setFormState({
+        editDomainId: domain.id,
+        editDomainName: domain.name,
+        editDomainDescription: domain.description,
+        editDomainStatus: domain.status,
+        editDomainOwner: domain.owner,
+        email: domain.contactEmail,
+        editDomainCountryOrigin: domain.countryOrigin,
+      });
+    }
+  }, [openEditDomainDialog, domain, setFormState]);
+
+  const editDomainSubmit = (event) => {
+    event.preventDefault();
+    if (!editDomainId || !editDomainName) {
+      Swal.fire("Error", "Faltan datos obligatorios", "error");
+      return;
+    }
+    startUpdatingDomain({
+      id: editDomainId,
+      name: editDomainName,
+      description: editDomainDescription,
+      status: editDomainStatus,
+      owner: editDomainOwner,
+      contactEmail: email,
+      countryOrigin: editDomainCountryOrigin,
+    });
+  };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error en la autenticación", errorMessage, "error");
+    }
+  }, [errorMessage]);
   return (
     <DialogLayout
       open={openEditDomainDialog}
@@ -23,29 +88,39 @@ export const CEditDomainDialog = ({
       maxWidth="lg"
       titleButton1="Guardar cambios"
       titleButton2="Cancelar"
-      funcion={handleCloseEditDomainDialog}
+      funcion={editDomainSubmit}
     >
       <Box>
         <Grid2 container direction={"row"}>
+          <input
+            type="hidden"
+            id="domainId"
+            name="editDomainId"
+            value={editDomainId}
+          />
           <Box sx={{ width: 775, mt: 2 }}>
             <TextField
               autoFocus
               required
               id="name"
-              name="Nombre de dominio"
+              name="editDomainName"
+              placeholder="Nombre de dominio"
               label="Nombre de dominio"
-              value="euservices.net"
+              value={editDomainName}
               type="text"
+              onChange={onEditDomainChange}
               sx={{ width: 378, mr: 2 }}
             />
             <TextField
               autoFocus
               required
               id="name"
-              name="Nombre propietario"
+              placeholder="Nombre propietario"
               label="Nombre propietario"
-              value="Mark Johnson"
+              name="editDomainOwner"
+              value={editDomainOwner}
               type="text"
+              onChange={onEditDomainChange}
               sx={{ width: 378 }}
             />
           </Box>
@@ -56,18 +131,21 @@ export const CEditDomainDialog = ({
               id="name"
               name="email"
               label="Correo electrónico"
-              value="mark.johson@euservices.net"
+              value={email}
               type="text"
+              onChange={onEditDomainChange}
               sx={{ width: 378, mr: 2 }}
             />
             <TextField
               autoFocus
               required
               id="name"
-              name="Pais"
+              name="editDomainCountryOrigin"
+              placeholder="Pais"
               label="Pais"
-              value="España"
+              value={editDomainCountryOrigin}
               type="text"
+              onChange={onEditDomainChange}
               sx={{ width: 378 }}
             />
           </Box>
@@ -75,10 +153,12 @@ export const CEditDomainDialog = ({
             <TextField
               autoFocus
               id="name"
-              name="Descripción"
+              name="editDomainDescription"
+              placeholder="Descripción"
               label="Descripción"
-              value="Servicio en línea para ciudadanos de la UE"
+              value={editDomainDescription}
               type="text"
+              onChange={onEditDomainChange}
               fullWidth
               multiline
               rows={4}
@@ -130,4 +210,13 @@ CEditDomainDialog.propTypes = {
   domainName: PropTypes.string,
   openEditDomainDialog: PropTypes.bool,
   handleCloseEditDomainDialog: PropTypes.func,
+  domain: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    status: PropTypes.string,
+    owner: PropTypes.string,
+    contactEmail: PropTypes.string,
+    countryOrigin: PropTypes.string,
+  }),
 };

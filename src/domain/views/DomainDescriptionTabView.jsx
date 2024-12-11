@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 export const DomainDescriptionTabView = ({
   cards = [],
   setCurrentTabIndex,
-  handleOpenDeleteDomainDialog,
 }) => {
   const navigate = useNavigate();
 
@@ -25,7 +24,6 @@ export const DomainDescriptionTabView = ({
         setCurrentTabIndex(5);
         break;
       case "Borrar dominio":
-        handleOpenDeleteDomainDialog();
         break;
       default:
         setCurrentTabIndex(0);
@@ -51,5 +49,4 @@ export const DomainDescriptionTabView = ({
 DomainDescriptionTabView.propTypes = {
   cards: PropTypes.array,
   setCurrentTabIndex: PropTypes.func.isRequired,
-  handleOpenDeleteDomainDialog: PropTypes.func.isRequired,
 };

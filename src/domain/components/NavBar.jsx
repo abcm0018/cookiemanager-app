@@ -12,11 +12,12 @@ import {
   Toolbar,
   Tooltip,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { CLogo } from "./CLogo";
 
-export const NavBar = () => {
+export const NavBar = ({ startLogout }) => {
   const pages = [
     { label: "Mis dominios", route: "/domains" },
     { label: "Soporte", route: "/contact-support" },
@@ -46,6 +47,10 @@ export const NavBar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    startLogout();
   };
 
   const handleMenuClick = (setting) => {
@@ -145,8 +150,8 @@ export const NavBar = () => {
                 {settings.map((setting) => (
                   <MenuItem
                     key={setting.title}
-                    onClick={() => handleMenuClick(setting)}
                     sx={{ color: "secondary.main" }}
+                    onClick={handleLogout}
                   >
                     <ListItemIcon>
                       {setting.icon === "Logout" ? (
@@ -171,4 +176,9 @@ export const NavBar = () => {
       </Container>
     </Box>
   );
+};
+
+NavBar.propTypes = {
+  startLogout: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };

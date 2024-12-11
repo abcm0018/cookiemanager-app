@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,59 +8,83 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import { CEditDomainDialog } from "./CEditDomainDialog";
-import { CDeleteDomainDialog } from "./CDeleteDomainDialog";
 import { TableLayout } from "../layout/TableLayout";
+import { useDomainStore } from "../../hooks";
+import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
-export const DomainTable = ({ dominios = [] }) => {
+export const DomainTable = ({ domains = [] }) => {
   const headers = ["Código", "Nombre", "totalCookies", "Operación"];
 
   const [openEditDomainDialog, setOpenEditDomainDialog] = useState(false);
-  const [openDeleteDomainDialog, setOpenDeleteDomainDialog] = useState(false);
 
-  const handleEditDomain = () => {
-    console.log("Abriendo el dialogo para editar dominio");
+  const { startDeletingDomain, errorMessage } = useDomainStore();
+
+  // Hook con el la información del dominio a editar
+  const [domainToEdit, setDomainToEdit] = useState({});
+
+  // Establecemos el dominio a editar
+  const handleOpenEditDomain = (domain) => {
     setOpenEditDomainDialog(true);
-  };
-
-  const handleDeleteDomain = () => {
-    console.log("Abriendo el dialogo para editar dominio");
-    setOpenDeleteDomainDialog(true);
+    setDomainToEdit(domain);
   };
 
   const handleCloseEditDomainDialog = () => {
-    console.log("Cerrando dialogo de editar dominio");
     setOpenEditDomainDialog(false);
   };
 
-  const handleCloseDeleteDomainDialog = () => {
-    console.log("Cerrando dialogo de editar dominio");
-    setOpenDeleteDomainDialog(false);
+  // Se usará para mostrar los datos del usuario
+  // console.log("Usauario logeado: ", user);
+
+  const handleDeleteDomain = (domainId) => {
+    Swal.fire({
+      title: "Estás a punto de eliminar un dominio, ¿Estás seguro?",
+      text: "Esta acción no podrá ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Eliminar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        startDeletingDomain(domainId);
+        Swal.fire({
+          title: "Domininio Eliminado",
+          text: "El dominio ha sido eliminado correctamente.",
+          icon: "success",
+        });
+      }
+    });
   };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error al eliminar el dominio", errorMessage, "error");
+    }
+  }, [errorMessage]);
 
   return (
     <Box>
       <TableLayout headers={headers}>
-        {dominios.map((dominio) => (
+        {domains.map((domain) => (
           <TableRow
-            key={dominio.codigo}
+            key={domain.id}
             sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
           >
             <TableCell component="th" scope="row">
-              <Typography variant="body1">{dominio.codigo}</Typography>
+              <Typography variant="body1">{domain.id}</Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="body1">{dominio.nombre}</Typography>
+              <Typography variant="body1">{domain.name}</Typography>
             </TableCell>
             <TableCell>
-              <Typography variant="body1">{dominio.totalCookies}</Typography>
+              <Typography variant="body1">{domain.totalCookies}</Typography>
             </TableCell>
             <TableCell>
               <ButtonGroup variant="text" aria-label="Basic button group">
                 <Button
                   variant="text"
-                  href="/domains/details"
                   sx={{
                     "&:hover": {
                       bgcolor: "secondary.main",
@@ -67,15 +92,24 @@ export const DomainTable = ({ dominios = [] }) => {
                     },
                   }}
                 >
-                  Ver detalles
+                  <Link to={`/domains/${domain.id}`}>Ver detalles</Link>
                 </Button>
-                <Button variant="text" onClick={handleEditDomain}>
+                <Button
+                  onClick={() => handleOpenEditDomain(domain)}
+                  variant="text"
+                  sx={{
+                    "&:hover": {
+                      bgcolor: "secondary.main",
+                      color: "white",
+                    },
+                  }}
+                >
                   Editar
                 </Button>
                 <Button
                   variant="text"
                   color="error"
-                  onClick={handleDeleteDomain}
+                  onClick={() => handleDeleteDomain(domain.id)}
                 >
                   Eliminar
                 </Button>
@@ -85,19 +119,15 @@ export const DomainTable = ({ dominios = [] }) => {
         ))}
       </TableLayout>
       <CEditDomainDialog
-        domainName="marca.com"
         openEditDomainDialog={openEditDomainDialog}
         handleCloseEditDomainDialog={handleCloseEditDomainDialog}
-      />
-      <CDeleteDomainDialog
-        domainName="marca.com"
-        openDeleteDomainDialog={openDeleteDomainDialog}
-        handleCloseDeleteDomainDialog={handleCloseDeleteDomainDialog}
+        domainToEdit={domainToEdit}
       />
     </Box>
   );
 };
 
 DomainTable.propTypes = {
-  dominios: PropTypes.array,
+  domains: PropTypes.array,
+  user: PropTypes.object,
 };

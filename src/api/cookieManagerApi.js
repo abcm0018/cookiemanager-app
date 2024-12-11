@@ -4,9 +4,9 @@ const cookieManagerApi = axios.create({
   baseURL: "http://localhost:8080/api",
 });
 
-//Configurar interceptores7
+//Configurar interceptores
 
-// Añadimos la "Authrization" para las peticiones que requieren el JWT Tojen
+// Añadimos la "Authorization" para las peticiones que requieren el JWT Tojen
 cookieManagerApi.interceptors.request.use((config) => {
   config.headers = {
     ...config.headers,

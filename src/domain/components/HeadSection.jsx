@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Search } from "@mui/icons-material";
+import { CAddDomainDialog } from "./CAddDomainDialog";
 import {
   Button,
   Grid2,
@@ -7,8 +9,6 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { CAddDomainDialog } from "./CAddDomainDialog";
 
 export const HeadSection = () => {
   const [openAddDomainDialog, setOpenAddDomainDialog] = useState(false);

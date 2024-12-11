@@ -8,7 +8,6 @@ import {
   ScannerCookieView,
   StatisticsCookiesView,
 } from "../views";
-import { CDeleteDomainDialog } from "./CDeleteDomainDialog";
 
 const cards = [
   {
@@ -52,19 +51,10 @@ const cards = [
 
 export const DomainTabs = () => {
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
-  const [openDeleteDomainDialog, setOpenDeleteDomainDialog] = useState(false);
 
   const handleChange = (event, tabIndex) => {
     console.log(tabIndex);
     setCurrentTabIndex(tabIndex);
-  };
-
-  const handleOpenDeleteDomainDialog = () => {
-    setOpenDeleteDomainDialog(true);
-  };
-
-  const handleCloseDeleteDomainDialog = () => {
-    setOpenDeleteDomainDialog(false);
   };
 
   const goToCookieListTab = () => {
@@ -85,7 +75,6 @@ export const DomainTabs = () => {
         <DomainDescriptionTabView
           cards={cards}
           setCurrentTabIndex={setCurrentTabIndex}
-          handleOpenDeleteDomainDialog={handleOpenDeleteDomainDialog}
         />
       )}
       {currentTabIndex === 1 && <ImplementationView />}
@@ -95,12 +84,6 @@ export const DomainTabs = () => {
       )}
       {currentTabIndex === 4 && <CookieListView />}
       {currentTabIndex === 5 && <StatisticsCookiesView />}
-
-      <CDeleteDomainDialog
-        domainName="randomName"
-        openDeleteDomainDialog={openDeleteDomainDialog}
-        handleCloseDeleteDomainDialog={handleCloseDeleteDomainDialog}
-      />
     </Box>
   );
 };

@@ -2,7 +2,7 @@ import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useAuthStore, useForm } from "../../hooks";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 
 const loginFormFields = {
@@ -19,18 +19,22 @@ export const LoginPage = () => {
     onInputChange: onLoginInputChange,
   } = useForm(loginFormFields);
 
+  const errorRef = useRef();
+
   // Para enviar los datos del formulario
   const loginSubmit = (event) => {
     event.preventDefault();
-    //console.log({ loginEmail, loginPassword });
+    console.log({ loginEmail, loginPassword });
     startLogin({ email: loginEmail, password: loginPassword });
   };
 
   useEffect(() => {
-    if (errorMessage !== undefined) {
+    if (errorMessage && errorMessage !== errorRef.current) {
+      errorRef.current = errorMessage; // Actualiza referencia
       Swal.fire("Error en la autenticación", errorMessage, "error");
     }
   }, [errorMessage]);
+
   return (
     <AuthLayout
       title="Iniciar sesión"

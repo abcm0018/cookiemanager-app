@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const authSlide = createSlice({
+export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    status: "checking",
+    status: "checking", //"authenticated", "not-authenticated"
     user: {},
     errorMessage: undefined,
   },
@@ -38,5 +38,11 @@ export const authSlide = createSlice({
     },
   },
 });
-export const { onChecking, onLogin, onRegister, onLogout, clearErrorMessage } =
-  authSlide.actions;
+export const {
+  onChecking,
+  onLogin,
+  onRegister,
+  onRecovery,
+  onLogout,
+  clearErrorMessage,
+} = authSlice.actions;

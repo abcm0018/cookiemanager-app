@@ -1,6 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import cookieManagerApi from "../api/cookieManagerApi";
-import { onLogin, onLogout } from "../store/auth/authSlice";
+import { persistor } from "../store/store";
+import {
+  clearErrorMessage,
+  onChecking,
+  onLogin,
+  onLogout,
+} from "../store/auth/authSlice";
+import { domainSlice } from "../store/domain/domainSlice";
+import { cookieSlice } from "../store/cookies/cookieSlice";
 
 export const useAuthStore = () => {
   const { status, user, errorMessage } = useSelector((state) => state.auth);
@@ -9,27 +17,57 @@ export const useAuthStore = () => {
 
   const startLogin = async ({ email, password }) => {
     console.log({ email, password });
+
+    dispatch(onChecking());
     try {
-      const response = await cookieManagerApi.post("/auth/login", {
+      const { data } = await cookieManagerApi.post("/auth/login", {
         email,
         password,
       });
-      console.log({ response });
+      localStorage.setItem("token", "Bearer " + data.token);
+      localStorage.setItem("currentUser", JSON.stringify(data.userResponse));
+      dispatch(
+        onLogin({
+          email: data.userResponse.email,
+          name: data.userResponse.name,
+          surname: data.userResponse.surname,
+          subscriptionPlan: data.userResponse.subscription,
+          role: data.userResponse.role,
+        })
+      );
     } catch (error) {
-      console.log({ error });
+      console.log(error);
+      // Error genérico
+      dispatch(onLogout("Credenciales inválidas"));
+      setTimeout(() => {
+        dispatch(clearErrorMessage());
+      }, 10);
     }
   };
 
   const startLoginAdmin = async ({ email, password }) => {
     console.log({ email, password });
     try {
-      const responseAdmin = await cookieManagerApi.post("auth/admin/login", {
+      const data = await cookieManagerApi.post("/auth/admin/login", {
         email,
         password,
       });
-      console.log({ responseAdmin });
+      localStorage.setItem("token", "Bearer " + data.token);
+      localStorage.setItem("currentUser", JSON.stringify(data.userResponse));
+      dispatch(
+        onLogin({
+          email: data.userResponse.email,
+          name: data.userResponse.name,
+          surname: data.userResponse.surname,
+        })
+      );
     } catch (error) {
-      console.log({ error });
+      console.log(error);
+      // Error genérico
+      dispatch(onLogout("Credenciales inválidas"));
+      setTimeout(() => {
+        dispatch(clearErrorMessage());
+      }, 10);
     }
   };
 
@@ -55,7 +93,7 @@ export const useAuthStore = () => {
       console.log("Debes aceptar los términos y condiciones.");
     }
     try {
-      const response = await cookieManagerApi.post("auth/register", {
+      const response = await cookieManagerApi.post("/auth/register", {
         name,
         surname,
         email,
@@ -65,13 +103,17 @@ export const useAuthStore = () => {
       });
       console.log(response);
     } catch (error) {
+      dispatch(onLogout(error.response.data?.error.violations[0] || ""));
+      setTimeout(() => {
+        dispatch(clearErrorMessage());
+      }, 10);
       console.log(error);
     }
   };
 
   const startRecoveryPassword = async ({ email, password }) => {
     try {
-      const response = await cookieManagerApi.put("auth/resetPassword", {
+      const response = await cookieManagerApi.put("/auth/resetPassword", {
         email,
         password,
       });
@@ -85,15 +127,44 @@ export const useAuthStore = () => {
     const token = localStorage.getItem("token");
     if (!token) return dispatch(onLogout());
     try {
-      const { data } = await cookieManagerApi.get("/auth/refreshToken");
+      const { data } = await cookieManagerApi.get("/refreshToken");
       localStorage.setItem("token", "Bearer " + data.token);
-      dispatch(onLogin());
+      console.log({ UserWithRefreshToken: data });
+      dispatch(
+        onLogin({
+          email: data.userResponse.email,
+          name: data.userResponse.name,
+          surname: data.userResponse.surname,
+          subscriptionPlan: data.userResponse.subscription,
+          role: data.userResponse.role,
+        })
+      );
     } catch (error) {
       console.log(error);
       localStorage.clear();
       dispatch(onLogout());
     }
   };
+
+  const startLogout = async () => {
+    try {
+      await cookieManagerApi.get("/logout");
+      // purga los datos persistidos
+      persistor.purge();
+
+      // Limpia el localStorage
+      localStorage.clear();
+
+      // Limpia los estados de cookies y domains
+      //dispatch(domainSlice.actions.onClearDomains());
+      //dispatch(cookieSlice.actions.onClearCookies());
+
+      // Actualiza el estado de la aplicación
+    } catch (error) {
+      console.error("Error al cerrar la sesión", error);
+    }
+  };
+
   return {
     //* Propiedades
     errorMessage,
@@ -105,5 +176,6 @@ export const useAuthStore = () => {
     startRegister,
     startRecoveryPassword,
     checkAuthToken,
+    startLogout,
   };
 };
