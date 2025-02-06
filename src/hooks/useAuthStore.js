@@ -45,36 +45,6 @@ export const useAuthStore = () => {
     }
   };
 
-  const startLoginAdmin = async ({ email, password }) => {
-    console.log({ email, password });
-
-    dispatch(onChecking());
-    try {
-      const { data } = await cookieManagerApi.post("/auth/admin/login", {
-        email,
-        password,
-      });
-      console.log(data);
-      localStorage.setItem("token", "Bearer " + data.token);
-      dispatch(
-        onLogin({
-          email: data.user.email,
-          name: data.user.name,
-          surname: data.user.surname,
-          subscription: data.user.subscription,
-          role: data.user.role,
-        })
-      );
-    } catch (error) {
-      console.log(error);
-      // Error genérico
-      dispatch(onLogout("Credenciales inválidos"));
-      setTimeout(() => {
-        dispatch(clearErrorMessage());
-      }, 10);
-    }
-  };
-
   const startRegister = async ({
     name,
     surname,
@@ -182,7 +152,6 @@ export const useAuthStore = () => {
     status,
     // Métodos
     startLogin,
-    startLoginAdmin,
     startRegister,
     startRecoveryPassword,
     startLogout,

@@ -2,7 +2,6 @@ import { useAuthStore } from "../hooks";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Loader } from "../domain/components";
-import { AdminRoutes } from "./AdminRoutes";
 import { UserRoutes } from "./UserRoutes";
 import { PublicRoutes } from "./PublicRoutes";
 
@@ -19,10 +18,6 @@ export const AppRoutes = () => {
 
   if (status === "not-authenticated") {
     return <PublicRoutes />;
-  }
-
-  if (user.role === "admin") {
-    return <AdminRoutes />;
   }
 
   if (user.role === "user") {

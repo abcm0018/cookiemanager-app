@@ -6,8 +6,8 @@ import { CLogo } from "./CLogo";
 export const NavBar = () => {
   const pages = [
     { label: "Mis dominios", route: "/domains" },
-    { label: "Soporte", route: "/contact-support" },
     { label: "FAQs", route: "/quick-answers" },
+    { label: "Soporte", route: "/contact-support" },
   ];
 
   const location = useLocation();

@@ -5,9 +5,9 @@ import { useState } from "react";
 
 export const NavBarIntro = () => {
   const pages = [
-    { label: "Soporte", route: "/support" },
-    { label: "FAQs", route: "/faq" },
     { label: "Planes de suscripción", route: "/subscriptions" },
+    { label: "FAQs", route: "/faq" },
+    { label: "Soporte", route: "/support" },
     { label: "Ayuda", route: "/help" },
   ];
 
