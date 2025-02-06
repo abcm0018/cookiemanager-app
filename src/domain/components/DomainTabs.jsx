@@ -1,4 +1,5 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import {
   DomainDescriptionTabView,
@@ -9,48 +10,21 @@ import {
   StatisticsCookiesView,
 } from "../views";
 
-const cards = [
-  {
-    id: 1,
-    title: "Plan básico",
-    description: "Descripción del plan básico",
-    buttonTitle: "Actualizar plan",
-    bgcolor: "#F0F4FF",
-  },
-  {
-    id: 2,
-    title: "107 Cookies",
-    description:
-      "66 cookies se instalan antes del consentimiento del usuario o aún no se han categorizado",
-    buttonTitle: "Gestionar cookies",
-    bgcolor: "#FFF5E6",
-  },
-  {
-    id: 3,
-    title: "Último escaneo de cookies:",
-    description: "107 cookies encontradas en 50 páginas",
-    buttonTitle: "Escanear",
-    bgcolor: "#E6FAF1",
-  },
-  {
-    id: 4,
-    title: "Utilización",
-    description: "Sesiones totales en el periodo mensual.",
-    buttonTitle: "Ver informes",
-    bgcolor: "#FFF9E6",
-  },
-  {
-    id: 5,
-    title: "Borrar dominio",
-    description:
-      "Esto borrará tu dominio incluyendo cualquier personalidzaión y registro de consentimiento. Tenga en cuenta que esta acción NO se podrá revertir",
-    buttonTitle: "Borrar dominio",
-    bgcolor: "#FFE6E6",
-  },
-];
+export const DomainTabs = ({ user, domain, setActiveTab }) => {
+  // Recuperamos el índice del tab desde localStorage, si existe
+  const storedTabIndex = localStorage.getItem(`activeTabIndex-${domain.id}`);
+  const [currentTabIndex, setCurrentTabIndex] = useState(
+    storedTabIndex ? parseInt(storedTabIndex, 10) : 0
+  );
 
-export const DomainTabs = () => {
-  const [currentTabIndex, setCurrentTabIndex] = useState(0);
+  // Guardamos el índice del tab activo en el localStorage cuando cambia
+  useEffect(() => {
+    // Para persistir el Tab actual
+    localStorage.setItem(`activeTabIndex-${domain.id}`, currentTabIndex);
+
+    // Para controlar la visibilidad del botón Añadir Cookie
+    setActiveTab(currentTabIndex);
+  }, [currentTabIndex, setActiveTab, domain.id]);
 
   const handleChange = (event, tabIndex) => {
     console.log(tabIndex);
@@ -66,14 +40,15 @@ export const DomainTabs = () => {
       <Tabs value={currentTabIndex} onChange={handleChange} centered>
         <Tab label="Descripción general" />
         <Tab label="Implementación" />
-        <Tab label="Ajustes" />
+        <Tab label="Editar banner" />
         <Tab label="Escaneo" />
         <Tab label="Cookies" />
         <Tab label="Informes" />
       </Tabs>
       {currentTabIndex === 0 && (
         <DomainDescriptionTabView
-          cards={cards}
+          domain={domain}
+          user={user}
           setCurrentTabIndex={setCurrentTabIndex}
         />
       )}
@@ -86,4 +61,10 @@ export const DomainTabs = () => {
       {currentTabIndex === 5 && <StatisticsCookiesView />}
     </Box>
   );
+};
+
+DomainTabs.propTypes = {
+  user: PropTypes.object,
+  domain: PropTypes.object,
+  setActiveTab: PropTypes.func,
 };

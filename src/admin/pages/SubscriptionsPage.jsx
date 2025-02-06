@@ -1,17 +1,10 @@
-import {
-  Footer,
-  HeadSectionSubscriptions,
-  MainSectionSubscriptions,
-  NavBarAdmin,
-} from "../components";
+import { MainSectionSubscriptions } from "../components";
+import { AdminLayout } from "../layout";
 
 export const SubscriptionsPage = () => {
   return (
-    <>
-      <NavBarAdmin />
-      <HeadSectionSubscriptions />
+    <AdminLayout>
       <MainSectionSubscriptions />
-      <Footer />
-    </>
+    </AdminLayout>
   );
 };

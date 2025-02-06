@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 
 import { Grid2, Typography } from "@mui/material";
-import { DiscountCodeInputSubscription } from "./DiscountCodeInputSubscription";
 
 export const SubscriptionHeader = ({ currentPlan = "" }) => {
   return (
@@ -14,7 +13,6 @@ export const SubscriptionHeader = ({ currentPlan = "" }) => {
           Plan de suscripción actual: {currentPlan}
         </Typography>
       </Grid2>
-      <DiscountCodeInputSubscription />
     </Grid2>
   );
 };

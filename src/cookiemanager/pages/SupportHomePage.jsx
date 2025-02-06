@@ -1,17 +1,10 @@
-import {
-  Footer,
-  NavBarIntro,
-  HeadSectionSupport,
-  MainSectionSupport,
-} from "../components";
+import { MainSectionSupport } from "../components";
+import { HomeLayout } from "../layout";
 
 export const SupportHomePage = () => {
   return (
-    <>
-      <NavBarIntro />
-      <HeadSectionSupport />
+    <HomeLayout>
       <MainSectionSupport />
-      <Footer />
-    </>
+    </HomeLayout>
   );
 };

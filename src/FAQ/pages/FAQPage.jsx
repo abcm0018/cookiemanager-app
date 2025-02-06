@@ -1,12 +1,12 @@
-import { Footer, HeadSection, MainSection, NavBar } from "../components";
+import { DomainLayout } from "../../domain/layout/DomainLayout";
+import { MainSection } from "../components";
 
 export const FAQPage = () => {
   return (
     <>
-      <NavBar />
-      <HeadSection />
-      <MainSection />
-      <Footer />
+      <DomainLayout>
+        <MainSection />
+      </DomainLayout>
     </>
   );
 };

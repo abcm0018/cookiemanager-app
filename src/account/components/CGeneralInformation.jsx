@@ -1,21 +1,94 @@
 import { Box, Grid2, Typography } from "@mui/material";
 import { CManageSubscription } from "./CManageSubscription";
-import { CCancelSubscriptionDialog } from "../../subscription/components/CCancelSubscriptionDialog";
-import { useState } from "react";
+import { useUserStore } from "../../hooks";
+import Swal from "sweetalert2";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const CGeneralInformation = () => {
-  const [openCancelSubscriptionDialog, setOpenCancelSubscriptionDialog] =
-    useState(false);
+  const { user, startCancelPlanUser, errorMessage } = useUserStore();
+  const navigate = useNavigate();
 
   const handleCancelSubscription = () => {
-    console.log("Abriendo el dialogo para ecancelar suscripción");
-    setOpenCancelSubscriptionDialog(true);
+    const userId = user.id;
+    const persistRoot = localStorage.getItem("persist:root");
+
+    if (persistRoot) {
+      const parsedData = JSON.parse(persistRoot);
+      const subscriptions = JSON.parse(parsedData.subscriptions);
+
+      // Filtramos solo los dominios activos
+      const activeUserDomains = (user.domains || []).filter(
+        (domain) => domain.status === "Activo"
+      );
+      const numberActiveDomains = activeUserDomains.length;
+      console.log(numberActiveDomains);
+
+      const subscriptionsList = subscriptions.subscriptions;
+      const starterPlan = subscriptionsList.find(
+        (sub) => sub.planType === "Starter"
+      );
+
+      if (starterPlan) {
+        const maxAllowedStarterDomains = starterPlan.maxDomains;
+
+        if (numberActiveDomains > maxAllowedStarterDomains) {
+          Swal.fire({
+            icon: "error",
+            title: "No puedes cancelar la suscripción",
+            text: `Para cancelar tu suscripción, debes tener máximo ${maxAllowedStarterDomains} dominio activo.`,
+            confirmButtonText: "Administrar dominios",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            allowEnterKey: false,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/domains");
+            }
+          });
+
+          return;
+        }
+      }
+    }
+
+    // Si todo está bien, sigue con la cancelación de suscripción
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción no podrá ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Aceptar",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        startCancelPlanUser({ userId })
+          .then(() => {
+            Swal.fire({
+              title: "Suscripción cancelada",
+              text: "La suscripción se ha cancelado de forma correcta.",
+              icon: "success",
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+            });
+          })
+          .catch(() => {
+            Swal.fire("Error", "No se pudo cancelar la suscripción.", "error");
+          });
+      }
+    });
   };
 
-  const handleCloseCancelSubscriptionDialog = () => {
-    console.log("Cerrando dialogo de cancelar suscripción");
-    setOpenCancelSubscriptionDialog(false);
-  };
+  useEffect(() => {
+    // Manejo de errores en la carga
+    if (errorMessage !== undefined) {
+      Swal.fire("Error al cargar los detalles", errorMessage, "error");
+    }
+  }, [errorMessage]);
 
   return (
     <>
@@ -35,7 +108,7 @@ export const CGeneralInformation = () => {
                   >
                     Nombre:
                   </Typography>{" "}
-                  Jane
+                  {user.name}
                 </Typography>
               </Box>
             </Grid2>
@@ -49,7 +122,7 @@ export const CGeneralInformation = () => {
                   >
                     Apellidos:
                   </Typography>{" "}
-                  Smith
+                  {user.surname}
                 </Typography>
               </Box>
             </Grid2>
@@ -63,7 +136,7 @@ export const CGeneralInformation = () => {
                   >
                     Email:
                   </Typography>{" "}
-                  janesmith@example.com
+                  {user.email}
                 </Typography>
               </Box>
             </Grid2>
@@ -77,7 +150,7 @@ export const CGeneralInformation = () => {
                   >
                     Compañía:
                   </Typography>{" "}
-                  Innovatech S.L.
+                  {user.company}
                 </Typography>
               </Box>
             </Grid2>
@@ -87,12 +160,6 @@ export const CGeneralInformation = () => {
           </Grid2>
         </Box>
       </Grid2>
-      <CCancelSubscriptionDialog
-        openCancelSubscriptionDialog={openCancelSubscriptionDialog}
-        handleCloseCancelSubscriptionDialog={
-          handleCloseCancelSubscriptionDialog
-        }
-      />
     </>
   );
 };

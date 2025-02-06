@@ -11,24 +11,17 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
-import { AuthLayout } from "../layout/AuthLayout";
-import { useAuthStore, useForm } from "../../hooks";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { AuthLayout } from "../layout";
+import { useAuthStore, useForm, useSubscriptionStore } from "../../hooks";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-
-const registerFormField = {
-  registerName: "",
-  registerSurname: "",
-  registerEmail: "",
-  registerPassword: "",
-  registerCompany: "",
-  registerPlan: "",
-  registerTerms: false,
-};
+import { registerFormField } from "../utils";
 
 export const RegisterPage = () => {
+  const navigate = useNavigate();
   const { startRegister, errorMessage } = useAuthStore();
+  const { subscriptions } = useSubscriptionStore();
 
   const {
     registerName,
@@ -44,7 +37,7 @@ export const RegisterPage = () => {
   // Para enviar los datos del formulario
   const registerSubmit = (event) => {
     event.preventDefault();
-    //console.log({ loginEmail, loginPassword });
+
     startRegister({
       name: registerName,
       surname: registerSurname,
@@ -53,7 +46,29 @@ export const RegisterPage = () => {
       company: registerCompany,
       subscriptionPlan: registerPlan,
       termsAccept: registerTerms,
-    });
+    })
+      .then((response) => {
+        if (response?.status === 200 && response?.data === "OK") {
+          Swal.fire({
+            title: "Registro exitoso",
+            text: "Tu cuenta ha sido creada correctamente. Ahora inicia sesión.",
+            icon: "success",
+            confirmButtonText: "Ir a login",
+            timer: 5000,
+          }).then(() => {
+            navigate("/auth/login");
+          });
+        }
+      })
+      .catch((error) => {
+        // Manejo de errores
+        console.error("Error en el registro:", error);
+        Swal.fire({
+          title: "Error en el registro",
+          text: "Hubo un problema al registrar la cuenta.",
+          icon: "error",
+        });
+      });
   };
 
   useEffect(() => {
@@ -75,7 +90,7 @@ export const RegisterPage = () => {
               value={registerName}
               size="medium"
               required
-              sx={{ mr: 0.5 }}
+              sx={{ mr: 3.25 }}
               onChange={onRegisterInputChange}
             />
             <TextField
@@ -86,7 +101,6 @@ export const RegisterPage = () => {
               value={registerSurname}
               size="medium"
               required
-              sx={{ ml: 0.75 }}
               onChange={onRegisterInputChange}
             />
           </Grid2>
@@ -135,10 +149,14 @@ export const RegisterPage = () => {
               value={registerPlan}
               onChange={onRegisterInputChange}
             >
-              <MenuItem value="Starter">Starter</MenuItem>
-              <MenuItem value="Basic">Basic</MenuItem>
-              <MenuItem value="Business">Business</MenuItem>
-              <MenuItem value="Enterprise">Enterprise</MenuItem>
+              {subscriptions.map((subscription) => (
+                <MenuItem
+                  key={subscription.planType}
+                  value={subscription.planType}
+                >
+                  {subscription.planType}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormGroup sx={{ mt: 1 }}>

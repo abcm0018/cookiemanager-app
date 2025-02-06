@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   Box,
   FormControl,
@@ -9,29 +10,40 @@ import {
   Typography,
 } from "@mui/material";
 
-export const CLenguageSettingsField = () => {
+export const CLanguageSettingsField = ({ lang, onEditBannerChange }) => {
   return (
-    <Grid2 container sx={{ mt: 2 }}>
+    <Grid2 container direction="column" sx={{ mt: 2 }}>
       <FormGroup>
-        <Box component="div">
+        <Box>
           <Typography variant="h6" color="secondary.main">
             Idiomas
           </Typography>
           <Typography variant="body2">Elija el idioma por defecto</Typography>
         </Box>
-        <Box sx={{ mt: 2, width: 480, mr: 3 }}>
-          <FormControl fullWidth size="medium">
+        <Box sx={{ mt: 2 }}>
+          <FormControl fullWidth>
             <InputLabel id="select-label-idioma">Idiomas</InputLabel>
-            <Select label="idiomas">
-              <MenuItem value="Aleman">Alemán</MenuItem>
-              <MenuItem value="Frances">Francés</MenuItem>
-              <MenuItem value="Ingles">Inglés</MenuItem>
-              <MenuItem value="Italiano">Italiano</MenuItem>
-              <MenuItem value="Portugues">Portugués</MenuItem>
+            <Select
+              labelId="select-label-idioma"
+              name="lang"
+              value={lang}
+              onChange={onEditBannerChange}
+            >
+              <MenuItem value="DE">Alemán</MenuItem>
+              <MenuItem value="ES">Español</MenuItem>
+              <MenuItem value="FR">Francés</MenuItem>
+              <MenuItem value="EN">Inglés</MenuItem>
+              <MenuItem value="IT">Italiano</MenuItem>
+              <MenuItem value="PT">Portugués</MenuItem>
             </Select>
           </FormControl>
         </Box>
       </FormGroup>
     </Grid2>
   );
+};
+
+CLanguageSettingsField.propTypes = {
+  lang: PropTypes.string,
+  onEditBannerChange: PropTypes.func,
 };

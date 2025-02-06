@@ -1,11 +1,13 @@
-import { MainInfo, Features, NavBarIntro } from "../components";
+import { MainInfo, Features } from "../components";
+import { HomeLayout } from "../layout/HomeLayout";
 
 export const HomePage = () => {
   return (
     <>
-      <NavBarIntro />
-      <MainInfo />
-      <Features />
+      <HomeLayout>
+        <MainInfo />
+        <Features />
+      </HomeLayout>
     </>
   );
 };

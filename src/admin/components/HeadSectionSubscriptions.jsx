@@ -8,12 +8,12 @@ export const HeadSectionSubscriptions = () => {
     useState(false);
 
   const handleOpenAddDomain = () => {
-    console.log("Abriendo el dialogo para añadir dominio");
+    console.log("Abriendo el dialogo para añadir suscripcion");
     setOpenAddSubscriptionDialog(true);
   };
 
   const handleCloseAddDomainDialog = () => {
-    console.log("Cerrando dialogo de añadir dominio");
+    console.log("Cerrando dialogo de añadir suscripcion");
     setOpenAddSubscriptionDialog(false);
   };
 
@@ -31,9 +31,9 @@ export const HeadSectionSubscriptions = () => {
                 <Button
                   size="small"
                   startIcon={<ArrowBack />}
-                  href="/admin/control"
+                  href="/admin/dashboard"
                 >
-                  Plan de subscripción
+                  Volver | Plan de subscripción
                 </Button>
               </Grid2>
               <Grid2>

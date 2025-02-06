@@ -10,9 +10,10 @@ export const CardsSubscriptions = ({ subscriptions = [] }) => {
         {subscriptions.map((subcription) => (
           <SubscriptionDetails
             key={subcription.id}
-            title={subcription.title}
+            title={subcription.planType}
             description={subcription.description}
             price={subcription.price}
+            maxDomains={subcription.maxDomains}
             characteristic1={subcription.characteristic1}
             characteristic2={subcription.characteristic2}
           />

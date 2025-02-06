@@ -6,35 +6,57 @@ import {
   TableContainer,
   TablePagination,
 } from "@mui/material";
-import { useState } from "react";
 import { DomainTable } from "./DomainTable";
 import { HeadSection } from "./HeadSection";
-import { useDomainStore } from "../../hooks/useDomainStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useDomainStore } from "../../hooks";
 import { Loader } from "./Loader";
-// import { useSelector } from "react-redux";
 
 export const MainSection = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredDomains, setFilteredDomains] = useState([]);
 
   const { domains, isLoadingDomains, startLoadingDomains } = useDomainStore();
   const user = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
-    // if (isPersisted) {
     startLoadingDomains();
   }, []);
 
-  if (isLoadingDomains) return <Loader />;
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      // Si no hay término de búsqueda, mostrar todos los dominios
+      setFilteredDomains(domains);
+    } else {
+      // Filtrar dominios según el término de búsqueda
+      const filtered = domains.filter((domain) =>
+        domain.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredDomains(filtered);
+    }
+  }, [searchTerm, domains]);
+
+  if (isLoadingDomains) {
+    return <Loader />;
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    console.log("Búsqueda enviada:", searchTerm);
   };
 
   return (
@@ -45,11 +67,21 @@ export const MainSection = () => {
     >
       <Container>
         <Box>
-          <HeadSection />
+          <HeadSection
+            searchTerm={searchTerm}
+            onSearchChange={handleSearchChange}
+            onSearchSubmit={handleSearchSubmit}
+          />
         </Box>
         <Box sx={{ mt: 5 }}>
           <TableContainer component={Paper}>
-            <DomainTable domains={domains} user={user} />
+            <DomainTable
+              domains={filteredDomains.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )}
+              user={user}
+            />
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
@@ -59,6 +91,10 @@ export const MainSection = () => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage="Filas por página:"
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`
+            }
           />
         </Box>
       </Container>

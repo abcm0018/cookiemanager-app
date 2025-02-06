@@ -1,14 +1,10 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { AuthLayout } from "../../admin/layout/AuthLayout";
+import { AuthLayout } from "../layout";
 import { useAuthStore, useForm } from "../../hooks";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-
-const recoveryFormFields = {
-  recoveryEmail: "",
-  recoveryPassword: "",
-};
+import { recoveryFormFields } from "../utils";
 
 export const PasswordRecoveryAdmin = () => {
   const { startRecoveryPassword, errorMessage } = useAuthStore();

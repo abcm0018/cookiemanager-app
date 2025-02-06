@@ -14,7 +14,7 @@ export const HeadSectionFAQ = () => {
             <Grid2 container spacing={2}>
               <Grid2 size={8} alignContent="center">
                 <Button size="small" startIcon={<ArrowBack />} href="/">
-                  Frequently Asked Questions (FAQs)
+                  Volver | Frequently Asked Questions (FAQs)
                 </Button>
               </Grid2>
             </Grid2>

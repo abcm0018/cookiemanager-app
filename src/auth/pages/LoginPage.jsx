@@ -1,14 +1,10 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { AuthLayout } from "../layout/AuthLayout";
+import { AuthLayout } from "../layout";
 import { useAuthStore, useForm } from "../../hooks";
 import { useEffect, useRef } from "react";
 import Swal from "sweetalert2";
-
-const loginFormFields = {
-  loginEmail: "",
-  loginPassword: "",
-};
+import { loginFormFields } from "../utils";
 
 export const LoginPage = () => {
   const { startLogin, errorMessage } = useAuthStore();
@@ -75,7 +71,7 @@ export const LoginPage = () => {
               sx={{ mt: 1, mb: 1 }}
             >
               <Link
-                to="/auth/resetPassword"
+                to="/auth/recovery-password"
                 component={RouterLink}
                 underline="none"
                 sx={{ color: "secondary.main" }}

@@ -1,7 +1,7 @@
 import { Box, Container, Grid2 } from "@mui/material";
+import { getFeatures } from "../utils";
 import { FeatureHeader } from "./FeatureHeader";
 import { FeatureCard } from "./FeatureCard";
-import { getFeatures } from "../utils/getFeatures";
 
 export const Features = () => {
   const features = getFeatures();

@@ -1,5 +1,5 @@
 import { MainSection } from "../components";
-import { DomainLayout } from "../layout/DomainLayout";
+import { DomainLayout } from "../layout";
 
 export const DomainPage = () => {
   return (

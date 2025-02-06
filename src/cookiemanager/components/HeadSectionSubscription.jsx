@@ -14,7 +14,7 @@ export const HeadSectionSubscription = () => {
             <Grid2 container spacing={2}>
               <Grid2 size={8} alignContent="center">
                 <Button size="small" startIcon={<ArrowBack />} href="/">
-                  Planes de subscripción
+                  Volver | Planes de subscripción
                 </Button>
               </Grid2>
             </Grid2>

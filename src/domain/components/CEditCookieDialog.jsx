@@ -1,144 +1,146 @@
 import PropTypes from "prop-types";
 import {
   Box,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Grid2,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
-import { DialogLayout } from "../layout/DialogLayout";
+import { useCookieStore } from "../../hooks/useCookieStore";
+import { editCookieForm } from "../utils";
+import { useForm } from "../../hooks";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import { CCookieForm } from "./CCookieForm";
 
 export const CEditCookieDialog = ({
-  cookieName = "randomName",
+  cookie = {},
   openEditCookieDialog,
   handleCloseEditCookieDialog,
 }) => {
+  const { startUpdatingCookie, errorMessage } = useCookieStore();
+  const {
+    category,
+    type,
+    description,
+    provider,
+    duration,
+    samesite,
+    httpOnly,
+    secure,
+    onInputChange: onEditCookieChange,
+    setFormState,
+  } = useForm(editCookieForm);
+
+  // Prellenar los datos del formulario cuando el diálogo se abre
+  useEffect(() => {
+    console.log("Datos iniciales de cookie:", cookie);
+    console.log("Categoría inicial:", cookie.category);
+    if (openEditCookieDialog && cookie) {
+      setFormState({
+        category: cookie.category,
+        type: cookie.type,
+        description: cookie.description,
+        provider: cookie.provider,
+        duration: cookie.duration,
+        samesite: cookie.samesite,
+        httpOnly: cookie.httpOnly ? "S" : "N",
+        secure: cookie.secure ? "S" : "N",
+      });
+    }
+  }, [openEditCookieDialog, cookie, setFormState]);
+
+  const onUpdateCookieSubmit = (event) => {
+    event.preventDefault();
+
+    startUpdatingCookie({
+      id: cookie.id,
+      name: cookie.name,
+      category: category,
+      type: type,
+      description: description,
+      provider: provider,
+      duration: duration,
+      sameSite: samesite,
+      httpOnly: httpOnly === "S" ? true : false,
+      secure: secure === "S" ? true : false,
+    });
+  };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire(
+        "Error al actualizar los datos de la cookie",
+        errorMessage,
+        "error"
+      );
+    }
+  }, [errorMessage]);
+
   return (
-    <DialogLayout
-      open={openEditCookieDialog}
-      onClose={handleCloseEditCookieDialog}
-      title={`Editar: ${cookieName}`}
-      maxWidth="lg"
-      titleButton1="Guardar cambios"
-      titleButton2="Cancelar"
-      funcion={handleCloseEditCookieDialog}
-    >
-      <Box>
-        <Grid2 container direction={"row"}>
-          <Box sx={{ width: 775, mt: 2 }}>
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="Nombre cookie"
-              label="Nombre cookie"
-              type="text"
-              sx={{ width: 378, mr: 2 }}
-            />
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="Proveedor"
-              label="Proveedor"
-              type="text"
-              sx={{ width: 378 }}
-            />
-          </Box>
-          <Box sx={{ width: 775, mt: 1 }}>
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="Categoría"
-              label="Categoría"
-              type="text"
-              sx={{ width: 378, mr: 2 }}
-            />
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="Tipo"
-              label="Tipo"
-              type="text"
-              sx={{ width: 378 }}
-            />
-          </Box>
-          <Box sx={{ width: 775, mt: 1 }}>
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="Duración"
-              label="Duración"
-              type="text"
-              sx={{ width: 378, mr: 2 }}
-            />
-            <TextField
-              autoFocus
-              id="name"
-              name="Descripción"
-              label="Descripción"
-              type="text"
-              sx={{ width: 378 }}
-            />
-          </Box>
-        </Grid2>
-      </Box>
-      <Box>
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Aspectos de seguridad de las cookies
-        </Typography>
-        <Typography>
-          A continuación, seleccione qué aspectos de seguridad contiene la
-          cookie que desea añadir.
-        </Typography>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Http Only (no accesible mediante Javascript)"
+    <Box>
+      <Dialog
+        fullWidth
+        maxWidth="lg"
+        open={openEditCookieDialog}
+        onClose={handleCloseEditCookieDialog}
+        PaperProps={{
+          component: "form",
+          onSubmit: (event) => {
+            onUpdateCookieSubmit(event);
+            handleCloseEditCookieDialog();
+          },
+        }}
+      >
+        <DialogTitle sx={{ pl: 8, pr: 8 }}>Editar cookie</DialogTitle>
+        <DialogContent sx={{ pl: 8, pr: 8 }}>
+          <DialogContentText color="primary.main">
+            Si una cookie se ha modificado y durante el proceso de escaneo no se
+            ha detectado los cambios, puedes editarla manualmente en tu
+            declaración de cookie.
+          </DialogContentText>
+          <CCookieForm
+            name={cookie.name}
+            category={category}
+            type={type}
+            description={description}
+            provider={provider}
+            duration={duration}
+            samesite={samesite}
+            httpOnly={httpOnly}
+            secure={secure}
+            onAddCookieChange={onEditCookieChange}
           />
-        </FormGroup>
-        <Typography variant="body2" color="textSecondary">
-          Las cookies marcadas como Secure solo se enviarán a través de
-          conexiones HTTPS.
-        </Typography>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Secure (sólo accesible en https)"
-          />
-          <Typography variant="body2" color="textSecondary">
-            Las cookies marcadas como HttpOnly no serán accesibles desde el lado
-            del cliente.
-          </Typography>
-        </FormGroup>
-        <FormControl sx={{ width: 660, mt: 1 }} size="medium">
-          <InputLabel id="select-label">Samesite</InputLabel>
-          <Select label="Plan de suscripción">
-            <MenuItem value="Lax">Lax</MenuItem>
-            <MenuItem value="Strict">Strict</MenuItem>
-            <MenuItem value="None">None</MenuItem>
-          </Select>
-          <Typography variant="body2" color="textSecondary">
-            Las cookies marcadas como SameSite restringirán el envío a
-            solicitudes de origen cruzado.
-          </Typography>
-        </FormControl>
-      </Box>
-    </DialogLayout>
+        </DialogContent>
+        <DialogActions sx={{ pl: 8, pr: 8, pb: 3 }}>
+          <Button
+            variant="outlined"
+            type="submit"
+            sx={{
+              bgcolor: "secondary.main",
+              color: "white",
+              borderColor: "secondary.main",
+            }}
+          >
+            Actualizar cookie
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ bgcolor: "primary.main", color: "white" }}
+            onClick={handleCloseEditCookieDialog}
+          >
+            Cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
 CEditCookieDialog.propTypes = {
-  cookieName: PropTypes.string.isRequired,
+  cookie: PropTypes.object,
   openEditCookieDialog: PropTypes.bool,
   handleCloseEditCookieDialog: PropTypes.func,
 };

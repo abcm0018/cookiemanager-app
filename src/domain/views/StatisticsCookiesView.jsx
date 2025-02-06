@@ -1,5 +1,5 @@
 import { Grid2 } from "@mui/material";
-import { StatisticsForm } from "../components/StatisticsForm";
+import { StatisticsForm } from "../components";
 
 export const StatisticsCookiesView = () => {
   return (

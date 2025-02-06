@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import { useState } from "react";
 import { Search } from "@mui/icons-material";
 import { CAddDomainDialog } from "./CAddDomainDialog";
@@ -10,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 
-export const HeadSection = () => {
+export const HeadSection = ({ searchTerm, onSearchChange, onSearchSubmit }) => {
   const [openAddDomainDialog, setOpenAddDomainDialog] = useState(false);
 
   const handleOpenAddDomain = () => {
@@ -40,15 +42,21 @@ export const HeadSection = () => {
       <Grid2 container size={8} alignContent="center">
         <Paper
           component="form"
+          onSubmit={onSearchSubmit}
           sx={{
-            ml: 24.01,
+            ml: 37,
             p: "2px 4px",
             display: "flex",
             alignItems: "center",
             width: 300,
           }}
         >
-          <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Buscar dominio" />
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Buscar dominio"
+            value={searchTerm}
+            onChange={onSearchChange}
+          />
           <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
             <Search />
           </IconButton>
@@ -58,7 +66,6 @@ export const HeadSection = () => {
             aria-label="directions"
           ></IconButton>
         </Paper>
-        <Button variant="contained">Buscar</Button>
         <Button
           variant="contained"
           sx={{ bgcolor: "secondary.main" }}
@@ -73,4 +80,10 @@ export const HeadSection = () => {
       </Grid2>
     </Grid2>
   );
+};
+
+HeadSection.propTypes = {
+  searchTerm: PropTypes.string,
+  onSearchChange: PropTypes.func,
+  onSearchSubmit: PropTypes.func,
 };

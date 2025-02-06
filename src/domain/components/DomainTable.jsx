@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -8,15 +7,20 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { CEditDomainDialog } from "./CEditDomainDialog";
 import { TableLayout } from "../layout/TableLayout";
 import { useDomainStore } from "../../hooks";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { CEditDomainDialog } from "./CEditDomainDialog";
 import { Link } from "react-router-dom";
 
 export const DomainTable = ({ domains = [] }) => {
-  const headers = ["Código", "Nombre", "totalCookies", "Operación"];
-
+  const headers = [
+    { id: "code", label: "Código" },
+    { id: "name", label: "Nombre" },
+    { id: "totalCookies", label: "Total cookies" },
+    { id: "operation", label: "Operación" },
+  ];
   const [openEditDomainDialog, setOpenEditDomainDialog] = useState(false);
 
   const { startDeletingDomain, errorMessage } = useDomainStore();
@@ -34,9 +38,6 @@ export const DomainTable = ({ domains = [] }) => {
     setOpenEditDomainDialog(false);
   };
 
-  // Se usará para mostrar los datos del usuario
-  // console.log("Usauario logeado: ", user);
-
   const handleDeleteDomain = (domainId) => {
     Swal.fire({
       title: "Estás a punto de eliminar un dominio, ¿Estás seguro?",
@@ -50,7 +51,7 @@ export const DomainTable = ({ domains = [] }) => {
       if (result.isConfirmed) {
         startDeletingDomain(domainId);
         Swal.fire({
-          title: "Domininio Eliminado",
+          title: "Dominio Eliminado",
           text: "El dominio ha sido eliminado correctamente.",
           icon: "success",
         });
@@ -63,10 +64,9 @@ export const DomainTable = ({ domains = [] }) => {
       Swal.fire("Error al eliminar el dominio", errorMessage, "error");
     }
   }, [errorMessage]);
-
   return (
     <Box>
-      <TableLayout headers={headers}>
+      <TableLayout headers={headers} sx={{ minWidth: 750 }}>
         {domains.map((domain) => (
           <TableRow
             key={domain.id}
@@ -92,7 +92,15 @@ export const DomainTable = ({ domains = [] }) => {
                     },
                   }}
                 >
-                  <Link to={`/domains/${domain.id}`}>Ver detalles</Link>
+                  <Link
+                    to={`/domains/${domain.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                    }}
+                  >
+                    Ver detalles
+                  </Link>
                 </Button>
                 <Button
                   onClick={() => handleOpenEditDomain(domain)}
@@ -113,16 +121,16 @@ export const DomainTable = ({ domains = [] }) => {
                 >
                   Eliminar
                 </Button>
+                <CEditDomainDialog
+                  openEditDomainDialog={openEditDomainDialog}
+                  handleCloseEditDomainDialog={handleCloseEditDomainDialog}
+                  domainToEdit={domainToEdit}
+                />
               </ButtonGroup>
             </TableCell>
           </TableRow>
         ))}
       </TableLayout>
-      <CEditDomainDialog
-        openEditDomainDialog={openEditDomainDialog}
-        handleCloseEditDomainDialog={handleCloseEditDomainDialog}
-        domainToEdit={domainToEdit}
-      />
     </Box>
   );
 };

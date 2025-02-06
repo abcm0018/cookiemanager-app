@@ -1,33 +1,31 @@
 import { CookieRounded } from "@mui/icons-material";
-import { Grid2, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export const AuthLogo = () => {
   return (
-    <Grid2 container>
+    <Link
+      to="admin/control"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        textDecoration: "none",
+      }}
+    >
       <CookieRounded
         fontSize="large"
-        sx={{
-          mb: 1,
-          mt: 3,
-          mr: 0.2,
-          color: "secondary.main",
-          rotate: "45deg",
-        }}
+        sx={{ color: "secondary.main", rotate: "45deg" }}
       />
-      <Typography
-        variant="h4"
-        align="center"
-        sx={{ mb: 1, mt: 3, color: "white" }}
-      >
+      <Typography variant="h5" component="div" sx={{ color: "secondary.main" }}>
         Cookie
       </Typography>
       <Typography
-        variant="h4"
-        align="center"
-        sx={{ mt: 3, color: "secondary.main" }}
+        variant="h5"
+        component="div"
+        sx={{ flexGrow: 0.1, color: "primary.main" }}
       >
         Manager
       </Typography>
-    </Grid2>
+    </Link>
   );
 };

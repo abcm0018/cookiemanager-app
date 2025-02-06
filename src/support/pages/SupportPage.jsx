@@ -1,12 +1,10 @@
-import { Footer, HeadSection, MainSection, NavBar } from "../components";
+import { DomainLayout } from "../../domain/layout/DomainLayout";
+import { MainSection } from "../components";
 
 export const SupportPage = () => {
   return (
-    <>
-      <NavBar />
-      <HeadSection />
+    <DomainLayout>
       <MainSection />
-      <Footer />
-    </>
+    </DomainLayout>
   );
 };

@@ -9,18 +9,43 @@ import {
   Grid2,
   Typography,
 } from "@mui/material";
+import Swal from "sweetalert2";
+import { useSubscriptionStore } from "../../hooks";
 
 export const SubscriptionDetailsAdmin = ({
-  title = "",
+  planType = "",
   description = "",
   price = "",
+  maxDomains = "",
   characteristic1 = "",
   characteristic2 = "",
   buttonTitle1 = "Modificar",
   buttonTitle2 = "Eliminar",
   handleUpdateSubscription,
-  handleDeleteSubscription,
 }) => {
+  const { startDeletingSubscription, errorMessage } = useSubscriptionStore();
+
+  const handleDeleteSubscription = (planType) => {
+    Swal.fire({
+      title: "Estás a punto de eliminar una suscripción, ¿Estás seguro?",
+      text: "Esta acción no podrá ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Eliminar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        startDeletingSubscription(planType);
+        Swal.fire({
+          title: "Suscripción Eliminado",
+          text: "La suscripción ha sido eliminado correctamente.",
+          icon: "success",
+        });
+      }
+    });
+  };
+
   return (
     <Grid2>
       <Card
@@ -43,7 +68,7 @@ export const SubscriptionDetailsAdmin = ({
             component="div"
             fontWeight="bold"
           >
-            {title}
+            {planType}
           </Typography>
           <Typography variant="body1" sx={{ color: "text.secondary", mb: 2 }}>
             {description}
@@ -52,13 +77,14 @@ export const SubscriptionDetailsAdmin = ({
             variant="h5"
             sx={{ pt: 2, color: "text.primary", fontWeight: "bold" }}
           >
-            {price}
+            {price} €uros/mes
           </Typography>
           <Divider sx={{ my: 2 }} />
           <Typography
             component="ul"
             sx={{ color: "text.secondary", pl: 2, mb: 3 }}
           >
+            <li>El número máximo de dominios permitidos es: {maxDomains}</li>
             <li>{characteristic1}</li>
             <li>{characteristic2}</li>
           </Typography>
@@ -86,7 +112,7 @@ export const SubscriptionDetailsAdmin = ({
               mt: -3,
             }}
             variant="contained"
-            onClick={handleDeleteSubscription}
+            onClick={() => handleDeleteSubscription(planType)}
           >
             {buttonTitle2}
           </Button>
@@ -97,13 +123,13 @@ export const SubscriptionDetailsAdmin = ({
 };
 
 SubscriptionDetailsAdmin.propTypes = {
-  title: PropTypes.string.isRequired,
+  planType: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
+  maxDomains: PropTypes.number.isRequired,
   characteristic1: PropTypes.string.isRequired,
   characteristic2: PropTypes.string.isRequired,
   buttonTitle1: PropTypes.string.isRequired,
   buttonTitle2: PropTypes.string.isRequired,
   handleUpdateSubscription: PropTypes.func.isRequired,
-  handleDeleteSubscription: PropTypes.func.isRequired,
 };

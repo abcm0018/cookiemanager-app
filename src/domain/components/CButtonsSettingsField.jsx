@@ -9,6 +9,7 @@ export const CButtonsSettingsField = () => {
           fullWidth
           size="large"
           sx={{ height: 45, bgcolor: "secondary.main" }}
+          type="submit"
         >
           Guardar cambios
         </Button>

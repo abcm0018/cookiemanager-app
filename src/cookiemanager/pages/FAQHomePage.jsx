@@ -1,17 +1,10 @@
-import {
-  Footer,
-  HeadSectionFAQ,
-  MainSectionFAQ,
-  NavBarIntro,
-} from "../components";
+import { MainSectionFAQ } from "../components";
+import { HomeLayout } from "../layout/HomeLayout";
 
 export const FAQHomePage = () => {
   return (
-    <>
-      <NavBarIntro />
-      <HeadSectionFAQ />
+    <HomeLayout>
       <MainSectionFAQ />
-      <Footer />
-    </>
+    </HomeLayout>
   );
 };

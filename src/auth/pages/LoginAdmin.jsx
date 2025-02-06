@@ -1,14 +1,10 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { AuthLayout } from "../layout/AuthLayout";
 import { useAuthStore, useForm } from "../../hooks";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-
-const loginFormFields = {
-  loginEmail: "",
-  loginPassword: "",
-};
+import { loginFormFields } from "../utils";
+import { AuthLayout } from "../layout";
 
 export const LoginAdmin = () => {
   const { startLoginAdmin, errorMessage } = useAuthStore();

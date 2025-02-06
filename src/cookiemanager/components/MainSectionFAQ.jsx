@@ -1,5 +1,6 @@
 import { Grid2, Typography } from "@mui/material";
 import { AccordionListFAQ } from "./AccordionListFAQ";
+import { HeadSectionFAQ } from "./HeadSectionFAQ";
 
 export const MainSectionFAQ = () => {
   const getExtraContent = (title) => {
@@ -107,12 +108,18 @@ export const MainSectionFAQ = () => {
   ];
 
   return (
-    <Grid2
-      container
-      direction="column"
-      sx={{ backgroundColor: "#F5F7F8", padding: 5 }}
-    >
-      <AccordionListFAQ sections={sections} getExtraContent={getExtraContent} />
-    </Grid2>
+    <>
+      <HeadSectionFAQ />
+      <Grid2
+        container
+        direction="column"
+        sx={{ backgroundColor: "#F5F7F8", padding: 5 }}
+      >
+        <AccordionListFAQ
+          sections={sections}
+          getExtraContent={getExtraContent}
+        />
+      </Grid2>
+    </>
   );
 };

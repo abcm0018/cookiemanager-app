@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   Box,
   Table,
@@ -22,4 +23,9 @@ export const TableLayout = ({ headers = [], children }) => {
       </Table>
     </Box>
   );
+};
+
+TableLayout.propTypes = {
+  headers: PropTypes.array.isRequired,
+  children: PropTypes.node,
 };

@@ -1,17 +1,10 @@
-import {
-  Footer,
-  HeadSectionSubscription,
-  MainSectionSubscription,
-  NavBarIntro,
-} from "../components";
+import { MainSectionSubscription } from "../components";
+import { HomeLayout } from "../layout/HomeLayout";
 
 export const SubscriptionHomePage = () => {
   return (
-    <>
-      <NavBarIntro />
-      <HeadSectionSubscription />
+    <HomeLayout>
       <MainSectionSubscription />
-      <Footer />
-    </>
+    </HomeLayout>
   );
 };

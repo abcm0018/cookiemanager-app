@@ -1,15 +1,10 @@
-import { MainSectionAdmin } from "../components/MainSectionAdmin";
-import { NavBarAdmin } from "../components/NavBarAdmin";
-import { Footer } from "../components/Footer";
-import { HeadSectionAdmin } from "../components/HeadSectionAdmin";
+import { MainSectionAdmin } from "../components";
+import { AdminLayout } from "../layout";
 
 export const AdminProfilePage = () => {
   return (
-    <>
-      <NavBarAdmin />
-      <HeadSectionAdmin />
+    <AdminLayout>
       <MainSectionAdmin />
-      <Footer />
-    </>
+    </AdminLayout>
   );
 };

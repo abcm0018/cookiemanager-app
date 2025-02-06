@@ -1,18 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
-import cookieManagerApi from "../api/cookieManagerApi";
-import { persistor } from "../store/store";
 import {
   clearErrorMessage,
   onChecking,
   onLogin,
   onLogout,
 } from "../store/auth/authSlice";
-import { domainSlice } from "../store/domain/domainSlice";
-import { cookieSlice } from "../store/cookies/cookieSlice";
+import { persistor } from "../store/store";
+import cookieManagerApi from "../api/cookieManagerApi";
+import { cookieSlice, domainSlice } from "../store";
 
 export const useAuthStore = () => {
   const { status, user, errorMessage } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
 
   const startLogin = async ({ email, password }) => {
@@ -24,21 +22,23 @@ export const useAuthStore = () => {
         email,
         password,
       });
+      console.log(data);
       localStorage.setItem("token", "Bearer " + data.token);
-      localStorage.setItem("currentUser", JSON.stringify(data.userResponse));
       dispatch(
         onLogin({
-          email: data.userResponse.email,
-          name: data.userResponse.name,
-          surname: data.userResponse.surname,
-          subscriptionPlan: data.userResponse.subscription,
-          role: data.userResponse.role,
+          email: data.user.email,
+          name: data.user.name,
+          surname: data.user.surname,
+          company: data.user.company,
+          subscription: data.user.subscription,
+          role: data.user.role,
+          domains: data.user.domains,
         })
       );
     } catch (error) {
       console.log(error);
       // Error genérico
-      dispatch(onLogout("Credenciales inválidas"));
+      dispatch(onLogout("Credenciales inválidos"));
       setTimeout(() => {
         dispatch(clearErrorMessage());
       }, 10);
@@ -47,24 +47,28 @@ export const useAuthStore = () => {
 
   const startLoginAdmin = async ({ email, password }) => {
     console.log({ email, password });
+
+    dispatch(onChecking());
     try {
-      const data = await cookieManagerApi.post("/auth/admin/login", {
+      const { data } = await cookieManagerApi.post("/auth/admin/login", {
         email,
         password,
       });
+      console.log(data);
       localStorage.setItem("token", "Bearer " + data.token);
-      localStorage.setItem("currentUser", JSON.stringify(data.userResponse));
       dispatch(
         onLogin({
-          email: data.userResponse.email,
-          name: data.userResponse.name,
-          surname: data.userResponse.surname,
+          email: data.user.email,
+          name: data.user.name,
+          surname: data.user.surname,
+          subscription: data.user.subscription,
+          role: data.user.role,
         })
       );
     } catch (error) {
       console.log(error);
       // Error genérico
-      dispatch(onLogout("Credenciales inválidas"));
+      dispatch(onLogout("Credenciales inválidos"));
       setTimeout(() => {
         dispatch(clearErrorMessage());
       }, 10);
@@ -102,6 +106,7 @@ export const useAuthStore = () => {
         subscriptionPlan,
       });
       console.log(response);
+      return response;
     } catch (error) {
       dispatch(onLogout(error.response.data?.error.violations[0] || ""));
       setTimeout(() => {
@@ -125,18 +130,22 @@ export const useAuthStore = () => {
 
   const checkAuthToken = async () => {
     const token = localStorage.getItem("token");
+
     if (!token) return dispatch(onLogout());
+
     try {
       const { data } = await cookieManagerApi.get("/refreshToken");
       localStorage.setItem("token", "Bearer " + data.token);
       console.log({ UserWithRefreshToken: data });
       dispatch(
         onLogin({
-          email: data.userResponse.email,
-          name: data.userResponse.name,
-          surname: data.userResponse.surname,
-          subscriptionPlan: data.userResponse.subscription,
-          role: data.userResponse.role,
+          email: data.user.email,
+          name: data.user.name,
+          surname: data.user.surname,
+          company: data.user.company,
+          subscription: data.user.subscription,
+          role: data.user.role,
+          domains: data.user.domains,
         })
       );
     } catch (error) {
@@ -156,26 +165,27 @@ export const useAuthStore = () => {
       localStorage.clear();
 
       // Limpia los estados de cookies y domains
-      //dispatch(domainSlice.actions.onClearDomains());
-      //dispatch(cookieSlice.actions.onClearCookies());
+      dispatch(domainSlice.actions.onClearDomains());
+      dispatch(cookieSlice.actions.onClearCookies());
 
       // Actualiza el estado de la aplicación
+      dispatch(onLogout());
     } catch (error) {
       console.error("Error al cerrar la sesión", error);
     }
   };
 
   return {
-    //* Propiedades
+    // Propiedades
     errorMessage,
-    status,
     user,
-    //* Metodos
+    status,
+    // Métodos
     startLogin,
     startLoginAdmin,
     startRegister,
     startRecoveryPassword,
-    checkAuthToken,
     startLogout,
+    checkAuthToken,
   };
 };

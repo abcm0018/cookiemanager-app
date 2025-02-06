@@ -3,34 +3,60 @@ import cookieManagerApi from "../api/cookieManagerApi";
 import {
   onAddNewDomain,
   onDeleteDomain,
-  onGetDomainById,
   onLoadDomains,
   onUpdateDomain,
-} from "../store";
+  onGetDomainById,
+  onLoadDomainBanner,
+  onAddNewBanner,
+  onUpdateBanner,
+  onLoadCookieStatistics,
+} from "../store/domain/domainSlice";
 import Swal from "sweetalert2";
 
 export const useDomainStore = () => {
   const dispatch = useDispatch();
 
-  const { isLoadingDomains, domains, errorMessage } = useSelector(
-    (state) => state.domains
-  );
+  const {
+    isLoadingDomains,
+    isLoadingCookieBanner,
+    statistics,
+    domains,
+    banner,
+    errorMessage,
+  } = useSelector((state) => state.domains);
+
+  const startLoadingDomains = async () => {
+    try {
+      const { data } = await cookieManagerApi.get("/domains");
+      console.log({ domains: data });
+      dispatch(onLoadDomains(data));
+    } catch (error) {
+      console.log("Error en la carga de dominios");
+      console.log(error);
+      Swal.fire(
+        "Error al listar los dominios",
+        error.response.data.msg,
+        "error"
+      );
+    }
+  };
 
   const startSavingDomain = async ({
-    nombre,
-    descripcion,
-    estado,
-    propietario,
-    contactoEmail,
+    name,
+    description,
+    status,
+    owner,
+    contactEmail,
+    countryOrigin,
   }) => {
     try {
       const { data } = await cookieManagerApi.post("/domains", {
-        nombre,
-        descripcion,
-        estado,
-        propietario,
-        contactoEmail,
-        paisOrigen: null,
+        name,
+        description,
+        status,
+        owner,
+        contactEmail,
+        countryOrigin,
       });
       console.log(data);
 
@@ -49,6 +75,33 @@ export const useDomainStore = () => {
     }
   };
 
+  const startUpdatingDomain = async ({
+    id,
+    name,
+    description,
+    status,
+    owner,
+    contactEmail,
+    countryOrigin,
+  }) => {
+    try {
+      const { data } = await cookieManagerApi.put(`/domains/${id}`, {
+        id,
+        name,
+        description,
+        status,
+        owner,
+        contactEmail,
+        countryOrigin,
+      });
+      console.log(data);
+      dispatch(onUpdateDomain(data));
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error al actualizar", error.response.data.msg, "error");
+    }
+  };
+
   const startDeletingDomain = async (domainId) => {
     try {
       await cookieManagerApi.delete(`/domains/${domainId}`);
@@ -59,46 +112,6 @@ export const useDomainStore = () => {
       console.error("Error al eliminar el dominio:", error);
       const errorMsg = error.response?.data?.msg || "Error desconocido";
       Swal.fire("Error al eliminar", errorMsg, "error");
-    }
-  };
-
-  const startUpdatingDomain = async ({
-    id,
-    nombre,
-    descripcion,
-    estado,
-    propietario,
-    contactoEmail,
-  }) => {
-    try {
-      const { data } = await cookieManagerApi.put(`/domains/${id}`, {
-        nombre,
-        descripcion,
-        estado,
-        propietario,
-        contactoEmail,
-      });
-      console.log(data);
-      dispatch(onUpdateDomain(data));
-    } catch (error) {
-      console.log(error);
-      Swal.fire("Error al actualizar", error.response.data.msg, "error");
-    }
-  };
-
-  const startLoadingDomains = async () => {
-    try {
-      const { data } = await cookieManagerApi.get("/domains");
-      console.log({ domains: data });
-      dispatch(onLoadDomains(data));
-    } catch (error) {
-      console.log("Error en la carga de dominios");
-      console.log(error);
-      Swal.fire(
-        "Error al listar los dominios",
-        error.response.data.msg,
-        "error"
-      );
     }
   };
 
@@ -118,16 +131,207 @@ export const useDomainStore = () => {
     }
   };
 
+  const startLoadingBanner = async (domainId) => {
+    console.log("Valor de domainId:", domainId);
+    try {
+      const { data } = await cookieManagerApi.get(
+        `/domains/${domainId}/banner`
+      );
+      console.log("Datos recibidos:", data);
+      dispatch(onLoadDomainBanner(data));
+      return data;
+    } catch (error) {
+      console.log("Error al cargar los datos del banner: ", error);
+      console.log(error);
+      Swal.fire(
+        "Error al obtener los datos del dominio",
+        error.response.data.msg,
+        "error"
+      );
+    }
+  };
+
+  const startSavingBanner = async ({
+    id,
+    title,
+    cookieDeclaration,
+    legislation,
+    legislationDescription,
+    consentType,
+    cookiePolicy,
+    privacyPolicy,
+    lang,
+    companyLogo,
+  }) => {
+    try {
+      const { data } = await cookieManagerApi.post(`/banner/${id}`, {
+        title,
+        cookieDeclaration,
+        legislation,
+        legislationDescription,
+        consentType,
+        cookiePolicy,
+        privacyPolicy,
+        lang,
+        companyLogo,
+      });
+      console.log(data);
+
+      // Despachamos el dominio recién creado
+      dispatch(onAddNewBanner(data));
+
+      // Devolvemos el dominio creado para usarlo en el componente si fuera necesario
+      return data;
+    } catch (error) {
+      console.error(error);
+      const errorMessage = error.response?.data?.msg || "Error desconocido";
+      Swal.fire("Error al crear el dominio", errorMessage, "error");
+
+      // Retornamos null en caso de error.
+      return null;
+    }
+  };
+
+  const startUpdatingBanner = async ({
+    id,
+    title,
+    cookieDeclaration,
+    legislation,
+    legislationDescription,
+    consentType,
+    cookiePolicy,
+    privacyPolicy,
+    lang,
+    companyLogo,
+  }) => {
+    try {
+      const { data } = await cookieManagerApi.put(`/banner/${id}`, {
+        title,
+        cookieDeclaration,
+        legislation,
+        legislationDescription,
+        consentType,
+        cookiePolicy,
+        privacyPolicy,
+        lang,
+        companyLogo,
+      });
+
+      console.log("Banner actualizado:", data);
+
+      // Despachamos la acción para actualizar el banner en el estado global
+      dispatch(onUpdateBanner(data));
+
+      // Devolvemos el banner actualizado para uso posterior, si es necesario
+      return data;
+    } catch (error) {
+      console.error("Error al actualizar el banner:", error);
+      const errorMessage = error.response?.data?.msg || "Error desconocido";
+      Swal.fire("Error al actualizar el banner", errorMessage, "error");
+
+      // Retornamos null en caso de error.
+      return null;
+    }
+  };
+
+  const startLoadingStatistics = async ({
+    domainId,
+    estado,
+    categoria,
+    fechaDesde,
+    fechaHasta,
+    plataforma,
+    pais,
+  }) => {
+    try {
+      const { data } = await cookieManagerApi.get(
+        `/domains/${domainId}/estadisticas`,
+        {
+          params: {
+            estado: estado,
+            categoria: categoria,
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta,
+            plataforma: plataforma,
+            pais: pais,
+          },
+        }
+      );
+
+      console.log({ estadisticas: data });
+      dispatch(onLoadCookieStatistics(data));
+    } catch (error) {
+      console.log("Error en la carga de estadísticas del dominio", domainId);
+      console.log(error);
+      Swal.fire(
+        "Error en la carga de estadísticas del dominio",
+        error.response.data.msg,
+        "error"
+      );
+    }
+  };
+
+  const startExportingCookies = async (domainId) => {
+    try {
+      const response = await cookieManagerApi.get(
+        `/domains/${domainId}/cookies/export-xlsx`,
+        {
+          // Mantener blob para archivos binarios
+          responseType: "blob",
+        }
+      );
+
+      console.log("Tipo de respuesta:", response.headers["content-type"]);
+
+      // Crear un Blob para el archivo XLSX
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      // Crear URL para descarga
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cookies_report_${domainId}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      window.URL.revokeObjectURL(url);
+
+      Swal.fire(
+        "Éxito",
+        "Las cookies han sido exportadas correctamente en formato Excel.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Error al exportar cookies:", error);
+      Swal.fire(
+        "Error",
+        error.response?.data?.msg || "No se pudo exportar las cookies.",
+        "error"
+      );
+    }
+  };
+
   return {
     // Propiedades
     isLoadingDomains,
+    isLoadingCookieBanner,
     domains,
+    banner,
+    statistics,
     errorMessage,
     // Métodos
-    startSavingDomain,
     startLoadingDomains,
-    startDeletingDomain,
+    startSavingDomain,
     startUpdatingDomain,
+    startDeletingDomain,
+    startLoadingBanner,
+    startSavingBanner,
+    startUpdatingBanner,
+    startLoadingStatistics,
     starGettingDomainById,
+    startExportingCookies,
   };
 };

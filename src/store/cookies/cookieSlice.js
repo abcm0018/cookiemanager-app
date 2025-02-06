@@ -3,64 +3,60 @@ import { createSlice } from "@reduxjs/toolkit";
 export const cookieSlice = createSlice({
   name: "cookies",
   initialState: {
-    isLoadingCookies: true, //Nos indica si están cargadas las cookies
+    isLoadingCookies: true, // Nos indica si están cargadas las cookies
     cookies: [],
     errorCookieMessage: undefined,
   },
   reducers: {
-    // Código para cargar los eventos de la base de datos
-
+    // Cargar las cookies desde la base de datos
     onLoadCookies: (state, { payload = [] }) => {
       state.isLoadingCookies = false;
+      state.errorCookieMessage = undefined; // Limpiar errores previos
       state.cookies = payload;
-      console.log("CookieSlice::OnLoadCookies: cookies cargadas", payload);
-      // Si se produce un error en el listado de cookies
-      state.errorCookieMessage = payload;
-
-      // Si se añade una nueva cookie
-      payload.forEach((cookie) => {
-        const exists = state.cookies.some(
-          (dbCookie) => dbCookie.id === cookie.id
-        );
-        if (!exists) {
-          state.cookies.push(cookie);
-        }
-      });
+      console.log("CookieSlice::onLoadCookies: cookies cargadas", payload);
     },
-  },
 
-  // Código para crear un nuevo dominio
-  onAddNewCookie: (state, { payload }) => {
-    state.isLoadingCookies = false;
-    state.cookies.push(payload);
-    // Si se produce un error en la edición del dominio
-    state.errorCookieMessage = payload;
-  },
+    // Añadir una nueva cookie
+    onAddNewCookie: (state, { payload }) => {
+      state.isLoadingCookies = false;
+      state.errorCookieMessage = undefined; // Limpiar errores previos
+      const exists = state.cookies.some((cookie) => cookie.id === payload.id);
+      if (!exists) {
+        state.cookies.push(payload);
+        console.log("CookieSlice::onAddNewCookie: cookie añadida", payload);
+      }
+    },
 
-  // Código para actualizar un nuevo dominio
-  onUpdateCookie: (state, { payload }) => {
-    state.isLoadingCookies = false;
+    // Actualizar una cookie existente
+    onUpdateCookie: (state, { payload }) => {
+      state.isLoadingCookies = false;
+      state.errorCookieMessage = undefined; // Limpiar errores previos
 
-    const index = state.cookies.findIndex((cookie) => cookie.id === payload.id);
+      const index = state.cookies.findIndex(
+        (cookie) => cookie.id === payload.id
+      );
+      if (index !== -1) {
+        state.cookies[index] = { ...state.cookies[index], ...payload };
+        console.log("CookieSlice::onUpdateCookie: cookie actualizada", payload);
+      }
+    },
 
-    if (index !== -1) {
-      state.cookies[index] = payload;
-    }
-  },
+    // Borrar una cookie por su ID
+    onDeleteCookie: (state, { payload: cookieId }) => {
+      state.isLoadingCookies = false;
+      state.errorCookieMessage = undefined; // Limpiar errores previos
 
-  // Código para borrar un dominio
-  onDeleteDomain: (state, { payload: cookieId }) => {
-    state.isLoadingDomain = false;
+      state.cookies = state.cookies.filter((cookie) => cookie.id !== cookieId);
+      console.log("CookieSlice::onDeleteCookie: cookie eliminada", cookieId);
+    },
 
-    // Devuelve un array de cookies filtrado en el que no aparece la cookie con el identificador pasado
-    state.cookies = state.cookies.filter((cookie) => cookie.id !== cookieId);
-  },
-
-  // Acción para borrar todas las cookies después del logout
-  onClearCookies: (state) => {
-    state.cookies = [];
-    state.isLoadingCookies = true;
-    state.errorCookieMessage = undefined;
+    // Limpiar todas las cookies después del logout
+    onClearCookies: (state) => {
+      state.cookies = [];
+      state.isLoadingCookies = true;
+      state.errorCookieMessage = undefined; // Limpiar errores previos
+      console.log("CookieSlice::onClearCookies: todas las cookies limpiadas");
+    },
   },
 });
 

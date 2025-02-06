@@ -1,67 +1,46 @@
-import { Box, Button, Grid2 } from "@mui/material";
-import { CAddCookieDialog } from "../components/CAddCookieDialog";
-import { useState } from "react";
-import { CookieTypeComponent } from "../components/CookieTypeComponent";
-import { CHeaderCookieList } from "../components/CHeaderCookieList";
+import { Box, Button, Grid2, Paper, TableContainer } from "@mui/material";
+import { CHeaderCookieList, CookieTable } from "../components";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useCookieStore } from "../../hooks/useCookieStore";
+import Swal from "sweetalert2";
+import { useDomainStore } from "../../hooks";
 
 export const CookieListView = () => {
-  const cookies = [
-    {
-      nombre: "CONSENT",
-      tipo: "Authentication",
-      proveedor: "Google",
-      duracion: "1 año",
-      descripcion: "Almacena el consentimiento de cookies",
-      etiquetas: [
-        { id: 0, nombre: "httpOnly" },
-        { id: 1, nombre: "Secure" },
-        { id: 1, nombre: "LAX" },
-      ],
-    },
-    {
-      nombre: "SID",
-      tipo: "Authentication",
-      proveedor: "Google",
-      duracion: "2 años",
-      descripcion: "Contiene la ID de sesión del usuario",
-      etiquetas: [
-        { id: 0, nombre: "httpOnly" },
-        { id: 1, nombre: "Secure" },
-      ],
-    },
-  ];
-
   const descripcion =
     "A continuación encontrará una lista de las cookies detectadas en su sitio web junto con información detallada sobre cada una de ellas. Puede moverlas entre categorías añadir una descripción a cada cookie que se mostrará en su declaración de cookies autogenerada.";
 
-  const [openAddCookieDialog, setOpenAddCookieDialog] = useState(false);
+  const { id } = useParams();
+  const { cookies, startLoadingCookies, errorMessage } = useCookieStore();
+  const { startExportingCookies } = useDomainStore();
 
-  const handleOpenCookieDialog = () => {
-    console.log("Abriendo el dialogo para añadir cookie");
-    setOpenAddCookieDialog(true);
+  // Función que se ejecuta al hacer clic en el botón
+  const handleExportCookies = () => {
+    startExportingCookies(id);
   };
 
-  const handleCloseAddCookieDialog = () => {
-    console.log("Cerrando dialogo de añadir cookie");
-    setOpenAddCookieDialog(false);
-  };
+  useEffect(() => {
+    startLoadingCookies(id);
+  }, []);
 
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error al cargar las cookies", errorMessage, "error");
+    }
+  }, [errorMessage]);
   return (
     <Grid2 container sx={{ pb: 5, pt: 4, pl: 10, pr: 10 }}>
-      <Box sx={{ width: 990 }}>
-        <CHeaderCookieList
-          descripcion={descripcion}
-          handleOpenCookieDialog={handleOpenCookieDialog}
-        />
-        <CAddCookieDialog
-          openAddCookieDialog={openAddCookieDialog}
-          handleCloseAddCookieDialog={handleCloseAddCookieDialog}
-        />
-        <CookieTypeComponent title="Cookies esenciales" cookies={cookies} />
-        <CookieTypeComponent title="Cookies opcionales" cookies={cookies} />
-        <CookieTypeComponent title="Cookies de terceros" cookies={cookies} />
+      <Box>
+        <CHeaderCookieList descripcion={descripcion} />
+        <TableContainer component={Paper} sx={{ mt: 2 }}>
+          <CookieTable cookies={cookies} />
+        </TableContainer>
         <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
-          <Button variant="contained" sx={{ bgcolor: "secondary.main" }}>
+          <Button
+            variant="contained"
+            sx={{ bgcolor: "secondary.main" }}
+            onClick={handleExportCookies}
+          >
             Exportar cookies
           </Button>
         </Box>

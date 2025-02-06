@@ -1,12 +1,10 @@
-import { Footer, HeadSection, MainSection, NavBar } from "../components";
+import { MainSection } from "../components";
+import { DomainLayout } from "../../domain/layout/DomainLayout";
 
 export const SubscriptionPage = () => {
   return (
-    <>
-      <NavBar />
-      <HeadSection />
+    <DomainLayout>
       <MainSection />
-      <Footer />
-    </>
+    </DomainLayout>
   );
 };

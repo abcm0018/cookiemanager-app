@@ -1,6 +1,6 @@
 import { Grid2, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { AuthLogo } from "../components/AuthLogo";
+import { AuthLogo } from "../components";
 
 export const AuthLayout = ({
   children,

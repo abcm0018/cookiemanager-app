@@ -1,12 +1,97 @@
+import PropTypes from "prop-types";
 import { Box, Button, Container, Grid2 } from "@mui/material";
-import { Footer, NavBar } from "../components";
-import { DomainTabs } from "../components/DomainTabs";
 import { ArrowBack } from "@mui/icons-material";
+import { useDomainStore } from "../../hooks/useDomainStore";
+import { useParams, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { useAuthStore } from "../../hooks";
+import { CAddCookieDialog, DomainTabs } from "../components";
+import { DomainLayout } from "../layout";
 
 export const DomainDetailsPage = () => {
+  const { id } = useParams();
+  const { domains, errorMessage, startLoadingDomains } = useDomainStore();
+  const { user } = useAuthStore();
+
+  const [loading, setLoading] = useState(true); // estado de carga
+  const [domain, setDomain] = useState(null);
+
+  // Este estado se está controlando en el componente
+  // DomainTabs que centraliza la funcionalidad de saber
+  // en cada momento qué Tab está activa
+  const [activeTab, setActiveTab] = useState(0);
+
+  // Para controlar el estado del Dialog de añadir cookie
+  const [openAddCookieDialog, setOpenAddCookieDialog] = useState(false);
+
+  const handleOpenAddCookie = () => {
+    setOpenAddCookieDialog(true);
+  };
+
+  const handleCloseAddCookieDialog = () => {
+    setOpenAddCookieDialog(false);
+  };
+
+  // Cargar dominios al montar el componente
+  useEffect(() => {
+    if (domains.length === 0) {
+      startLoadingDomains().then(() => setLoading(false));
+    } else {
+      setLoading(false); // Si ya hay dominios cargados, no es necesario recargar
+    }
+  }, [domains.length, startLoadingDomains]);
+
+  useEffect(() => {
+    // Si los dominios ya están cargados, encuentra el dominio correspondiente
+    if (!loading && domains.length > 0) {
+      const currentDomain = domains.find(
+        (element) => element.id === parseInt(id, 10)
+      );
+      setDomain(currentDomain);
+    }
+    // startLoadingDomains();
+  }, [loading, id, domains]);
+
+  useEffect(() => {
+    // Guardar el valor de activeTab en el localStorage cada vez que cambie
+    if (activeTab !== undefined) {
+      localStorage.setItem("activeTabIndex", activeTab);
+    }
+    // Guardamos el valor del dominio activo
+    if (id !== undefined) {
+      localStorage.setItem("activeDomainId", id);
+    }
+  }, [activeTab, id]);
+
+  useEffect(() => {
+    // Manejo de errores en la carga
+    if (errorMessage !== undefined) {
+      Swal.fire(
+        "Error al cargar los detalles del dominio",
+        errorMessage,
+        "error"
+      );
+    }
+  }, [errorMessage]);
+
+  // Si no existe el id o es incorrecto
+  // TODO: No funciona, revisarlo
+  if (!id) {
+    return <Navigate to="/" />;
+  }
+
+  if (loading) {
+    // Mostrar un mensaje de carga mientras se obtienen los datos
+    return <p>Cargando detalles del dominio...</p>;
+  }
+
+  if (!domain) {
+    return <p>No se encontró el dominio con ID {id}.</p>;
+  }
+
   return (
-    <>
-      <NavBar />
+    <DomainLayout>
       <Grid2
         container
         direction="column"
@@ -17,17 +102,47 @@ export const DomainDetailsPage = () => {
             <Grid2 container spacing={2}>
               <Grid2 size={8} alignContent="center">
                 <Button size="small" startIcon={<ArrowBack />} href="/domains">
-                  marca.com
+                  DETALLES | {domain.name}
+                </Button>
+              </Grid2>
+              <Grid2
+                container
+                size={4}
+                alignContent="center"
+                sx={{
+                  display: activeTab === 4 ? "flex" : "none",
+                  transition: "opacity 0.3s",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  sx={{ bgcolor: "secondary.main", ml: 28 }}
+                  onClick={handleOpenAddCookie}
+                >
+                  Añadir cookie
                 </Button>
               </Grid2>
             </Grid2>
           </Box>
           <Box sx={{ mt: 4 }}>
-            <DomainTabs />
+            <DomainTabs
+              user={user}
+              domain={domain}
+              setActiveTab={setActiveTab}
+            />
           </Box>
+          <CAddCookieDialog
+            openAddCookieDialog={openAddCookieDialog}
+            handleCloseAddCookieDialog={handleCloseAddCookieDialog}
+            domainId={id}
+          />
         </Container>
       </Grid2>
-      <Footer />
-    </>
+    </DomainLayout>
   );
+};
+
+DomainDetailsPage.propTypes = {
+  domain: PropTypes.bool,
+  onViewDomainDetails: PropTypes.func,
 };

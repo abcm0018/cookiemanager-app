@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { EmojiFlags } from "@mui/icons-material";
 import { Card, CardContent, Typography } from "@mui/material";
 
@@ -15,4 +16,9 @@ export const FeatureCard = ({ title = "", description = "" }) => {
       </CardContent>
     </Card>
   );
+};
+
+FeatureCard.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
 };

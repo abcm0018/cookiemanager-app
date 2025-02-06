@@ -2,13 +2,19 @@ import { Box, Button, Container, Grid2 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
 import { CEditUserDialog } from "./CEditUserDialog";
 import { useState } from "react";
+import { useAuthStore } from "../../hooks";
 
 export const HeadSection = () => {
+  const { user } = useAuthStore();
   const [openEditUserDialog, setOpenEditUserDialog] = useState(false);
+
+  // Hook con el la información del dominio a editar
+  const [userToEdit, setUserToEdit] = useState({});
 
   const handleOpenEditUser = () => {
     console.log("Abriendo el dialogo para añadir dominio");
     setOpenEditUserDialog(true);
+    setUserToEdit(user);
   };
 
   const handleCloseEditUserDialog = () => {
@@ -30,7 +36,7 @@ export const HeadSection = () => {
             alignItems="center"
           >
             <Button size="small" startIcon={<ArrowBack />} href="/domains">
-              Perfil | Jane Smith
+              Perfil | {user.name}
             </Button>
             <Button
               variant="contained"
@@ -43,6 +49,7 @@ export const HeadSection = () => {
           <CEditUserDialog
             openEditUserDialog={openEditUserDialog}
             handleCloseEditUserDialog={handleCloseEditUserDialog}
+            userToEdit={userToEdit}
           />
         </Container>
       </Grid2>

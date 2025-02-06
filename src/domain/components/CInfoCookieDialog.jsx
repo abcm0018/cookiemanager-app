@@ -3,15 +3,18 @@ import { Box, Grid2, Typography } from "@mui/material";
 import { DialogLayout } from "../layout/DialogLayout";
 
 export const CInfoCookieDialog = ({
-  cookieName = "randomName",
+  cookie,
   openInfoCookieDialog,
   handleCloseInfoCookieDialog,
 }) => {
+  if (!cookie) {
+    return <p>No se encontró la cookie con ID {cookie.id}.</p>;
+  }
   return (
     <DialogLayout
       open={openInfoCookieDialog}
       onClose={handleCloseInfoCookieDialog}
-      title={`Detalles: ${cookieName}`}
+      title={`Detalles: ${cookie.name}`}
       maxWidth="lg"
       titleButton2="Cerrar"
       funcion={handleCloseInfoCookieDialog}
@@ -24,7 +27,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Nombre cookie:
                 </Typography>{" "}
-                CONSENT
+                {cookie.name}
               </Typography>
             </Box>
           </Grid2>
@@ -34,7 +37,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Proveedor:
                 </Typography>{" "}
-                Google
+                {cookie.provider}
               </Typography>
             </Box>
           </Grid2>
@@ -44,7 +47,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Categoría:
                 </Typography>{" "}
-                Esencial
+                {cookie.category}
               </Typography>
             </Box>
           </Grid2>
@@ -54,7 +57,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Tipo:
                 </Typography>{" "}
-                Authentication
+                {cookie.type}
               </Typography>
             </Box>
           </Grid2>
@@ -64,7 +67,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Duración:
                 </Typography>{" "}
-                1 año
+                {cookie.duration}
               </Typography>
             </Box>
           </Grid2>
@@ -72,9 +75,9 @@ export const CInfoCookieDialog = ({
             <Box sx={{ width: 378, mt: 2, ml: 35 }}>
               <Typography>
                 <Typography component="span" fontWeight="bold" variant="body1">
-                  Http Only:
+                  httpOnly:
                 </Typography>{" "}
-                Sí
+                {cookie.httpOnly ? "Sí" : "No"}
               </Typography>
             </Box>
           </Grid2>
@@ -84,7 +87,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Secure:
                 </Typography>{" "}
-                No
+                {cookie.secure ? "Sí" : "No"}
               </Typography>
             </Box>
           </Grid2>
@@ -94,7 +97,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Samesite:
                 </Typography>{" "}
-                LAX
+                {cookie.samesite}
               </Typography>
             </Box>
           </Grid2>
@@ -104,7 +107,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Descripción:
                 </Typography>{" "}
-                Almacena el consentimiento de cookies
+                {cookie.description}
               </Typography>
             </Box>
           </Grid2>
@@ -115,7 +118,7 @@ export const CInfoCookieDialog = ({
 };
 
 CInfoCookieDialog.propTypes = {
-  cookieName: PropTypes.string.isRequired,
+  cookie: PropTypes.object.isRequired,
   openInfoCookieDialog: PropTypes.bool,
   handleCloseInfoCookieDialog: PropTypes.func,
 };

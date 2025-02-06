@@ -1,69 +1,130 @@
 import PropTypes from "prop-types";
-import { Box, Grid2, TextField } from "@mui/material";
-import { DialogLayout } from "../layout/DialogLayout";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { useForm, useSubscriptionStore } from "../../hooks";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import { CDialogSubscriptionForm } from "./CDialogSubscriptionForm";
+import { updateSubscriptionForm } from "../utils";
 
 export const CUpdateSubscriptionDialog = ({
-  subscriptionName = "randomName",
+  subscriptionToEdit,
   openUpdateSubscriptionDialog,
   handleCloseUpdateSubscriptionDialog,
 }) => {
+  const { startUpdatingSubscription, errorMessage } = useSubscriptionStore();
+
+  const {
+    planTypeSubscription,
+    descriptionSubscription,
+    characteristic1Subscription,
+    characteristic2Subscription,
+    priceSubscription,
+    maxDomainsSubscription,
+    onInputChange: onSubscriptionChange,
+    setFormState,
+  } = useForm(updateSubscriptionForm);
+
+  // Prellenar los datos del formulario cuando el diálogo se abre
+  useEffect(() => {
+    if (openUpdateSubscriptionDialog && subscriptionToEdit) {
+      setFormState({
+        planTypeSubscription: subscriptionToEdit.planType,
+        descriptionSubscription: subscriptionToEdit.description,
+        characteristic1Subscription: subscriptionToEdit.characteristic1,
+        characteristic2Subscription: subscriptionToEdit.characteristic2,
+        priceSubscription: subscriptionToEdit.price,
+        maxDomainsSubscription: subscriptionToEdit.maxDomains || 0,
+      });
+    }
+  }, [openUpdateSubscriptionDialog, subscriptionToEdit, setFormState]);
+
+  const onSubscriptionSubmit = (event) => {
+    event.preventDefault();
+    startUpdatingSubscription({
+      planType: planTypeSubscription,
+      description: descriptionSubscription,
+      characteristic1: characteristic1Subscription,
+      characteristic2: characteristic2Subscription,
+      price: priceSubscription,
+      maxDomains: maxDomainsSubscription,
+    });
+  };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error en los datos de la suscripción", errorMessage, "error");
+    }
+  }, [errorMessage]);
   return (
-    <DialogLayout
-      open={openUpdateSubscriptionDialog}
-      onClose={handleCloseUpdateSubscriptionDialog}
-      title={`Editar: ${subscriptionName}`}
-      description1=" A continuación, aquí puedes editar una suscripción ya existente en el sistema."
-      maxWidth="lg"
-      titleButton1="Añadir dominio"
-      titleButton2="Cancelar"
-      funcion={handleCloseUpdateSubscriptionDialog}
-    >
-      <Box sx={{ mt: 2 }}>
-        <Grid2 container spacing={2} direction="column" alignItems="left">
-          <Grid2 xs={12}>
-            <TextField
-              autoFocus
-              required
-              id="subscription-plan"
-              name="Plan de subscripción"
-              label="Plan de subscripción"
-              type="text"
-              value="Basic"
-              fullWidth
-            />
-          </Grid2>
-          <Grid2 xs={12}>
-            <TextField
-              required
-              id="description"
-              name="Descripción"
-              label="Descripción"
-              type="text"
-              value="Para pequeñas empresas y nuevas empresas. 600 páginas por escaneo. 100.000 páginas vistas/mes"
-              multiline
-              minRows={4}
-              fullWidth
-            />
-          </Grid2>
-          <Grid2 item xs={12}>
-            <TextField
-              required
-              id="price"
-              name="Precio"
-              label="Precio"
-              type="text"
-              value="9.99 €/mes"
-              fullWidth
-            />
-          </Grid2>
-        </Grid2>
-      </Box>
-    </DialogLayout>
+    <Box>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open={openUpdateSubscriptionDialog}
+        onClose={handleCloseUpdateSubscriptionDialog}
+        PaperProps={{
+          component: "form",
+          onSubmit: (event) => {
+            onSubscriptionSubmit(event);
+            handleCloseUpdateSubscriptionDialog();
+          },
+        }}
+      >
+        <DialogTitle sx={{ pl: 8, pr: 8 }}>Modificar suscripción</DialogTitle>
+        <DialogContent sx={{ pl: 8, pr: 8 }}>
+          <DialogContentText color="primary.main">
+            Modifique los campos necesarios para agregar una modificación a la
+            suscripción.
+          </DialogContentText>
+          <DialogContentText sx={{ mt: 2 }} color="primary.main">
+            Modifica la información necesaria como el tipo de plan, precio y
+            características clave de la suscripción.
+          </DialogContentText>
+          <CDialogSubscriptionForm
+            planTypeSubscription={planTypeSubscription}
+            descriptionSubscription={descriptionSubscription}
+            characteristic1Subscription={characteristic1Subscription}
+            characteristic2Subscription={characteristic2Subscription}
+            priceSubscription={priceSubscription}
+            maxDomainsSubscription={maxDomainsSubscription}
+            onEditSubscriptionChange={onSubscriptionChange}
+          />
+        </DialogContent>
+        <DialogActions sx={{ pl: 8, pr: 8, pb: 3 }}>
+          <Button
+            variant="outlined"
+            type="submit"
+            sx={{
+              bgcolor: "secondary.main",
+              color: "white",
+              borderColor: "secondary.main",
+            }}
+          >
+            Modificar suscripción
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ bgcolor: "primary.main", color: "white" }}
+            onClick={handleCloseUpdateSubscriptionDialog}
+          >
+            Cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
 CUpdateSubscriptionDialog.propTypes = {
-  subscriptionName: PropTypes.string,
+  subscriptionToEdit: PropTypes.object.isRequired,
   openUpdateSubscriptionDialog: PropTypes.bool,
   handleCloseUpdateSubscriptionDialog: PropTypes.func,
 };

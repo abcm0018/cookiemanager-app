@@ -50,7 +50,7 @@ export const SubscriptionDetails = ({
             variant="h5"
             sx={{ pt: 2, color: "text.primary", fontWeight: "bold" }}
           >
-            {price}
+            {price} €uros/mes
           </Typography>
           <Divider sx={{ my: 2 }} />
           <Typography

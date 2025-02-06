@@ -16,9 +16,9 @@ export const HeadSectionTableUser = () => {
                 <Button
                   size="small"
                   startIcon={<ArrowBack />}
-                  href="/admin/control"
+                  href="/admin/dashboard"
                 >
-                  Lista de usuarios
+                  Volver | Lista de usuarios
                 </Button>
               </Grid2>
             </Grid2>

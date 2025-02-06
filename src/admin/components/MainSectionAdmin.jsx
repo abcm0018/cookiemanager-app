@@ -1,9 +1,11 @@
 import { Box, Container, Grid2 } from "@mui/material";
 import { CGeneralAdminInfo } from "./CGeneralAdminInfo";
+import { HeadSectionAdmin } from "./HeadSectionAdmin";
 
 export const MainSectionAdmin = () => {
   return (
     <>
+      <HeadSectionAdmin />
       <Grid2
         container
         direction="column"

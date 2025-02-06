@@ -1,32 +1,34 @@
-import { AuthRoutes } from "../auth/routes/AuthRoutes";
-import { CookieManagerRoutes } from "../cookiemanager/routes/CookieManagerRoutes";
-import { DomainDetailsPage, DomainPage } from "../domain/pages";
 import { useAuthStore } from "../hooks";
 import { useEffect } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { Loader } from "../domain/components";
+import { AdminRoutes } from "./AdminRoutes";
+import { UserRoutes } from "./UserRoutes";
+import { PublicRoutes } from "./PublicRoutes";
 
 export const AppRoutes = () => {
-  const { status, checkAuthToken } = useAuthStore();
+  const { status, user, checkAuthToken } = useAuthStore();
 
   useEffect(() => {
     checkAuthToken();
   }, []);
 
-  return (
-    <Routes>
-      {status === "not-authenticated" ? (
-        <>
-          <Route path="/*" element={<CookieManagerRoutes />} />
-          <Route path="/auth/*" element={<AuthRoutes />} />
-          <Route path="/*" element={<Navigate to={"/auth/login"} />} />
-        </>
-      ) : (
-        <>
-          <Route path="/" element={<DomainPage />} />
-          <Route path="/domains/:id" element={<DomainDetailsPage />} />
-          <Route path="/*" element={<Navigate to={"/"} />} />
-        </>
-      )}
-    </Routes>
-  );
+  if (status === "checking") {
+    return <Loader />;
+  }
+
+  if (status === "not-authenticated") {
+    return <PublicRoutes />;
+  }
+
+  if (user.role === "admin") {
+    return <AdminRoutes />;
+  }
+
+  if (user.role === "user") {
+    return <UserRoutes />;
+  }
+
+  // Manejo de errores y fallback
+  return <Navigate to="/auth/login" replace />;
 };

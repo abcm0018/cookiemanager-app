@@ -1,9 +1,11 @@
 import { Box, Container, Grid2 } from "@mui/material";
 import { CGeneralInformation } from "./CGeneralInformation";
+import { HeadSection } from "./HeadSection";
 
 export const MainSection = () => {
   return (
     <>
+      <HeadSection />
       <Grid2
         container
         direction="column"

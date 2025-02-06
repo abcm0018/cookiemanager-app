@@ -1,19 +1,14 @@
-import { RotatingLines } from "react-loader-spinner";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 
 export const Loader = () => {
   return (
-    <div>
-      <RotatingLines
-        visible={true}
-        height="96"
-        width="96"
-        color="secondary.main"
-        strokeWidth="5"
-        animationDuration="0.75"
-        ariaLabel="rotating-lines-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-      />
-    </div>
+    <Box>
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </Box>
   );
 };

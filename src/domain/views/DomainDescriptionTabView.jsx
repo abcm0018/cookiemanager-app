@@ -1,18 +1,73 @@
 import PropTypes from "prop-types";
 import { Grid2 } from "@mui/material";
-import { CardDetail } from "../components/CardDetails";
-import { useNavigate } from "react-router-dom";
+import { CAddBannerDialog, CardDetail } from "../components";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDomainStore } from "../../hooks";
+import { useEffect, useState } from "react";
+import { generateCards } from "../utils";
+import Swal from "sweetalert2";
 
 export const DomainDescriptionTabView = ({
-  cards = [],
+  domain = {},
+  user = {},
   setCurrentTabIndex,
 }) => {
+  const {
+    banner,
+    startLoadingBanner,
+    startDeletingDomain,
+    isLoadingCookieBanner,
+    errorMessage,
+  } = useDomainStore();
+
+  const { id } = useParams();
+
+  const [cookieBanner, setCookieBanner] = useState(banner || {});
+  const [openAddBannerDialog, setOpenAddBannerDialog] = useState(false);
+
   const navigate = useNavigate();
+
+  const handleOpenAddBanner = () => {
+    console.log("Abriendo el diálogo para añadir banner");
+    setOpenAddBannerDialog(true);
+  };
+
+  const handleCloseAddBannerDialog = () => {
+    console.log("Cerrando el diálogo de añadir banner");
+    setOpenAddBannerDialog(false);
+  };
+
+  const handleDeleteDomain = (domainId) => {
+    Swal.fire({
+      title: "Estás a punto de eliminar un dominio, ¿Estás seguro?",
+      text: "Esta acción no podrá ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Eliminar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        startDeletingDomain(domainId);
+        Swal.fire({
+          title: "Dominio eliminado",
+          text: "El dominio ha sido eliminado correctamente.",
+          icon: "success",
+        });
+      }
+    });
+  };
 
   const handleButtonClick = (buttonTitle) => {
     switch (buttonTitle) {
       case "Actualizar plan":
         navigate("/manage-subscriptions");
+        break;
+      case "Editar banner":
+        setCurrentTabIndex(2);
+        break;
+      case "Crear banner":
+        handleOpenAddBanner();
         break;
       case "Escanear":
         setCurrentTabIndex(3);
@@ -24,14 +79,39 @@ export const DomainDescriptionTabView = ({
         setCurrentTabIndex(5);
         break;
       case "Borrar dominio":
+        handleDeleteDomain(domain.id);
         break;
       default:
         setCurrentTabIndex(0);
     }
   };
 
+  // useEffect(() => {
+  //   if (isLoadingCookieBanner) {
+  //     startLoadingBanner(domain.id);
+  //   }
+  // }, [domain.id, isLoadingCookieBanner, startLoadingBanner]);
+
+  useEffect(() => {
+    startLoadingBanner(domain.id); // Carga el banner al cambiar de dominio
+  }, [domain.id, startLoadingBanner]);
+
+  useEffect(() => {
+    if (!isLoadingCookieBanner && banner) {
+      setCookieBanner(banner);
+    }
+  }, [banner, isLoadingCookieBanner]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      Swal.fire("Error al eliminar el dominio", errorMessage, "error");
+    }
+  }, [errorMessage]);
+
+  const cards = generateCards(domain, banner || {}, user);
+
   return (
-    <Grid2 container sx={{ pb: 10, pt: 4, pl: 12 }}>
+    <Grid2 container spacing={3} sx={{ pb: 10, pt: 4, pl: 12 }}>
       {cards.map((card) => (
         <CardDetail
           key={card.id}
@@ -42,11 +122,17 @@ export const DomainDescriptionTabView = ({
           onButtonClick={() => handleButtonClick(card.buttonTitle)}
         />
       ))}
+      <CAddBannerDialog
+        id={id}
+        openAddBannerDialog={openAddBannerDialog}
+        handleCloseAddBannerDialog={handleCloseAddBannerDialog}
+      />
     </Grid2>
   );
 };
 
 DomainDescriptionTabView.propTypes = {
-  cards: PropTypes.array,
+  domain: PropTypes.object,
+  user: PropTypes.object,
   setCurrentTabIndex: PropTypes.func.isRequired,
 };

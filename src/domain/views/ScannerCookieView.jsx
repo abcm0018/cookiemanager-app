@@ -1,61 +1,57 @@
 import PropTypes from "prop-types";
-import {
-  Box,
-  Button,
-  Grid2,
-  Paper,
-  TableContainer,
-  Typography,
-} from "@mui/material";
-import { CookieScanTable } from "../components/CookieScanTable";
+import { Box, Grid2, Paper, TableContainer, Typography } from "@mui/material";
+import { CookieScanTable } from "../components";
+import { useDomainStore } from "../../hooks";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export const ScannerCookieView = ({ onDetailClick }) => {
-  function createData(
-    estado,
-    totalCookies,
-    fechaCreacion,
-    fechaModificacion,
-    ultimoEscaneo
-  ) {
-    return {
-      estado,
-      totalCookies,
-      fechaCreacion,
-      fechaModificacion,
-      ultimoEscaneo,
-    };
+  const { id } = useParams();
+  const { domains, errorMessage, startLoadingDomains } = useDomainStore();
+
+  const [loading, setLoading] = useState(true); // estado de carga
+  const [domain, setDomain] = useState(null);
+
+  // Cargar dominios al montar el componente
+  useEffect(() => {
+    if (domains.length === 0) {
+      startLoadingDomains().then(() => setLoading(false));
+    } else {
+      setLoading(false); // Si ya hay dominios cargados, no es necesario recargar
+    }
+  }, [domains.length, startLoadingDomains]);
+
+  useEffect(() => {
+    // Si los dominios ya están cargados, encuentra el dominio correspondiente
+    if (!loading && domains.length > 0) {
+      const currentDomain = domains.find(
+        (element) => element.id === parseInt(id, 10)
+      );
+      setDomain(currentDomain);
+    }
+    // startLoadingDomains();
+  }, [loading, id, domains]);
+
+  useEffect(() => {
+    // Manejo de errores en la carga
+    if (errorMessage !== undefined) {
+      Swal.fire(
+        "Error al cargar los detalles del dominio",
+        errorMessage,
+        "error"
+      );
+    }
+  }, [errorMessage]);
+
+  if (loading) {
+    // Mostrar un mensaje de carga mientras se obtienen los datos
+    return <p>Cargando detalles del dominio...</p>;
   }
 
-  const escaneos = [
-    createData(
-      "Completado",
-      50,
-      "16/10/2024 11:06",
-      "16/10/2024 11:11",
-      "16/10/2024 11:11"
-    ),
-    createData(
-      "Completado",
-      50,
-      "16/09/2024 11:05",
-      "16/09/2024 11:10",
-      "16/09/2024 11:10"
-    ),
-    createData(
-      "Completado",
-      50,
-      "17/08/2024 11:04",
-      "17/08/2024 11:09",
-      "17/08/2024 11:09"
-    ),
-    createData(
-      "Completado",
-      50,
-      "18/07/2024 11:03",
-      "18/07/2024 11:08",
-      "18/07/2024 11:08"
-    ),
-  ];
+  if (!domain) {
+    return <p>No se encontró el dominio con ID {id}.</p>;
+  }
 
   return (
     <Grid2 container sx={{ pb: 5, pt: 4, pl: 10, pr: 10 }}>
@@ -68,22 +64,17 @@ export const ScannerCookieView = ({ onDetailClick }) => {
         <Box component="div" sx={{ mt: 2 }}>
           <TableContainer component={Paper}>
             <CookieScanTable
-              key={escaneos.fechaCreacion}
-              scans={escaneos}
+              key={domain.dateCreation}
+              domain={domain}
               onDetailClick={onDetailClick}
             />
           </TableContainer>
-        </Box>
-        <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
-          <Button variant="contained" sx={{ bgcolor: "secondary.main" }}>
-            Exportar cookies
-          </Button>
         </Box>
       </Box>
     </Grid2>
   );
 };
 
-ScannerCookieView.propType = {
+ScannerCookieView.propTypes = {
   onDetailClick: PropTypes.func.isRequired,
 };

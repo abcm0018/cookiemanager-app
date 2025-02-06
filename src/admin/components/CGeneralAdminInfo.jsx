@@ -1,6 +1,18 @@
 import { Box, Grid2, Typography } from "@mui/material";
+import { useAuthStore } from "../../hooks";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
 
 export const CGeneralAdminInfo = () => {
+  const { user, errorMessage } = useAuthStore();
+
+  useEffect(() => {
+    // Manejo de errores en la carga
+    if (errorMessage !== undefined) {
+      Swal.fire("Error al cargar el usuario", errorMessage, "error");
+    }
+  }, [errorMessage]);
+
   return (
     <Grid2 container sx={{ pb: 10, pt: 4, pl: 8, pr: 8 }}>
       <Box>
@@ -14,17 +26,27 @@ export const CGeneralAdminInfo = () => {
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Nombre:
                 </Typography>{" "}
-                Ana Belén
+                {user.name}
               </Typography>
             </Box>
           </Grid2>
           <Grid2 xs={6}>
             <Box sx={{ width: 400, mt: 2 }}>
-              <Typography sx={{ ml: 2 }}>
+              <Typography>
+                <Typography component="span" fontWeight="bold" variant="body1">
+                  Apellidos:
+                </Typography>{" "}
+                {user.surname}
+              </Typography>
+            </Box>
+          </Grid2>
+          <Grid2 xs={6}>
+            <Box sx={{ width: 400, mt: 2 }}>
+              <Typography>
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Email:
                 </Typography>{" "}
-                ana@gmail.com
+                {user.email}
               </Typography>
             </Box>
           </Grid2>

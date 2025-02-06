@@ -2,25 +2,21 @@ import PropTypes from "prop-types";
 
 import { Grid2 } from "@mui/material";
 import { CUpdateSubscriptionDialog } from "./CUpdateSubscriptionDialog";
-import { CDeleteSubscriptionDialog } from "./CDeleteSubscriptionDialog";
 import { useState } from "react";
 import { SubscriptionDetailsAdmin } from "./SubscriptionDetailsAdmin";
 
-export const CardsSubscription = ({ subscriptions = "" }) => {
+export const CardsSubscription = ({ subscriptions = [] }) => {
   const [openUpdateSubscriptionDialog, setOpenUpdateSubscriptionDialog] =
     useState(false);
 
-  const [openDeleteSubscriptionDialog, setOpenDeleteSubscriptionDialog] =
-    useState(false);
+  // Hook con el la información del dominio a editar
+  const [subscriptionToEdit, setSubscriptionToEdit] = useState({});
 
-  const handleUpdateSubscription = () => {
+  // Establecemos la suscripcion a editar
+  const handleOpenUpdateSubscription = (subscription) => {
     console.log("Abriendo el dialogo para añadir dominio");
     setOpenUpdateSubscriptionDialog(true);
-  };
-
-  const handleDeleteSubscription = () => {
-    console.log("Abriendo el dialogo para añadir dominio");
-    setOpenDeleteSubscriptionDialog(true);
+    setSubscriptionToEdit(subscription);
   };
 
   const handleCloseUpdateSubscriptionDialog = () => {
@@ -28,41 +24,31 @@ export const CardsSubscription = ({ subscriptions = "" }) => {
     setOpenUpdateSubscriptionDialog(false);
   };
 
-  const handleCloseDeleteSubscriptionDialog = () => {
-    console.log("Cerrando dialogo de añadir dominio");
-    setOpenDeleteSubscriptionDialog(false);
-  };
-
   return (
     <>
       <Grid2 container spacing={2} justifyContent="center" alignItems="center">
-        {subscriptions.map((subcription) => (
+        {subscriptions.map((subscription) => (
           <SubscriptionDetailsAdmin
-            key={subcription.id}
-            title={subcription.title}
-            description={subcription.description}
-            price={subcription.price}
-            characteristic1={subcription.characteristic1}
-            characteristic2={subcription.characteristic2}
-            buttonTitle1={subcription.buttonTitle1}
-            buttonTitle2={subcription.buttonTitle2}
-            handleUpdateSubscription={handleUpdateSubscription}
-            handleDeleteSubscription={handleDeleteSubscription}
+            key={subscription.id}
+            planType={subscription.planType}
+            description={subscription.description}
+            characteristic1={subscription.characteristic1}
+            characteristic2={subscription.characteristic2}
+            price={subscription.price}
+            maxDomains={subscription.maxDomains}
+            handleUpdateSubscription={() =>
+              handleOpenUpdateSubscription(subscription)
+            }
           />
         ))}
+        <CUpdateSubscriptionDialog
+          subscriptionToEdit={subscriptionToEdit}
+          openUpdateSubscriptionDialog={openUpdateSubscriptionDialog}
+          handleCloseUpdateSubscriptionDialog={
+            handleCloseUpdateSubscriptionDialog
+          }
+        />
       </Grid2>
-      <CUpdateSubscriptionDialog
-        openUpdateSubscriptionDialog={openUpdateSubscriptionDialog}
-        handleCloseUpdateSubscriptionDialog={
-          handleCloseUpdateSubscriptionDialog
-        }
-      />
-      <CDeleteSubscriptionDialog
-        openDeleteSubscriptionDialog={openDeleteSubscriptionDialog}
-        handleCloseDeleteSubscriptionDialog={
-          handleCloseDeleteSubscriptionDialog
-        }
-      />
     </>
   );
 };

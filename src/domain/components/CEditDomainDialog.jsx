@@ -1,222 +1,194 @@
 import PropTypes from "prop-types";
 import {
   Box,
+  Button,
   Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
   FormControlLabel,
   FormGroup,
-  Grid2,
-  TextField,
+  InputLabel,
+  MenuItem,
+  Select,
   Typography,
 } from "@mui/material";
-import { DialogLayout } from "../layout/DialogLayout";
 import { useDomainStore, useForm } from "../../hooks";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
-
-const domainFormField = {
-  editDomainId: "",
-  editDomainName: "",
-  editDomainDescription: "",
-  editDomainStatus: "",
-  editDomainOwner: "",
-  email: "",
-  editDomainCountryOrigin: "",
-};
+import { CDialogForm } from "./CDialogForm";
+import { editDomainForm } from "../utils";
+import { useNavigate } from "react-router-dom";
 
 export const CEditDomainDialog = ({
-  domainName = "",
+  domainToEdit,
   openEditDomainDialog,
   handleCloseEditDomainDialog,
-  domain,
 }) => {
   const { startUpdatingDomain, errorMessage } = useDomainStore();
+  const navigate = useNavigate();
 
   const {
-    editDomainId,
-    editDomainName,
-    editDomainDescription,
-    editDomainStatus,
-    editDomainOwner,
-    email,
-    editDomainCountryOrigin,
+    domainDescription,
+    domainStatus,
+    domainOwner,
+    domainContactEmail,
+    domainCountryOrigin,
     onInputChange: onEditDomainChange,
     setFormState,
-  } = useForm(domainFormField);
+  } = useForm(editDomainForm);
 
   // Prellenar los datos del formulario cuando el diálogo se abre
   useEffect(() => {
-    if (openEditDomainDialog && domain?.id) {
+    if (openEditDomainDialog && domainToEdit) {
       setFormState({
-        editDomainId: domain.id,
-        editDomainName: domain.name,
-        editDomainDescription: domain.description,
-        editDomainStatus: domain.status,
-        editDomainOwner: domain.owner,
-        email: domain.contactEmail,
-        editDomainCountryOrigin: domain.countryOrigin,
+        domainName: domainToEdit.name,
+        domainDescription: domainToEdit.description,
+        domainStatus: domainToEdit.status,
+        domainOwner: domainToEdit.owner,
+        domainContactEmail: domainToEdit.contactEmail,
+        domainCountryOrigin: domainToEdit.countryOrigin,
       });
     }
-  }, [openEditDomainDialog, domain, setFormState]);
+  }, [openEditDomainDialog, domainToEdit, setFormState]);
 
-  const editDomainSubmit = (event) => {
+  const onUpdateDomainSubmit = (event) => {
     event.preventDefault();
-    if (!editDomainId || !editDomainName) {
-      Swal.fire("Error", "Faltan datos obligatorios", "error");
-      return;
-    }
     startUpdatingDomain({
-      id: editDomainId,
-      name: editDomainName,
-      description: editDomainDescription,
-      status: editDomainStatus,
-      owner: editDomainOwner,
-      contactEmail: email,
-      countryOrigin: editDomainCountryOrigin,
+      id: domainToEdit.id,
+      name: domainToEdit.name,
+      description: domainDescription,
+      status: domainStatus,
+      owner: domainOwner,
+      contactEmail: domainContactEmail,
+      countryOrigin: domainCountryOrigin,
     });
+    navigate(`/domains/${domainToEdit.id}`);
   };
 
   useEffect(() => {
     if (errorMessage !== undefined) {
-      Swal.fire("Error en la autenticación", errorMessage, "error");
+      Swal.fire("Error en los datos del dominio", errorMessage, "error");
     }
   }, [errorMessage]);
+
   return (
-    <DialogLayout
-      open={openEditDomainDialog}
-      onClose={handleCloseEditDomainDialog}
-      title={`Editar: ${domainName}`}
-      maxWidth="lg"
-      titleButton1="Guardar cambios"
-      titleButton2="Cancelar"
-      funcion={editDomainSubmit}
-    >
-      <Box>
-        <Grid2 container direction={"row"}>
-          <input
-            type="hidden"
-            id="domainId"
-            name="editDomainId"
-            value={editDomainId}
+    <Box>
+      <Dialog
+        fullWidth
+        maxWidth="lg"
+        open={openEditDomainDialog}
+        onClose={handleCloseEditDomainDialog}
+        PaperProps={{
+          component: "form",
+          onSubmit: (event) => {
+            onUpdateDomainSubmit(event);
+            handleCloseEditDomainDialog();
+          },
+        }}
+      >
+        <DialogTitle sx={{ pl: 8, pr: 8 }}>Editar dominio </DialogTitle>
+        <DialogContent sx={{ pl: 8, pr: 8 }}>
+          <DialogContentText color="primary.main">
+            Escriba su nombre de dominio o sitio web a continuación para crear
+            una nueva instancia de CookieManager
+          </DialogContentText>
+          <DialogContentText sx={{ mt: 2 }} color="primary.main">
+            CookieManager restrará el sitio web para identificar las cookies en
+            uso y crear un banner personalizado de consentimiento de cookies. La
+            primera exploración sólo escanerá una solo página para acelerar el
+            proceso de despliegue. Una exploración completa del sitio se llevará
+            a cabo 24 horas más tarde o puede solicitar manualmente un nuevo
+            análisis.
+          </DialogContentText>
+          <CDialogForm
+            domainName={domainToEdit.name}
+            domainOwner={domainOwner}
+            domainContactEmail={domainContactEmail}
+            domainCountryOrigin={domainCountryOrigin}
+            domainDescription={domainDescription}
+            onEditDomainChange={onEditDomainChange}
           />
-          <Box sx={{ width: 775, mt: 2 }}>
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="editDomainName"
-              placeholder="Nombre de dominio"
-              label="Nombre de dominio"
-              value={editDomainName}
-              type="text"
+          <FormControl sx={{ width: 775, mt: 1 }} size="medium">
+            <InputLabel id="select-status-label">Estado</InputLabel>
+            <Select
+              labelId="select-status-label"
+              name="domainStatus"
+              value={domainStatus}
               onChange={onEditDomainChange}
-              sx={{ width: 378, mr: 2 }}
-            />
-            <TextField
-              autoFocus
-              required
-              id="name"
-              placeholder="Nombre propietario"
-              label="Nombre propietario"
-              name="editDomainOwner"
-              value={editDomainOwner}
-              type="text"
-              onChange={onEditDomainChange}
-              sx={{ width: 378 }}
-            />
+              label="Estado"
+            >
+              <MenuItem value="Activo">Activo</MenuItem>
+              <MenuItem value="Inactivo">Inactivo</MenuItem>
+            </Select>
+          </FormControl>
+          <Box>
+            <Typography variant="h6" sx={{ mt: 2 }}>
+              Marcos políticos y configuración del consentimiento
+            </Typography>
+            <Typography>
+              Seleccione una plantilla a continuación para controlar la
+              configuración regional y los marcos de políticas para su dominio.
+              Siempre puede cambiar estos ajustes más adelante.
+            </Typography>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Por defecto (consentimiento explícito)"
+              />
+            </FormGroup>
+            <Typography>
+              El diálogo de consentimiento de CookieManager se mostrará para
+              todos los usuarios, requiriendo el consentimiento explícito.
+              Política simple y estricta para cumplir con la mayoría de las
+              regulaciones, incluyendo GDPR.
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 2 }}>
+              Marcos políticos y configuración del consentimiento
+            </Typography>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Activar el modo consentimiento"
+              />
+            </FormGroup>
+            <Typography>
+              El modo de consentimiento está perfectamente integrado en
+              CookieManager, garantizando una implementación sin esfuerxo en
+              línea con los requisitos técnicos del modo de consentimiento.
+            </Typography>
           </Box>
-          <Box sx={{ width: 775, mt: 1 }}>
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="email"
-              label="Correo electrónico"
-              value={email}
-              type="text"
-              onChange={onEditDomainChange}
-              sx={{ width: 378, mr: 2 }}
-            />
-            <TextField
-              autoFocus
-              required
-              id="name"
-              name="editDomainCountryOrigin"
-              placeholder="Pais"
-              label="Pais"
-              value={editDomainCountryOrigin}
-              type="text"
-              onChange={onEditDomainChange}
-              sx={{ width: 378 }}
-            />
-          </Box>
-          <Box sx={{ width: 775, mt: 1 }}>
-            <TextField
-              autoFocus
-              id="name"
-              name="editDomainDescription"
-              placeholder="Descripción"
-              label="Descripción"
-              value={editDomainDescription}
-              type="text"
-              onChange={onEditDomainChange}
-              fullWidth
-              multiline
-              rows={4}
-            />
-          </Box>
-        </Grid2>
-      </Box>
-      <Box>
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Marcos políticos y configuración del consentimiento
-        </Typography>
-        <Typography>
-          Seleccione una plantilla a continuación para controlar la
-          configuración regional y los marcos de políticas para su dominio.
-          Siempre puede cambiar estos ajustes más adelante.
-        </Typography>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Por defecto (consentimiento explícito)"
-          />
-        </FormGroup>
-        <Typography>
-          El diálogo de consentimiento de CookieManager se mostrará para todos
-          los usuarios, requiriendo el consentimiento explícito. Política simple
-          y estricta para cumplir con la mayoría de las regulaciones, incluyendo
-          GDPR.
-        </Typography>
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Marcos políticos y configuración del consentimiento
-        </Typography>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Activar el modo consentimiento"
-          />
-        </FormGroup>
-        <Typography>
-          El modo de consentimiento está perfectamente integrado en
-          CookieManager, garantizando una implementación sin esfuerxo en línea
-          con los requisitos técnicos del modo de consentimiento.
-        </Typography>
-      </Box>
-    </DialogLayout>
+        </DialogContent>
+        <DialogActions sx={{ pl: 8, pr: 8, pb: 3 }}>
+          <Button
+            variant="outlined"
+            type="submit"
+            sx={{
+              bgcolor: "secondary.main",
+              color: "white",
+              borderColor: "secondary.main",
+            }}
+          >
+            Actualizar dominio
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ bgcolor: "primary.main", color: "white" }}
+            onClick={handleCloseEditDomainDialog}
+          >
+            Cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
 CEditDomainDialog.propTypes = {
-  domainName: PropTypes.string,
+  domainToEdit: PropTypes.object.isRequired,
   openEditDomainDialog: PropTypes.bool,
   handleCloseEditDomainDialog: PropTypes.func,
-  domain: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    description: PropTypes.string,
-    status: PropTypes.string,
-    owner: PropTypes.string,
-    contactEmail: PropTypes.string,
-    countryOrigin: PropTypes.string,
-  }),
 };

@@ -2,8 +2,11 @@ import PropTypes from "prop-types";
 
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../../hooks";
 
 export const CManageSubscription = ({ handleCancelSubscription }) => {
+  const { user } = useAuthStore();
+
   return (
     <>
       <Typography variant="h6" sx={{ mt: 4 }}>
@@ -24,7 +27,7 @@ export const CManageSubscription = ({ handleCancelSubscription }) => {
         }}
       >
         <Typography variant="h6" component="span" fontWeight="bold">
-          Basic
+          {user.subscription}
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
           <Link to="/subscription" style={{ textDecoration: "none" }}>
@@ -40,17 +43,19 @@ export const CManageSubscription = ({ handleCancelSubscription }) => {
               Actualizar plan
             </Button>
           </Link>
-          <Button
-            variant="contained"
-            onClick={handleCancelSubscription}
-            sx={{
-              width: 170,
-              height: 40,
-              bgcolor: "primary.main",
-            }}
-          >
-            Cancelar plan
-          </Button>
+          {user.subscription !== "Starter" && (
+            <Button
+              variant="contained"
+              onClick={handleCancelSubscription}
+              sx={{
+                width: 170,
+                height: 40,
+                bgcolor: "primary.main",
+              }}
+            >
+              Cancelar plan
+            </Button>
+          )}
         </Box>
       </Box>
     </>

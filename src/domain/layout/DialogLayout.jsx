@@ -2,25 +2,23 @@ import PropTypes from "prop-types";
 
 import {
   Box,
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const DialogLayout = ({
   title = "",
   children,
   description1 = "",
   description2 = "",
-  maxWidth = "null",
+  maxWidth = "",
   open,
   onClose,
   funcion,
-  titleButton1 = "",
-  titleButton2 = "",
 }) => {
   return (
     <>
@@ -38,41 +36,27 @@ export const DialogLayout = ({
             },
           }}
         >
-          <DialogTitle sx={{ pl: 8, pr: 8 }}>{title}</DialogTitle>
+          <DialogTitle sx={{ pl: 8, pr: 8 }}>
+            {title}
+
+            <IconButton
+              onClick={onClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+              }}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
 
           <DialogContent sx={{ pl: 8, pr: 8 }}>
             <DialogContentText>{description1}</DialogContentText>
             <DialogContentText sx={{ mt: 2 }}>{description2}</DialogContentText>
             {children}
           </DialogContent>
-          <DialogActions
-            sx={{
-              pl: 8,
-              pr: 8,
-              pb: 3,
-            }}
-          >
-            {titleButton1 && (
-              <Button
-                variant="outlined"
-                type="submit"
-                sx={{
-                  bgcolor: "secondary.main",
-                  color: "white",
-                  borderColor: "secondary.main",
-                }}
-              >
-                {titleButton1}
-              </Button>
-            )}
-            <Button
-              variant="outlined"
-              sx={{ bgcolor: "primary.main", color: "white" }}
-              onClick={onClose}
-            >
-              {titleButton2}
-            </Button>
-          </DialogActions>
         </Dialog>
       </Box>
     </>
