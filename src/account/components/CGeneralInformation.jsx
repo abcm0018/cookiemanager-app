@@ -61,6 +61,7 @@ export const CGeneralInformation = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Aceptar",
+      cancelButtonText: "Cancelar",
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
