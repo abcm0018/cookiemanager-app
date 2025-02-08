@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-
 import { Grid2 } from "@mui/material";
 import { SubscriptionDetails } from "./SubscriptionDetails";
 
@@ -14,8 +13,6 @@ export const CardsSubscriptions = ({ subscriptions = [] }) => {
             description={subcription.description}
             price={subcription.price}
             maxDomains={subcription.maxDomains}
-            characteristic1={subcription.characteristic1}
-            characteristic2={subcription.characteristic2}
           />
         ))}
       </Grid2>

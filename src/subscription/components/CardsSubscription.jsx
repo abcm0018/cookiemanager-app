@@ -36,10 +36,9 @@ export const CardsSubscription = ({ subscriptions = [] }) => {
           <SubscriptionDetails
             key={subcription.id}
             title={subcription.planType}
+            maxDomains={subcription.maxDomains}
             description={subcription.description}
             price={subcription.price}
-            characteristic1={subcription.characteristic1}
-            characteristic2={subcription.characteristic2}
             buttonTitle={subcription.buttonTitle}
             handleUpdateSubscription={() =>
               handleUpdateSubscription(subcription.planType)

@@ -10,6 +10,7 @@ import {
   onAddNewBanner,
   onUpdateBanner,
   onLoadCookieStatistics,
+  onLoadScriptBanner,
 } from "../store/domain/domainSlice";
 import Swal from "sweetalert2";
 
@@ -19,9 +20,11 @@ export const useDomainStore = () => {
   const {
     isLoadingDomains,
     isLoadingCookieBanner,
+    isLoadingScriptBanner,
     statistics,
     domains,
     banner,
+    script,
     errorMessage,
   } = useSelector((state) => state.domains);
 
@@ -144,7 +147,7 @@ export const useDomainStore = () => {
       console.log("Error al cargar los datos del banner: ", error);
       console.log(error);
       Swal.fire(
-        "Error al obtener los datos del dominio",
+        "Error al obtener los datos del banner",
         error.response.data.msg,
         "error"
       );
@@ -164,7 +167,7 @@ export const useDomainStore = () => {
     companyLogo,
   }) => {
     try {
-      const { data } = await cookieManagerApi.post(`/banner/${id}`, {
+      const { data } = await cookieManagerApi.post(`/domains/${id}/banner`, {
         title,
         cookieDeclaration,
         legislation,
@@ -185,7 +188,7 @@ export const useDomainStore = () => {
     } catch (error) {
       console.error(error);
       const errorMessage = error.response?.data?.msg || "Error desconocido";
-      Swal.fire("Error al crear el dominio", errorMessage, "error");
+      Swal.fire("Error al crear el banner", errorMessage, "error");
 
       // Retornamos null en caso de error.
       return null;
@@ -314,12 +317,34 @@ export const useDomainStore = () => {
     }
   };
 
+  const startLoadingScript = async (domainId) => {
+    console.log("Valor de domainId:", domainId);
+    try {
+      const { data } = await cookieManagerApi.get(
+        `/domains/${domainId}/script-banner`
+      );
+      console.log("Datos recibidos:", data);
+      dispatch(onLoadScriptBanner(data));
+      return data;
+    } catch (error) {
+      console.log("Error al cargar los datos del script: ", error);
+      console.log(error);
+      Swal.fire(
+        "Error al obtener los datos del script",
+        error.response.data.msg,
+        "error"
+      );
+    }
+  };
+
   return {
     // Propiedades
     isLoadingDomains,
     isLoadingCookieBanner,
+    isLoadingScriptBanner,
     domains,
     banner,
+    script,
     statistics,
     errorMessage,
     // Métodos
@@ -333,5 +358,6 @@ export const useDomainStore = () => {
     startLoadingStatistics,
     starGettingDomainById,
     startExportingCookies,
+    startLoadingScript,
   };
 };

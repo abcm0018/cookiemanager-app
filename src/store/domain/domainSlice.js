@@ -6,9 +6,11 @@ export const domainSlice = createSlice({
     isLoadingDomains: true, // Nos indica si estan cargados los dominios o no
     isLoadingCookieBanner: true, // Nos indica si ya se ha cargado la informacion del banner
     isLoadingCookieStatistics: true, // Nos indica si ya se han cargado las estadísticas
+    isLoadingScriptBanner: true,
     domains: [],
     statistics: [], // Listado de estadísiticas del dominio
     banner: {},
+    script: {},
     errorDomainMessage: undefined,
     selectedDomain: null,
   },
@@ -97,6 +99,11 @@ export const domainSlice = createSlice({
       });
     },
 
+    onLoadScriptBanner: (state, { payload }) => {
+      state.isLoadingScriptBanner = false;
+      state.script = payload;
+    },
+
     onClearDomains: (state) => {
       state.domains = [];
       state.banner = {};
@@ -118,5 +125,6 @@ export const {
   onUpdateBanner,
   onLoadCookieStatistics,
   onGetDomainById,
+  onLoadScriptBanner,
   onClearDomains,
 } = domainSlice.actions;

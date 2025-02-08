@@ -1,5 +1,8 @@
 import { Box, Grid2, Typography } from "@mui/material";
 import { CCardImplementation } from "../components";
+import { useDomainStore } from "../../hooks";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 export const ImplementationView = () => {
   const implementationsModes = [
@@ -33,11 +36,9 @@ export const ImplementationView = () => {
         "Este script permite gestionar el consentimiento de los usuarios antes de cargar cualquier etiqueta o script que recopile datos personales. Solo tienes que incluir el código proporcionado en la sección 'head' de tu HTML para empezar. Asegúrate de revisar la documentación completa para obtener más detalles sobre cómo personalizar el comportamiento del script según tus necesidades.",
       firstButtonTitle: "Ver script",
       secondButtonTitle: "Saber más...",
-      scriptCode: "<script>/* Script de Consentimiento aquí */</script>",
       isConsentManagement: true,
     },
   ];
-
   return (
     <Grid2 container sx={{ pb: 10, pt: 4, pl: 14, mr: 14 }}>
       <Box>
@@ -78,7 +79,6 @@ export const ImplementationView = () => {
             details={mode.details}
             instructionsLink={mode.instructionsLink}
             isConsentManagement={mode.isConsentManagement}
-            scriptCode={mode.scriptCode}
           />
         ))}
       </Grid2>

@@ -14,8 +14,7 @@ export const SubscriptionDetails = ({
   title = "",
   description = "",
   price = "",
-  characteristic1 = "",
-  characteristic2 = "",
+  maxDomains = 0,
   buttonTitle = "Actualizar",
   handleUpdateSubscription,
 }) => {
@@ -57,8 +56,7 @@ export const SubscriptionDetails = ({
             component="ul"
             sx={{ color: "text.secondary", pl: 2, mb: 3 }}
           >
-            <li>{characteristic1}</li>
-            <li>{characteristic2}</li>
+            <li>El número máximo de dominios permitidos es: {maxDomains}</li>
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "center", p: 2, pt: 0 }}>
@@ -85,8 +83,7 @@ SubscriptionDetails.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
-  characteristic1: PropTypes.string.isRequired,
-  characteristic2: PropTypes.string.isRequired,
+  maxDomains: PropTypes.number.isRequired,
   buttonTitle: PropTypes.string.isRequired,
   handleUpdateSubscription: PropTypes.func.isRequired,
 };

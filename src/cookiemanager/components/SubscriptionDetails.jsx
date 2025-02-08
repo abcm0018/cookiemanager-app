@@ -7,8 +7,6 @@ export const SubscriptionDetails = ({
   description = "",
   price = "",
   maxDomains = 0,
-  characteristic1 = "",
-  characteristic2 = "",
 }) => {
   return (
     <Grid2>
@@ -49,8 +47,6 @@ export const SubscriptionDetails = ({
             sx={{ color: "text.secondary", pl: 2, mb: 3 }}
           >
             <li>El número máximo de dominios permitidos es: {maxDomains}</li>
-            <li>{characteristic1}</li>
-            <li>{characteristic2}</li>
           </Typography>
         </CardContent>
       </Card>
@@ -63,6 +59,4 @@ SubscriptionDetails.propTypes = {
   description: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   maxDomains: PropTypes.number.isRequired,
-  characteristic1: PropTypes.string.isRequired,
-  characteristic2: PropTypes.string.isRequired,
 };

@@ -47,11 +47,7 @@ export const CAddBannerDialog = ({
 
   useEffect(() => {
     if (errorMessage !== undefined) {
-      Swal.fire(
-        "Error al guardar los datos de la cookie",
-        errorMessage,
-        "error"
-      );
+      Swal.fire("Error al guardar los datos del banner", errorMessage, "error");
     }
   }, [errorMessage]);
   return (

@@ -7,9 +7,11 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CMoreInfoDialog } from "./CDialogMoreInfo";
 import { CScriptDialog } from "./CScriptDialog";
+import { useParams } from "react-router-dom";
+import { useDomainStore } from "../../hooks";
 
 export const CCardImplementation = ({
   title = "",
@@ -18,7 +20,8 @@ export const CCardImplementation = ({
   secondButtonTitle = "",
   details = "",
   instructionsLink = "",
-  scriptCode = "",
+  scriptCss = "",
+  scriptJs = "",
   isConsentManagement = false,
 }) => {
   const [openScriptDialog, setOpenScriptDialog] = useState(false); // Estado para el diálogo de script
@@ -47,6 +50,16 @@ export const CCardImplementation = ({
   const handleMoreInfoDialogClose = () => {
     setOpenMoreInfoDialog(false);
   };
+
+  const { id } = useParams();
+  const { script, startLoadingScript, isLoadingScriptBanner } =
+    useDomainStore();
+
+  console.log("Datos del script cargados:", script);
+
+  useEffect(() => {
+    startLoadingScript(id);
+  }, []);
 
   return (
     <>
@@ -83,11 +96,13 @@ export const CCardImplementation = ({
       </Box>
 
       {/* Diálogo para mostrar el script (solo si es gestión del consentimiento) */}
-      {isConsentManagement && scriptCode && (
+      {isConsentManagement && script && (
         <CScriptDialog
           open={openScriptDialog}
           onClose={handleScriptDialogClose}
-          scriptCode={scriptCode}
+          apiKey={script.apiKey}
+          scriptCss={script.codigoCss}
+          scriptJs={script.codigoJs}
         />
       )}
 
@@ -109,6 +124,7 @@ CCardImplementation.propTypes = {
   secondButtonTitle: PropTypes.string,
   details: PropTypes.string,
   instructionsLink: PropTypes.string,
-  scriptCode: PropTypes.string,
+  scriptCss: PropTypes.string,
+  scriptJs: PropTypes.string,
   isConsentManagement: PropTypes.bool,
 };
