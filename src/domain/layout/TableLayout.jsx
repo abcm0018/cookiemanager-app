@@ -19,13 +19,31 @@ export const TableLayout = ({
 }) => {
   return (
     <Box>
-      <Table sx={sx} aria-label="simple table">
+      <Table sx={{ tableLayout: "fixed", ...sx }} aria-label="simple table">
         <TableHead>
           <TableRow>
             {headers.map((header) => (
               <TableCell
                 key={header.id}
                 sortDirection={orderBy === header.id ? order : false}
+                sx={{
+                  ...(header.id === "name" && {
+                    width: "170px",
+                    minWidth: "170px",
+                  }),
+                  ...(header.id === "category" && {
+                    position: "relative",
+                    left: "10px",
+                  }),
+                  ...(header.id === "etiquetas" && {
+                    position: "relative",
+                    left: "-30px",
+                  }),
+                  ...(header.id === "action" && {
+                    position: "relative",
+                    left: "6.5px", // Ajusta según necesidad
+                  }),
+                }}
               >
                 <TableSortLabel
                   active={orderBy === header.id}

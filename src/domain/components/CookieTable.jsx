@@ -28,7 +28,11 @@ export const CookieTable = ({ cookies = [] }) => {
     { id: "category", label: "Categoría" },
     { id: "provider", label: "Proveedor" },
     { id: "duration", label: "Duración" },
-    { id: "etiquetas", label: "Etiquetas" },
+    {
+      id: "etiquetas",
+      label: "Etiquetas",
+      sx: { textAlign: "left", marginLeft: "-30px" },
+    },
     { id: "action", label: "Acción" },
   ];
 
@@ -167,7 +171,6 @@ export const CookieTable = ({ cookies = [] }) => {
               id,
               name,
               category,
-              //type,
               provider,
               duration,
               samesite,
@@ -206,7 +209,7 @@ export const CookieTable = ({ cookies = [] }) => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    pl: 2,
+                    pl: 3.3,
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -238,7 +241,11 @@ export const CookieTable = ({ cookies = [] }) => {
                   <Typography variant="body1">{duration}</Typography>
                 </TableCell>
                 <TableCell sx={{ pl: 2 }} padding="none">
-                  <Stack direction="row" spacing={1}>
+                  <Stack
+                    direction="row"
+                    spacing={0.5}
+                    sx={{ marginLeft: "-30px" }}
+                  >
                     {etiquetas.map((etiqueta) => (
                       <Box key={etiqueta.id} disablePadding dense>
                         <Chip
