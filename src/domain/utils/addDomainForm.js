@@ -1,7 +1,7 @@
 export const addDomainForm = {
-  newDomainName: "",
-  newDomainDescription: "",
-  newDomainOwner: "",
-  newDomainContactEmail: "",
-  newDomainCountryOrigin: "",
+  domainName: "",
+  domainDescription: "",
+  domainOwner: "",
+  domainContactEmail: "",
+  domainCountryOrigin: "",
 };

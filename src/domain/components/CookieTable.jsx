@@ -17,10 +17,10 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { CEditCookieDialog } from "./CEditCookieDialog";
 import React, { useState } from "react";
 import { CInfoCookieDialog } from "./CInfoCookieDialog";
-import { TableLayout } from "../layout/TableLayout";
 import Swal from "sweetalert2";
 import { useCookieStore } from "../../hooks/useCookieStore";
 import { CSearchCookieDialog } from "./CSearchCookieDialog";
+import { TableCookieLayout } from "../layout/TableCookieLayout";
 
 export const CookieTable = ({ cookies = [] }) => {
   const headers = [
@@ -158,7 +158,7 @@ export const CookieTable = ({ cookies = [] }) => {
         </IconButton>
       </Toolbar>
 
-      <TableLayout
+      <TableCookieLayout
         headers={headers}
         order={order}
         orderBy={orderBy}
@@ -173,13 +173,13 @@ export const CookieTable = ({ cookies = [] }) => {
               category,
               provider,
               duration,
-              samesite,
+              sameSite,
               secure,
               httpOnly,
             } = cookie;
 
             const etiquetas = [
-              { id: 1, nombre: `${samesite}`, color: "#2196f3" },
+              { id: 1, nombre: `${sameSite}`, color: "#2196f3" },
             ];
 
             if (secure)
@@ -298,7 +298,7 @@ export const CookieTable = ({ cookies = [] }) => {
               </TableRow>
             );
           })}
-      </TableLayout>
+      </TableCookieLayout>
 
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

@@ -29,11 +29,11 @@ export const CAddDomainDialog = ({
   const navigate = useNavigate();
 
   const {
-    newDomainName,
-    newDomainDescription,
-    newDomainOwner,
-    newDomainContactEmail,
-    newDomainCountryOrigin,
+    domainName,
+    domainDescription,
+    domainOwner,
+    domainContactEmail,
+    domainCountryOrigin,
     onInputChange: onCreateDomainChange,
   } = useForm(addDomainForm);
 
@@ -87,12 +87,12 @@ export const CAddDomainDialog = ({
     }
 
     startSavingDomain({
-      name: newDomainName,
-      description: newDomainDescription,
+      name: domainName,
+      description: domainDescription,
       status: estado,
-      owner: newDomainOwner,
-      contactEmail: newDomainContactEmail,
-      countryOrigin: newDomainCountryOrigin,
+      owner: domainOwner,
+      contactEmail: domainContactEmail,
+      countryOrigin: domainCountryOrigin,
     });
   };
 
@@ -132,12 +132,12 @@ export const CAddDomainDialog = ({
             análisis.
           </DialogContentText>
           <CDialogForm
-            newDomainName={newDomainName}
-            newDomainDescription={newDomainDescription}
-            newDomainOwner={newDomainOwner}
-            newDomainContactEmail={newDomainContactEmail}
-            newDomainCountryOrigin={newDomainCountryOrigin}
-            onAddDomainChange={onCreateDomainChange}
+            domainName={domainName}
+            domainDescription={domainDescription}
+            domainOwner={domainOwner}
+            domainContactEmail={domainContactEmail}
+            domainCountryOrigin={domainCountryOrigin}
+            onEditDomainChange={onCreateDomainChange}
           />
           <Box sx={{ width: 775, mt: 3 }}>
             <Typography variant="h6" sx={{ mt: 2 }}>

@@ -30,6 +30,7 @@ export const StatisticsForm = () => {
     country,
     platform,
     state,
+    language,
     onInputChange: onStatisticsInputChange,
     onResetForm: clearFilters,
   } = useForm(statisticsFormFields);
@@ -62,6 +63,7 @@ export const StatisticsForm = () => {
     plataforma: platform,
     pais: country,
     categoria: category,
+    idioma: language,
   });
 
   const handleCloseDialog = () => {
@@ -106,12 +108,13 @@ export const StatisticsForm = () => {
             Aplica los siguientes filtros para refinar aun más los resultados
           </Typography>
         </Box>
-        <Grid2 container sx={{ pt: 2, width: 950 }}>
+        <Grid2 container sx={{ pt: 2, width: 930 }}>
           <CSelectStatisticsForm
             category={category}
             country={country}
             platform={platform}
             state={state}
+            language={language}
             onStatisticsInputChange={onStatisticsInputChange}
           />
           <CStatisticsButtonForm clearFilters={handleClearFilters} />

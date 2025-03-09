@@ -1,8 +1,5 @@
 import { Box, Grid2, Typography } from "@mui/material";
 import { CCardImplementation } from "../components";
-import { useDomainStore } from "../../hooks";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
 
 export const ImplementationView = () => {
   const implementationsModes = [
@@ -36,6 +33,7 @@ export const ImplementationView = () => {
         "Este script permite gestionar el consentimiento de los usuarios antes de cargar cualquier etiqueta o script que recopile datos personales. Solo tienes que incluir el código proporcionado en la sección 'head' de tu HTML para empezar. Asegúrate de revisar la documentación completa para obtener más detalles sobre cómo personalizar el comportamiento del script según tus necesidades.",
       firstButtonTitle: "Ver script",
       secondButtonTitle: "Saber más...",
+      thirdButtonTitle: "Descargar fichero",
       isConsentManagement: true,
     },
   ];
@@ -76,6 +74,7 @@ export const ImplementationView = () => {
             description={mode.description}
             firstButtonTitle={mode.firstButtonTitle}
             secondButtonTitle={mode.secondButtonTitle}
+            thirdButtonTitle={mode.thirdButtonTitle}
             details={mode.details}
             instructionsLink={mode.instructionsLink}
             isConsentManagement={mode.isConsentManagement}

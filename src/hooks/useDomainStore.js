@@ -317,6 +317,47 @@ export const useDomainStore = () => {
     }
   };
 
+  const startDownloadFile = async (idBanner) => {
+    console.log("Valor de bannerId: ", idBanner);
+    try {
+      const response = await cookieManagerApi.get(
+        `/banner/scripts/export-file`,
+        {
+          params: { idBanner },
+          responseType: "blob", // Importante para manejar archivos
+        }
+      );
+
+      // Extraer el nombre del archivo desde Content-Disposition
+      const contentDisposition = response.headers["content-disposition"];
+      console.log(contentDisposition);
+      let fileName = "script_banner.js"; // Nombre por defecto
+
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="(.+?)"/);
+        if (match && match[1]) {
+          fileName = match[1];
+        }
+      }
+
+      // Crear un enlace para descargar el archivo con el nombre correcto
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName); // Usar el nombre extraído
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error al cargar los datos del script: ", error);
+      Swal.fire(
+        "Error al obtener los datos del script",
+        error.response?.data?.msg || "Error desconocido",
+        "error"
+      );
+    }
+  };
+
   const startLoadingScript = async (domainId) => {
     console.log("Valor de domainId:", domainId);
     try {
@@ -358,6 +399,7 @@ export const useDomainStore = () => {
     startLoadingStatistics,
     starGettingDomainById,
     startExportingCookies,
+    startDownloadFile,
     startLoadingScript,
   };
 };

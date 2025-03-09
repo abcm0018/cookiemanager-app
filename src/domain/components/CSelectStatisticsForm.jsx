@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-
 import {
   Box,
   FormControl,
@@ -14,73 +13,116 @@ export const CSelectStatisticsForm = ({
   country,
   platform,
   state,
+  language,
   onStatisticsInputChange,
 }) => {
   return (
     <>
-      <Box sx={{ width: 220, mr: 2 }}>
-        <Typography sx={{ mb: 1 }}>Filtrar por categoria de cookie</Typography>
-        <FormControl fullWidth size="medium">
-          <InputLabel id="select-label-idioma">Categoria de cookie</InputLabel>
-          <Select
-            label="Tipo de cookie"
-            onChange={onStatisticsInputChange}
-            name="category"
-            value={category}
-          >
-            <MenuItem value="Essential">Esenciales</MenuItem>
-            <MenuItem value="Optional">Opcionales</MenuItem>
-            <MenuItem value="Third">Terceros</MenuItem>
-          </Select>
-        </FormControl>
+      {/* Filtros principales alineados con las fechas */}
+      <Box
+        width="100%"
+        maxWidth="900px"
+        margin="0 auto"
+        mb={2}
+        display="flex"
+        gap={2}
+        justifyContent="space-between"
+      >
+        <Box flex={1} sx={{ ml: -2 }}>
+          {" "}
+          {/* Movemos la categoría un poco a la izquierda */}
+          <Typography sx={{ mb: 1 }}>
+            Filtrar por categoría de cookie
+          </Typography>
+          <FormControl fullWidth size="medium">
+            <InputLabel>Categoría de cookie</InputLabel>
+            <Select
+              name="category"
+              value={category}
+              onChange={onStatisticsInputChange}
+            >
+              <MenuItem value="Essential">Esenciales</MenuItem>
+              <MenuItem value="Optional">Opcionales</MenuItem>
+              <MenuItem value="Third">Terceros</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box flex={1}>
+          <Typography sx={{ mb: 1 }}>Filtrar por país de acceso</Typography>
+          <FormControl fullWidth size="medium">
+            <InputLabel>País de acceso</InputLabel>
+            <Select
+              name="country"
+              value={country}
+              onChange={onStatisticsInputChange}
+            >
+              <MenuItem value="fr">Francia</MenuItem>
+              <MenuItem value="es">España</MenuItem>
+              <MenuItem value="it">Italia</MenuItem>
+              <MenuItem value="de">Alemania</MenuItem>
+              <MenuItem value="pt">Portugal</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box flex={1} sx={{ mr: -1.7 }}>
+          <Typography sx={{ mb: 1 }}>Filtrar por idioma</Typography>
+          <FormControl fullWidth size="medium">
+            <InputLabel>Idioma</InputLabel>
+            <Select
+              name="language"
+              value={language}
+              onChange={onStatisticsInputChange}
+            >
+              <MenuItem value="fr">Francés</MenuItem>
+              <MenuItem value="es-ES">Español</MenuItem>
+              <MenuItem value="it">Italiano</MenuItem>
+              <MenuItem value="de">Alemán</MenuItem>
+              <MenuItem value="pt">Portugués</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
-      <Box sx={{ width: 220, mr: 2 }}>
-        <Typography sx={{ mb: 1 }}>Filtrar por país de acceso</Typography>
-        <FormControl fullWidth size="medium">
-          <InputLabel id="select-label-idioma">País de acceso</InputLabel>
-          <Select
-            label="País de acceso"
-            onChange={onStatisticsInputChange}
-            name="country"
-            value={country}
-          >
-            <MenuItem value="fr">Francia</MenuItem>
-            <MenuItem value="es">España</MenuItem>
-            <MenuItem value="it">Italia</MenuItem>
-            <MenuItem value="de">Alemania</MenuItem>
-            <MenuItem value="pt">Portugal</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-      <Box sx={{ width: 220, mr: 2 }}>
-        <Typography sx={{ mb: 1 }}>Filtrar por plataforma</Typography>
-        <FormControl fullWidth size="medium">
-          <InputLabel id="select-label-idioma">Tipo de plataforma</InputLabel>
-          <Select
-            label="Tipo de plataforma"
-            onChange={onStatisticsInputChange}
-            name="platform"
-            value={platform}
-          >
-            <MenuItem value="Mobile">Móvil</MenuItem>
-            <MenuItem value="web">Web</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-      <Box sx={{ width: 220 }}>
-        <Typography sx={{ mb: 1 }}>Filtrar por el estado</Typography>
-        <FormControl fullWidth size="medium">
-          <InputLabel id="select-label-idioma">Estado de aceptación</InputLabel>
-          <Select
-            label="Estado de aceptación"
-            value={state}
-            onChange={onStatisticsInputChange}
-            name="state"
-          >
-            <MenuItem value="Aceptado">Aceptado</MenuItem>
-            <MenuItem value="Rechazado">Rechazado</MenuItem>
-          </Select>
-        </FormControl>
+
+      {/* Segunda fila centrada */}
+      <Box
+        width="100%"
+        maxWidth="600px"
+        margin="0 auto"
+        display="flex"
+        gap={2}
+        justifyContent="center"
+      >
+        <Box flex={1}>
+          <Typography sx={{ mb: 1 }}>Filtrar por plataforma</Typography>
+          <FormControl fullWidth size="medium">
+            <InputLabel>Tipo de plataforma</InputLabel>
+            <Select
+              name="platform"
+              value={platform}
+              onChange={onStatisticsInputChange}
+            >
+              <MenuItem value="Mobile">Móvil</MenuItem>
+              <MenuItem value="web">Web</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box flex={1}>
+          <Typography sx={{ mb: 1 }}>Filtrar por el estado</Typography>
+          <FormControl fullWidth size="medium">
+            <InputLabel>Estado de aceptación</InputLabel>
+            <Select
+              name="state"
+              value={state}
+              onChange={onStatisticsInputChange}
+            >
+              <MenuItem value="Aceptado">Aceptado</MenuItem>
+              <MenuItem value="Rechazado">Rechazado</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
     </>
   );
@@ -91,5 +133,6 @@ CSelectStatisticsForm.propTypes = {
   country: PropTypes.string,
   platform: PropTypes.string,
   state: PropTypes.string,
+  language: PropTypes.string,
   onStatisticsInputChange: PropTypes.func,
 };

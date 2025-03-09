@@ -50,19 +50,54 @@ export const useUserStore = () => {
 
   const startUpdatingPlanUser = async ({ planType }) => {
     try {
-      const { data } = await cookieManagerApi.post(
-        `/users/subscriptions/${planType}`,
-        { email: user.email }
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        Swal.fire(
+          "Error",
+          "No estás autenticado. Inicia sesión primero.",
+          "error"
+        );
+        return;
+      }
+
+      const { data } = await cookieManagerApi.put(
+        `/payment/create?planType=${planType}` // Enviar planType en la URL
       );
-      console.log(data);
-      dispatch(onUpdateSubscriptionPlan({ newPlan: planType }));
+      console.log("Redirigiendo a PayPal con URL:", data.approvalUrl);
+      if (data.approvalUrl) {
+        window.location.href = data.approvalUrl; // Redirigir manualmente a PayPal
+      } else {
+        Swal.fire(
+          "Error",
+          "No se recibió una URL de aprobación de PayPal.",
+          "error"
+        );
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error al actualizar el plan:", error);
       Swal.fire(
         "Error al actualizar el plan",
-        error.response.data.msg,
+        error.response?.data?.message || "Ocurrió un error inesperado",
         "error"
       );
+    }
+  };
+
+  const startPaymentSuccess = async (paymentId, PayerId) => {
+    try {
+      console.log("🔍 Procesando pago con:", { paymentId, PayerId });
+
+      const { data } = await cookieManagerApi.get(`/payment/success`, {
+        params: { paymentId, PayerId },
+      });
+
+      console.log("✅ Respuesta del backend:", data);
+
+      Swal.fire("Éxito", "Suscripción actualizada correctamente", "success");
+      dispatch(onUpdateSubscriptionPlan({ newPlan: data.planType }));
+    } catch (error) {
+      console.error("❌ Error en el pago:", error);
     }
   };
 
@@ -91,6 +126,7 @@ export const useUserStore = () => {
     startUpdatingUser,
     startCancelPlanUser,
     startUpdatingPlanUser,
+    startPaymentSuccess,
     startLoadingSubscriptions,
   };
 };

@@ -67,7 +67,7 @@ export const DomainTable = ({ domains = [] }) => {
   }, [errorMessage]);
   return (
     <Box>
-      <TableLayout headers={headers} sx={{ minWidth: 750 }}>
+      <TableLayout headers={headers}>
         {domains.map((domain) => (
           <TableRow
             key={domain.id}

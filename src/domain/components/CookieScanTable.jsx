@@ -18,7 +18,7 @@ export const CookieScanTable = ({ domain = {}, onDetailClick }) => {
   const fechaModificacion = dayjs(domain.dateModification).format("DD/MM/YYYY");
 
   return (
-    <TableLayout headers={headers} sx={{ minWidth: 750 }}>
+    <TableLayout headers={headers}>
       <TableRow
         key={domain.id}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

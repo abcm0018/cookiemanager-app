@@ -5,4 +5,5 @@ export const statisticsFormFields = {
   country: "",
   platform: "",
   state: "",
+  language: "",
 };

@@ -5,7 +5,7 @@ export const userSlice = createSlice({
   initialState: {
     isLoadingUser: true, // Indica si los datos se han cargado correctamente
     isLoadingSubscriptions: true, // Nos indica si ya se han cargado las subscripciones
-    user: [],
+    user: {},
     errorMessage: undefined,
   },
   reducers: {
@@ -13,34 +13,20 @@ export const userSlice = createSlice({
     onUpdateUser: (state, { payload }) => {
       // código para actualizar un dominio
       state.isLoadingUser = false;
-      const index = state.users.findIndex((user) => user.id === payload.id);
-
-      if (index !== -1) {
-        state.users[index] = payload;
-      }
+      state.user = payload;
     },
+
     // Acción para cancelar la suscripción de un usuario
     onCancelSubscription: (state, { payload }) => {
       state.isLoadingUser = false;
-      const index = state.users.findIndex((user) => user.id === payload.userId);
-
-      if (index !== -1) {
-        state.users[index] = {
-          ...state.users[index],
-          subscription: "Starter", // Asume que `subscription` almacena el plan actual
-        };
-      }
+      state.user = payload;
     },
+
     // Actualizar el plan de subscripción de un usuario
     onUpdateSubscriptionPlan: (state, { payload }) => {
       state.isLoadingUser = false;
-      const index = state.users.findIndex((user) => user.id === payload.userId);
-      if (index !== -1) {
-        state.users[index] = {
-          ...state.users[index],
-          subscription: payload.newPlan,
-        };
-      }
+      console.log("Actualizar plan: ", payload);
+      state.user = payload;
     },
   },
 });

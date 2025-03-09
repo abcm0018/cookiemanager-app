@@ -30,6 +30,7 @@ export const useCookieStore = () => {
   const startSavingCookie = async ({
     domainId,
     name,
+    category,
     type,
     description,
     provider,
@@ -43,6 +44,7 @@ export const useCookieStore = () => {
         `/domains/${domainId}/cookie`,
         {
           name,
+          category,
           type,
           description,
           provider,
@@ -81,7 +83,7 @@ export const useCookieStore = () => {
     description,
     provider,
     duration,
-    samesite,
+    sameSite,
     httpOnly,
     secure,
   }) => {
@@ -93,7 +95,7 @@ export const useCookieStore = () => {
         description,
         provider,
         duration,
-        samesite,
+        sameSite,
         httpOnly,
         secure,
       });

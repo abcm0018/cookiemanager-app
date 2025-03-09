@@ -17,7 +17,7 @@ export const CCookieForm = ({
   description,
   provider,
   duration,
-  samesite,
+  sameSite,
   httpOnly,
   secure,
   onAddCookieChange,
@@ -150,8 +150,8 @@ export const CCookieForm = ({
             <Select
               label="Samesite"
               onChange={onAddCookieChange}
-              name="samesite"
-              value={samesite}
+              name="sameSite"
+              value={sameSite}
             >
               <MenuItem value="Strict">Strict</MenuItem>
               <MenuItem value="Lax">Lax</MenuItem>
@@ -175,7 +175,7 @@ CCookieForm.propTypes = {
   description: PropTypes.string,
   provider: PropTypes.string,
   duration: PropTypes.string,
-  samesite: PropTypes.string,
+  sameSite: PropTypes.string,
   httpOnly: PropTypes.string,
   secure: PropTypes.string,
   onAddCookieChange: PropTypes.func,

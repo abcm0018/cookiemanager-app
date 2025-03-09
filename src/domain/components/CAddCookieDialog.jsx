@@ -9,11 +9,11 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useForm } from "../../hooks";
-import { addCookieForm } from "../utils";
 import { useCookieStore } from "../../hooks/useCookieStore";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 import { CCookieForm } from "./CCookieForm";
+import { addCookieForm } from "../utils";
 
 export const CAddCookieDialog = ({
   domainId,
@@ -22,9 +22,9 @@ export const CAddCookieDialog = ({
 }) => {
   const { startSavingCookie, errorMessage } = useCookieStore();
   const {
-    cookieName,
-    cookieCategory,
-    cookieType,
+    name,
+    category,
+    type,
     description,
     provider,
     duration,
@@ -38,13 +38,13 @@ export const CAddCookieDialog = ({
     event.preventDefault();
     startSavingCookie({
       domainId: parseInt(domainId, 10),
-      name: cookieName,
-      category: cookieCategory,
-      type: cookieType,
+      name: name,
+      category: category,
+      type: type,
       description: description,
       provider: provider,
       duration: duration,
-      samesite: sameSite,
+      sameSite: sameSite,
       httpOnly: httpOnly === "S" ? true : false,
       secure: secure === "S" ? true : false,
     });
@@ -81,13 +81,13 @@ export const CAddCookieDialog = ({
             puedes añadirla manualmente en tu declaración de cookie
           </DialogContentText>
           <CCookieForm
-            name={cookieName}
-            category={cookieCategory}
-            type={cookieType}
+            name={name}
+            category={category}
+            type={type}
             description={description}
             provider={provider}
             duration={duration}
-            samesite={sameSite}
+            sameSite={sameSite}
             secure={secure}
             onAddCookieChange={onAddCookieChange}
           />

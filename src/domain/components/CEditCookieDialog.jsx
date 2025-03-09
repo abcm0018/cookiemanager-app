@@ -27,7 +27,7 @@ export const CEditCookieDialog = ({
     description,
     provider,
     duration,
-    samesite,
+    sameSite,
     httpOnly,
     secure,
     onInputChange: onEditCookieChange,
@@ -36,8 +36,6 @@ export const CEditCookieDialog = ({
 
   // Prellenar los datos del formulario cuando el diálogo se abre
   useEffect(() => {
-    console.log("Datos iniciales de cookie:", cookie);
-    console.log("Categoría inicial:", cookie.category);
     if (openEditCookieDialog && cookie) {
       setFormState({
         category: cookie.category,
@@ -45,7 +43,7 @@ export const CEditCookieDialog = ({
         description: cookie.description,
         provider: cookie.provider,
         duration: cookie.duration,
-        samesite: cookie.samesite,
+        sameSite: cookie.sameSite,
         httpOnly: cookie.httpOnly ? "S" : "N",
         secure: cookie.secure ? "S" : "N",
       });
@@ -63,7 +61,7 @@ export const CEditCookieDialog = ({
       description: description,
       provider: provider,
       duration: duration,
-      sameSite: samesite,
+      sameSite: sameSite,
       httpOnly: httpOnly === "S" ? true : false,
       secure: secure === "S" ? true : false,
     });
@@ -108,7 +106,7 @@ export const CEditCookieDialog = ({
             description={description}
             provider={provider}
             duration={duration}
-            samesite={samesite}
+            sameSite={sameSite}
             httpOnly={httpOnly}
             secure={secure}
             onAddCookieChange={onEditCookieChange}

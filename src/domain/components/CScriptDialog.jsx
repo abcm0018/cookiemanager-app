@@ -42,7 +42,7 @@ export const CScriptDialog = ({
               rows={3}
               value={apiKey}
               variant="outlined"
-              InputProps={{
+              PaperProps={{
                 readOnly: true,
                 style: { fontFamily: "monospace" },
               }}
@@ -54,7 +54,7 @@ export const CScriptDialog = ({
               rows={10}
               value={scriptCss}
               variant="outlined"
-              InputProps={{
+              PaperProps={{
                 readOnly: true,
                 style: { fontFamily: "monospace" },
               }}
@@ -66,7 +66,7 @@ export const CScriptDialog = ({
               rows={10}
               value={scriptJs}
               variant="outlined"
-              InputProps={{
+              PaperProps={{
                 readOnly: true,
                 style: { fontFamily: "monospace" },
               }}

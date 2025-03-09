@@ -1,10 +1,11 @@
 export const addCookieForm = {
-  cookieName: "",
-  cookieType: "",
+  name: "",
+  category: "",
+  type: "",
   description: "",
   provider: "",
   duration: "",
-  samesite: "",
+  sameSite: "",
   httpOnly: "",
   secure: "",
 };

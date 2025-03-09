@@ -18,14 +18,19 @@ export const CCardImplementation = ({
   description = "",
   firstButtonTitle = "",
   secondButtonTitle = "",
+  thirdButtonTitle = "",
   details = "",
   instructionsLink = "",
   scriptCss = "",
   scriptJs = "",
   isConsentManagement = false,
 }) => {
-  const [openScriptDialog, setOpenScriptDialog] = useState(false); // Estado para el diálogo de script
-  const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false); // Estado para el diálogo "Saber más"
+  const { id } = useParams();
+  const { script, startLoadingScript, startDownloadFile, banner } =
+    useDomainStore();
+
+  const [openScriptDialog, setOpenScriptDialog] = useState(false);
+  const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
 
   const handleInstructionsClick = () => {
     if (instructionsLink) {
@@ -51,11 +56,9 @@ export const CCardImplementation = ({
     setOpenMoreInfoDialog(false);
   };
 
-  const { id } = useParams();
-  const { script, startLoadingScript, isLoadingScriptBanner } =
-    useDomainStore();
-
-  console.log("Datos del script cargados:", script);
+  const handleDownloadClick = () => {
+    startDownloadFile(banner.id);
+  };
 
   useEffect(() => {
     startLoadingScript(id);
@@ -64,21 +67,41 @@ export const CCardImplementation = ({
   return (
     <>
       <Box sx={{ width: 300, mr: 1 }}>
-        <Card sx={{ bgcolor: "#F5F7F8" }}>
-          <CardContent>
+        <Card
+          sx={{
+            bgcolor: "#F5F7F8",
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          <CardContent
+            sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
+          >
             <Typography gutterBottom variant="h5" component="div">
               {title}
             </Typography>
-            <Typography variant="body2">{description}</Typography>
+            <Typography variant="body2" sx={{ flexGrow: 1, minHeight: 80 }}>
+              {description}{" "}
+              {isConsentManagement && (
+                <Button
+                  size="small"
+                  onClick={handleMoreInfoClick}
+                  sx={{ mt: 2 }}
+                >
+                  {secondButtonTitle}
+                </Button>
+              )}
+            </Typography>
           </CardContent>
-          <CardActions>
+          <CardActions sx={{ mt: "auto" }}>
             {isConsentManagement ? (
               <>
                 <Button size="small" onClick={handleScriptClick}>
                   {firstButtonTitle}
                 </Button>
-                <Button size="small" onClick={handleMoreInfoClick}>
-                  {secondButtonTitle}
+                <Button size="small" onClick={handleDownloadClick}>
+                  {thirdButtonTitle}
                 </Button>
               </>
             ) : (
@@ -95,7 +118,7 @@ export const CCardImplementation = ({
         </Card>
       </Box>
 
-      {/* Diálogo para mostrar el script (solo si es gestión del consentimiento) */}
+      {/* Diálogo para mostrar el script */}
       {isConsentManagement && script && (
         <CScriptDialog
           open={openScriptDialog}
@@ -122,6 +145,7 @@ CCardImplementation.propTypes = {
   description: PropTypes.string.isRequired,
   firstButtonTitle: PropTypes.string,
   secondButtonTitle: PropTypes.string,
+  thirdButtonTitle: PropTypes.string,
   details: PropTypes.string,
   instructionsLink: PropTypes.string,
   scriptCss: PropTypes.string,
