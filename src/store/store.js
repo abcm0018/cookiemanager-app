@@ -5,7 +5,6 @@ import { authSlice } from "./auth/authSlice";
 import { domainSlice } from "./domain/domainSlice";
 import persistStore from "redux-persist/es/persistStore";
 import { cookieSlice } from "./cookies/cookieSlice";
-import { userSlice } from "./user/userSlice";
 import { subscriptionSlice } from "./subscriptions/subscriptionSlice";
 
 // Configuración de redux-persist
@@ -13,7 +12,7 @@ const persistConfig = {
   key: "root", // Clave base para guardar el estado
   storage, // Usa localStorage (puedes cambiarlo a sessionStorage si prefieres)
   version: 1,
-  whitelist: ["auth", "user", "domains", "cookies", "subscriptions"], // Reducers que deseas persistir
+  whitelist: ["auth", "domains", "cookies", "subscriptions"], // Reducers que deseas persistir
 };
 
 // Configuracón de los reducers
@@ -21,7 +20,6 @@ const rootReducer = combineReducers({
   auth: authSlice.reducer,
   domains: domainSlice.reducer,
   cookies: cookieSlice.reducer,
-  user: userSlice.reducer,
   subscriptions: subscriptionSlice.reducer,
 });
 

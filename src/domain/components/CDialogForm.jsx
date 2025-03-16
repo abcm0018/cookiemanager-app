@@ -1,4 +1,12 @@
-import { Box, Grid2, TextField } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  Grid2,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import PropTypes from "prop-types";
 
 export const CDialogForm = ({
@@ -49,17 +57,23 @@ export const CDialogForm = ({
             sx={{ width: 378, mr: 2 }}
             onChange={onEditDomainChange}
           />
-          <TextField
-            autoFocus
-            required
-            placeholder="País"
-            label="País"
-            type="text"
-            name="domainCountryOrigin"
-            value={domainCountryOrigin}
-            sx={{ width: 378 }}
-            onChange={onEditDomainChange}
-          />
+          <FormControl sx={{ width: 378 }} size="medium">
+            <InputLabel id="country-label">Pais</InputLabel>
+            <Select
+              id="country"
+              label="País"
+              name="domainCountryOrigin"
+              value={domainCountryOrigin}
+              onChange={onEditDomainChange}
+            >
+              <MenuItem value="DE">Alemania</MenuItem>
+              <MenuItem value="ES">España</MenuItem>
+              <MenuItem value="FR">Francia</MenuItem>
+              <MenuItem value="EN">Inglaterra</MenuItem>
+              <MenuItem value="IT">Italia</MenuItem>
+              <MenuItem value="PT">Portugal</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
         <Box sx={{ width: 775, mt: 1 }}>
           <TextField

@@ -31,6 +31,7 @@ export const CAddBannerDialog = ({
     cookieDeclaration,
     consentType,
     lang,
+    companyLogo,
     onInputChange: onAddBannerChange,
   } = useForm(addBannerForm);
 
@@ -42,6 +43,11 @@ export const CAddBannerDialog = ({
       cookieDeclaration: cookieDeclaration,
       consentType: consentType,
       lang: lang,
+      companyLogo: companyLogo,
+      legislation: legislation,
+      legislationDescription: legislationDescription,
+      cookiePolicy: cookiePolicy,
+      privacyPolicy: privacyPolicy,
     });
   };
 

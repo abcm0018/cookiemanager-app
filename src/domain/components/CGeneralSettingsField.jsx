@@ -54,7 +54,7 @@ export const CGeneralSettingsField = ({
           <Grid2 sx={{ width: 484 }}>
             <TextField
               fullWidth
-              name="company"
+              name="companyLogo"
               value={companyLogo}
               onChange={onEditBannerChange}
               label="Compañía"

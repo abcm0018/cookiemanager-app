@@ -3,4 +3,5 @@ export const addBannerForm = {
   cookieDeclaration: "",
   consentType: "",
   lang: "",
+  companyLogo: "",
 };

@@ -7,7 +7,7 @@ import {
 } from "../store/auth/authSlice";
 import { persistor } from "../store/store";
 import cookieManagerApi from "../api/cookieManagerApi";
-import { cookieSlice, domainSlice } from "../store";
+import { cookieSlice, domainSlice, subscriptionSlice } from "../store";
 
 export const useAuthStore = () => {
   const { status, user, errorMessage } = useSelector((state) => state.auth);
@@ -137,6 +137,7 @@ export const useAuthStore = () => {
       // Limpia los estados de cookies y domains
       dispatch(domainSlice.actions.onClearDomains());
       dispatch(cookieSlice.actions.onClearCookies());
+      dispatch(subscriptionSlice.actions.onClearSubscriptions());
 
       // Actualiza el estado de la aplicación
       dispatch(onLogout());

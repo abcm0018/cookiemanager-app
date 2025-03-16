@@ -23,7 +23,7 @@ export const CAddDomainDialog = ({
   openAddDomainDialog,
   handleCloseAddDomainDialog,
 }) => {
-  const estado = "activo";
+  const estado = "Activo";
   const { startSavingDomain, errorMessage } = useDomainStore();
 
   const navigate = useNavigate();

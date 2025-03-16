@@ -1,19 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import cookieManagerApi from "../api/cookieManagerApi";
 import Swal from "sweetalert2";
-import {
-  onCancelSubscription,
-  onLoadSubscriptions,
-  onUpdateSubscriptionPlan,
-  onUpdateUser,
-} from "../store";
+import { onLoadSubscriptions, onUpdate } from "../store";
 
 export const useUserStore = () => {
   const dispatch = useDispatch();
 
-  const { isLoadingSubscriptions, isLoadingUser, errorMessage } = useSelector(
-    (state) => state.user
+  const { isLoadingSubscriptions, errorMessage } = useSelector(
+    (state) => state.subscriptions
   );
+
   const { user } = useSelector((state) => state.auth);
 
   const startUpdatingUser = async ({ name, surname, email, company }) => {
@@ -24,8 +20,8 @@ export const useUserStore = () => {
         email,
         company,
       });
-      console.log(data);
-      dispatch(onUpdateUser(data));
+      console.log("UseUserStore::startUpdatingUser", data);
+      dispatch(onUpdate(data));
     } catch (error) {
       console.log(error);
       Swal.fire("Error al actualizar", error.response.data.msg, "error");
@@ -41,7 +37,7 @@ export const useUserStore = () => {
         }
       );
       console.log(data);
-      dispatch(onCancelSubscription(data));
+      dispatch(onUpdate(data));
     } catch (error) {
       console.log(error);
       Swal.fire("Error al cancelar", error.response.data.msg, "error");
@@ -93,9 +89,8 @@ export const useUserStore = () => {
       });
 
       console.log("✅ Respuesta del backend:", data);
-
+      dispatch(onUpdate(data.userResponse));
       Swal.fire("Éxito", "Suscripción actualizada correctamente", "success");
-      dispatch(onUpdateSubscriptionPlan({ newPlan: data.planType }));
     } catch (error) {
       console.error("❌ Error en el pago:", error);
     }
@@ -119,10 +114,10 @@ export const useUserStore = () => {
   return {
     // Propiedades
     isLoadingSubscriptions,
-    isLoadingUser,
     user,
     errorMessage,
     // Métodos
+    //startLoadingUser,
     startUpdatingUser,
     startCancelPlanUser,
     startUpdatingPlanUser,

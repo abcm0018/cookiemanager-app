@@ -15,6 +15,7 @@ export const CBannerForm = ({
   cookieDeclaration,
   consentType,
   lang,
+  companyLogo,
   legislation,
   legislationDescription,
   cookiePolicy,
@@ -49,22 +50,17 @@ export const CBannerForm = ({
               onChange={onAddBannerChange}
             />
           </Box>
-          <Box sx={{ width: 775, mt: 1 }}>
-            <FormControl sx={{ width: 378, mr: 2 }} size="medium">
-              <InputLabel id="consent-type-label">
-                Tipo de Consentimiento
-              </InputLabel>
-              <Select
-                id="consent-type"
-                label="Tipo de Consentimiento"
-                name="consentType"
-                value={consentType}
-                onChange={onAddBannerChange}
-              >
-                <MenuItem value="Explícito">Explícito</MenuItem>
-                <MenuItem value="Implícito">Implícito</MenuItem>
-              </Select>
-            </FormControl>
+          <Box sx={{ width: 775, mt: 2 }}>
+            <TextField
+              id="company-logo"
+              label="Compañía*"
+              name="companyLogo"
+              value={companyLogo}
+              type="text"
+              sx={{ width: 378, mr: 2 }}
+              onChange={onAddBannerChange}
+            />
+
             <FormControl sx={{ width: 378 }} size="medium">
               <InputLabel id="language-label">Idioma</InputLabel>
               <Select
@@ -80,6 +76,23 @@ export const CBannerForm = ({
                 <MenuItem value="EN">Inglés</MenuItem>
                 <MenuItem value="IT">Italiano</MenuItem>
                 <MenuItem value="PT">Portugués</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Box spacing={2} sx={{ width: 775, mt: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="consent-type-label">
+                Tipo de Consentimiento
+              </InputLabel>
+              <Select
+                id="consent-type"
+                label="Tipo de Consentimiento"
+                name="consentType"
+                value={consentType}
+                onChange={onAddBannerChange}
+              >
+                <MenuItem value="Explicit">Explícito</MenuItem>
+                <MenuItem value="Implied">Implícito</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -118,6 +131,7 @@ CBannerForm.propTypes = {
   cookieDeclaration: PropTypes.string.isRequired,
   consentType: PropTypes.string.isRequired,
   lang: PropTypes.string.isRequired,
+  companyLogo: PropTypes.string.isRequired,
   legislation: PropTypes.string.isRequired,
   legislationDescription: PropTypes.string.isRequired,
   cookiePolicy: PropTypes.string.isRequired,

@@ -13,7 +13,13 @@ export const subscriptionSlice = createSlice({
       state.isLoadingSubscriptions = false;
       state.subscriptions = payload;
     },
+    onClearSubscriptions: (state) => {
+      state.subscriptions = [];
+      state.isLoadingSubscriptions = true;
+      state.errorMessage = undefined; // Limpiar errores previos
+    },
   },
 });
 
-export const { onLoadSubscriptions } = subscriptionSlice.actions;
+export const { onLoadSubscriptions, onClearSubscriptions } =
+  subscriptionSlice.actions;
