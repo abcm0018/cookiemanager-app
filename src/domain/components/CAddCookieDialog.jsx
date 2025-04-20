@@ -32,7 +32,13 @@ export const CAddCookieDialog = ({
     httpOnly,
     secure,
     onInputChange: onAddCookieChange,
+    onResetForm,
   } = useForm(addCookieForm);
+
+  const handleCloseAndReset = () => {
+    onResetForm();
+    handleCloseAddCookieDialog();
+  };
 
   const onCreateCookieSubmit = (event) => {
     event.preventDefault();
@@ -65,12 +71,12 @@ export const CAddCookieDialog = ({
         fullWidth
         maxWidth="lg"
         open={openAddCookieDialog}
-        onClose={handleCloseAddCookieDialog}
+        onClose={handleCloseAndReset}
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
             onCreateCookieSubmit(event);
-            handleCloseAddCookieDialog();
+            handleCloseAndReset();
           },
         }}
       >
@@ -107,7 +113,7 @@ export const CAddCookieDialog = ({
           <Button
             variant="outlined"
             sx={{ bgcolor: "primary.main", color: "white" }}
-            onClick={handleCloseAddCookieDialog}
+            onClick={handleCloseAndReset}
           >
             Cancelar
           </Button>

@@ -7,14 +7,17 @@ export const domainSlice = createSlice({
     isLoadingCookieBanner: true, // Nos indica si ya se ha cargado la informacion del banner
     isLoadingCookieStatistics: true, // Nos indica si ya se han cargado las estadísticas
     isLoadingScriptBanner: true,
+    isLoadingActiveDomain: true, // Nos indica si el dominio activo esta cargado
     domains: [],
-    statistics: [], // Listado de estadísiticas del dominio
-    banner: {},
-    script: {},
+    statistics: [], // Listado de estadísiticas del dominio activo
+    activeDomain: {}, // Información del dominio activo
+    banner: {}, // Información del banner del dominio activo
+    script: {}, // Información del script del banner del dominio activo
     errorDomainMessage: undefined,
     selectedDomain: null,
   },
   reducers: {
+    // Acción que recupera todos los dominios
     onLoadDomains: (state, { payload = [] }) => {
       // Codigo para cargar los eventos de la base de datos
       state.isLoadingDomains = false;
@@ -33,6 +36,15 @@ export const domainSlice = createSlice({
       });
     },
 
+    // Acción que recuperar el dominio activo
+    onGetDomainById: (state, { payload }) => {
+      state.isLoadingActiveDomain = false;
+      state.activeDomain = payload;
+      state.banner = payload.banner;
+      state.script = payload.script;
+      state.errorDomainMessage = payload;
+    },
+
     onAddNewDomain: (state, { payload }) => {
       // Codigo para crear un nuevo dominio
       state.isLoadingDomains = false;
@@ -48,6 +60,7 @@ export const domainSlice = createSlice({
       state.domains = state.domains.filter((domain) => domain.id !== domainId);
     },
 
+    // Acción para actualizar la información del dominio
     onUpdateDomain: (state, { payload }) => {
       // Código para actualizar un dominio
       state.isLoadingDomains = false;
@@ -61,6 +74,7 @@ export const domainSlice = createSlice({
       }
     },
 
+    // Acción para recuperar la información del banner del dominio activo
     onLoadDomainBanner: (state, { payload }) => {
       state.isLoadingCookieBanner = false;
       state.banner = payload;
@@ -69,6 +83,8 @@ export const domainSlice = createSlice({
     onAddNewBanner: (state, { payload }) => {
       // Codigo para crear un nuevo banner si no está creado
       state.isLoadingCookieBanner = false;
+
+      // Ya que el banner se ha actualizado
       state.banner = payload;
 
       // Si se produce un error en la edición del dominio
@@ -78,11 +94,19 @@ export const domainSlice = createSlice({
     // Actualizar un banner existente
     onUpdateBanner: (state, { payload }) => {
       state.isLoadingCookieBanner = false;
-      state.errorDomainMessage = undefined; // Limpiar errores previos
+      state.errorDomainMessage = payload; // Limpiar errores previos
 
       if (payload.id === state.banner.id) {
         state.banner = { ...state.banner, ...payload };
         console.log("Banner actualizado:", payload);
+      }
+    },
+
+    onDeleteBanner: (state, { payload: bannerId }) => {
+      state.isLoadingCookieBanner = false;
+
+      if (state.banner?.id === bannerId) {
+        state.banner = null; // Se elimina el banner
       }
     },
 
@@ -107,8 +131,12 @@ export const domainSlice = createSlice({
     onClearDomains: (state) => {
       state.domains = [];
       state.banner = {};
+      state.script = {};
+      state.activeDomain = {};
       state.isLoadingDomains = true;
       state.isLoadingCookieBanner = true;
+      state.isLoadingScriptBanner = true;
+      state.isLoadingActiveDomain = true;
       state.isLoadingCookieStatistics = true;
       state.errorDomainMessage = undefined;
     },
@@ -123,6 +151,7 @@ export const {
   onLoadDomainBanner,
   onAddNewBanner,
   onUpdateBanner,
+  onDeleteBanner,
   onLoadCookieStatistics,
   onGetDomainById,
   onLoadScriptBanner,

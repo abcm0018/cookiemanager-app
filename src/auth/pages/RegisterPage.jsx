@@ -21,7 +21,7 @@ import { registerFormField } from "../utils";
 export const RegisterPage = () => {
   const navigate = useNavigate();
   const { startRegister, errorMessage } = useAuthStore();
-  const { subscriptions } = useSubscriptionStore();
+  const { subscriptions, startLoadingSubscriptions } = useSubscriptionStore();
 
   const {
     registerName,
@@ -70,6 +70,10 @@ export const RegisterPage = () => {
         });
       });
   };
+
+  useEffect(() => {
+    startLoadingSubscriptions();
+  }, []);
 
   useEffect(() => {
     if (errorMessage !== undefined) {
@@ -170,7 +174,7 @@ export const RegisterPage = () => {
                     onRegisterInputChange({
                       target: { name: e.target.name, value: e.target.checked },
                     })
-                  } // Captura el valor booleano del checkbox
+                  }
                 />
               }
               label="Acepto las condiciones de Servicio y la Política de Privacidad"

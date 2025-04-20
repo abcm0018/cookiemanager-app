@@ -33,7 +33,13 @@ export const CAddBannerDialog = ({
     lang,
     companyLogo,
     onInputChange: onAddBannerChange,
+    onResetForm,
   } = useForm(addBannerForm);
+
+  const handleCloseAndReset = () => {
+    onResetForm();
+    handleCloseAddBannerDialog();
+  };
 
   const onCreateBannerSubmit = (event) => {
     event.preventDefault();
@@ -62,12 +68,12 @@ export const CAddBannerDialog = ({
         fullWidth
         maxWidth="lg"
         open={openAddBannerDialog}
-        onClose={handleCloseAddBannerDialog}
+        onClose={handleCloseAndReset}
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
             onCreateBannerSubmit(event);
-            handleCloseAddBannerDialog();
+            handleCloseAndReset();
           },
         }}
       >
@@ -112,7 +118,7 @@ export const CAddBannerDialog = ({
           <Button
             variant="outlined"
             sx={{ bgcolor: "primary.main", color: "white" }}
-            onClick={handleCloseAddBannerDialog}
+            onClick={handleCloseAndReset}
           >
             Cancelar
           </Button>

@@ -62,7 +62,7 @@ export const CCardImplementation = ({
 
   useEffect(() => {
     startLoadingScript(id);
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -97,10 +97,18 @@ export const CCardImplementation = ({
           <CardActions sx={{ mt: "auto" }}>
             {isConsentManagement ? (
               <>
-                <Button size="small" onClick={handleScriptClick}>
+                <Button
+                  size="small"
+                  onClick={handleScriptClick}
+                  disabled={!banner}
+                >
                   {firstButtonTitle}
                 </Button>
-                <Button size="small" onClick={handleDownloadClick}>
+                <Button
+                  size="small"
+                  onClick={handleDownloadClick}
+                  disabled={!banner}
+                >
                   {thirdButtonTitle}
                 </Button>
               </>

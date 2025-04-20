@@ -30,13 +30,14 @@ export const CSearchCookieDialog = ({
     return NaN;
   };
 
-  // Obtenemos las duraciones válidas que tienen las cookies
   const validDurations = cookies
     .map((cookie) => parseDuration(cookie.duration))
     .filter((duration) => !isNaN(duration));
 
+  console.log(validDurations);
   const minDuration = validDurations.length ? Math.min(...validDurations) : 0;
   const maxDuration = validDurations.length ? Math.max(...validDurations) : 365;
+  console.log(maxDuration);
 
   // Estados para los filtros
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,6 +47,11 @@ export const CSearchCookieDialog = ({
   const [selectedHttpOnly, setSelectedHttpOnly] = useState(null);
   const [selectedSecure, setSelectedSecure] = useState(null);
   const [selectedSamesite, setSelectedSamesite] = useState([]);
+
+  // Para setear la duración y que no aplique el filtro
+  useEffect(() => {
+    setDuration([minDuration, maxDuration]);
+  }, [minDuration, maxDuration]);
 
   // Filtrar cookies según los criterios
   useEffect(() => {
@@ -70,7 +76,7 @@ export const CSearchCookieDialog = ({
         selectedSecure === null || cookie.secure === selectedSecure;
       const matchSamesite =
         selectedSamesite.length === 0 ||
-        selectedSamesite.includes(cookie.samesite);
+        selectedSamesite.includes(cookie.sameSite);
 
       return (
         matchName &&
@@ -82,6 +88,7 @@ export const CSearchCookieDialog = ({
         matchSamesite
       );
     });
+
     setFilteredCookies(filtered);
   }, [
     searchTerm,
@@ -95,52 +102,6 @@ export const CSearchCookieDialog = ({
   ]);
 
   // Función para limpiar filtros
-  useEffect(() => {
-    const filtered = cookies.filter((cookie) => {
-      const matchName = searchTerm
-        ? cookie.name.toLowerCase().includes(searchTerm.toLowerCase())
-        : true;
-      const matchCategory =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(cookie.category);
-      const matchProvider =
-        selectedProviders.length === 0 ||
-        selectedProviders.includes(cookie.provider);
-      const cookieDuration = parseDuration(cookie.duration);
-      const matchDuration =
-        !isNaN(cookieDuration) &&
-        cookieDuration >= duration[0] &&
-        cookieDuration <= duration[1];
-      const matchHttpOnly =
-        selectedHttpOnly === null || cookie.httpOnly === selectedHttpOnly;
-      const matchSecure =
-        selectedSecure === null || cookie.secure === selectedSecure;
-      const matchSamesite =
-        selectedSamesite.length === 0 ||
-        selectedSamesite.includes(cookie.samesite);
-
-      return (
-        matchName &&
-        matchCategory &&
-        matchProvider &&
-        matchDuration &&
-        matchHttpOnly &&
-        matchSecure &&
-        matchSamesite
-      );
-    });
-    setFilteredCookies(filtered);
-  }, [
-    searchTerm,
-    selectedCategories,
-    selectedProviders,
-    duration,
-    cookies,
-    selectedHttpOnly,
-    selectedSecure,
-    selectedSamesite,
-  ]);
-
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedCategories([]);
@@ -149,9 +110,10 @@ export const CSearchCookieDialog = ({
     setSelectedHttpOnly(null);
     setSelectedSecure(null);
     setSelectedSamesite([]);
+    setFilteredCookies(cookies); // ← Reset de cookies al completo
   };
 
-  // Función para restablecer filtros cuando se cierre el diálogo
+  // Función para cerrar el diálogo y restablecer filtros
   const handleCloseWithReset = () => {
     clearFilters();
     handleCloseFilterCookieDialog();

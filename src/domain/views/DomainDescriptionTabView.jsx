@@ -13,10 +13,12 @@ export const DomainDescriptionTabView = ({
   setCurrentTabIndex,
 }) => {
   const {
+    activeDomain,
     banner,
     startLoadingBanner,
     startDeletingDomain,
     isLoadingCookieBanner,
+    startDeletingBanner,
     errorMessage,
   } = useDomainStore();
 
@@ -58,9 +60,31 @@ export const DomainDescriptionTabView = ({
     });
   };
 
+  const handleDeleteBanner = (bannerId) => {
+    Swal.fire({
+      title: "Estás a punto de eliminar un banner, ¿Estás seguro?",
+      text: "Esta acción no podrá ser revertida",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Eliminar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        startDeletingBanner(bannerId);
+        Swal.fire({
+          title: "Banner eliminado",
+          text: "El banner ha sido eliminado correctamente.",
+          icon: "success",
+        });
+      }
+    });
+  };
+
   const handleButtonClick = (buttonTitle) => {
     switch (buttonTitle) {
       case "Actualizar plan":
+        localStorage.setItem("updateSubscriptionPreviousPage", "domains");
         navigate("/manage-subscriptions");
         break;
       case "Editar banner":
@@ -68,6 +92,9 @@ export const DomainDescriptionTabView = ({
         break;
       case "Crear banner":
         handleOpenAddBanner();
+        break;
+      case "Borrar banner":
+        handleDeleteBanner(banner.id);
         break;
       case "Escanear":
         setCurrentTabIndex(3);
@@ -86,15 +113,9 @@ export const DomainDescriptionTabView = ({
     }
   };
 
-  // useEffect(() => {
-  //   if (isLoadingCookieBanner) {
-  //     startLoadingBanner(domain.id);
-  //   }
-  // }, [domain.id, isLoadingCookieBanner, startLoadingBanner]);
-
   useEffect(() => {
-    startLoadingBanner(domain.id); // Carga el banner al cambiar de dominio
-  }, [domain.id, startLoadingBanner]);
+    startLoadingBanner(id); // Carga el banner al cambiar de dominio
+  }, [id, startLoadingBanner]);
 
   useEffect(() => {
     if (!isLoadingCookieBanner && banner) {
@@ -108,7 +129,12 @@ export const DomainDescriptionTabView = ({
     }
   }, [errorMessage]);
 
-  const cards = generateCards(domain, banner || {}, user);
+  const cards = generateCards(
+    activeDomain.totalCookies,
+    activeDomain.lastCookieScan,
+    banner || {},
+    user
+  );
 
   return (
     <Grid2 container spacing={3} sx={{ pb: 10, pt: 4, pl: 12 }}>
@@ -119,7 +145,9 @@ export const DomainDescriptionTabView = ({
           description={card.description}
           buttonTitle={card.buttonTitle}
           bgcolor={card.bgcolor}
+          secondaryButtonTitle={card.buttonTitleSecondary}
           onButtonClick={() => handleButtonClick(card.buttonTitle)}
+          onSecondaryButtonClick={() => handleDeleteBanner(banner?.id)}
         />
       ))}
       <CAddBannerDialog

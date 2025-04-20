@@ -25,7 +25,7 @@ export const CFilterCookie = ({
 
   // Solo mostramos valores válidos de SameSite
   const sameSiteOptions = [
-    ...new Set(cookies.map((cookie) => cookie.samesite)),
+    ...new Set(cookies.map((cookie) => cookie.sameSite)),
   ];
 
   const handleSearchChange = (event) => {
@@ -225,6 +225,6 @@ CFilterCookie.propTypes = {
   setSelectedHttpOnly: PropTypes.func.isRequired,
   selectedSecure: PropTypes.bool,
   setSelectedSecure: PropTypes.func.isRequired,
-  selectedSamesite: PropTypes.string.isRequired,
+  selectedSamesite: PropTypes.array.isRequired,
   setSelectedSamesite: PropTypes.func.isRequired,
 };

@@ -38,6 +38,13 @@ export const DomainTable = ({ domains = [] }) => {
     setOpenEditDomainDialog(false);
   };
 
+  const handleSetActiveDomain = (domainId) => {
+    const storedTabIndex = localStorage.getItem(`activeTabIndex-${domainId}`);
+    if (storedTabIndex === undefined) {
+      localStorage.setItem(`activeTabIndex-${domainId}`, 0);
+    }
+  };
+
   const handleDeleteDomain = (domainId) => {
     Swal.fire({
       title: "Estás a punto de eliminar un dominio, ¿Estás seguro?",
@@ -92,6 +99,7 @@ export const DomainTable = ({ domains = [] }) => {
                       color: "white",
                     },
                   }}
+                  onClick={() => handleSetActiveDomain(domain.id)}
                 >
                   <Link
                     to={`/domains/${domain.id}`}

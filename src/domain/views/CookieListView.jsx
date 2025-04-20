@@ -1,10 +1,11 @@
 import { Box, Button, Grid2, Paper, TableContainer } from "@mui/material";
 import { CHeaderCookieList, CookieTable } from "../components";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useCookieStore } from "../../hooks/useCookieStore";
 import Swal from "sweetalert2";
 import { useDomainStore } from "../../hooks";
+import { useParams } from "react-router-dom";
+import { CNoCookies } from "../components/CNoCookies";
 
 export const CookieListView = () => {
   const descripcion =
@@ -12,16 +13,27 @@ export const CookieListView = () => {
 
   const { id } = useParams();
   const { cookies, startLoadingCookies, errorMessage } = useCookieStore();
-  const { startExportingCookies } = useDomainStore();
+  const {
+    activeDomain,
+    startGettingDomainById,
+    startExportingCookies,
+    isLoadingActiveDomain,
+  } = useDomainStore();
+
+  useEffect(() => {
+    if (isLoadingActiveDomain) {
+      startGettingDomainById(id);
+    }
+  }, []);
 
   // Función que se ejecuta al hacer clic en el botón
   const handleExportCookies = () => {
-    startExportingCookies(id);
+    startExportingCookies(activeDomain.id);
   };
 
   useEffect(() => {
-    startLoadingCookies(id);
-  }, []);
+    startLoadingCookies(activeDomain.id);
+  }, [activeDomain.id]);
 
   useEffect(() => {
     if (errorMessage !== undefined) {
@@ -29,22 +41,31 @@ export const CookieListView = () => {
     }
   }, [errorMessage]);
   return (
-    <Grid2 container sx={{ pb: 5, pt: 4, pl: 10, pr: 10 }}>
-      <Box>
-        <CHeaderCookieList descripcion={descripcion} />
-        <TableContainer component={Paper} sx={{ mt: 2 }}>
-          <CookieTable cookies={cookies} />
-        </TableContainer>
-        <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            variant="contained"
-            sx={{ bgcolor: "secondary.main" }}
-            onClick={handleExportCookies}
-          >
-            Exportar cookies
-          </Button>
-        </Box>
-      </Box>
+    <Grid2
+      container
+      justifyContent="center"
+      alignItems="center"
+      sx={{ pb: 5, pt: 4, pl: 10, pr: 10, minHeight: "400px" }} // puedes ajustar la altura
+    >
+      {cookies.length === 0 ? (
+        <CNoCookies />
+      ) : (
+        <Grid2 item xs={12}>
+          <CHeaderCookieList descripcion={descripcion} />
+          <TableContainer component={Paper} sx={{ mt: 2 }}>
+            <CookieTable cookies={cookies} />
+          </TableContainer>
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
+            <Button
+              variant="contained"
+              sx={{ bgcolor: "secondary.main" }}
+              onClick={handleExportCookies}
+            >
+              Exportar cookies
+            </Button>
+          </Box>
+        </Grid2>
+      )}
     </Grid2>
   );
 };

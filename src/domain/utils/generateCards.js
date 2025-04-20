@@ -1,7 +1,12 @@
 import dayjs from "dayjs";
 
-export const generateCards = (domain = {}, banner = {}, user = {}) => {
-  const { totalCookies = 0, lastCookieScan = null } = domain;
+export const generateCards = (
+  totalCookies,
+  lastCookieScan,
+  banner = {},
+  user = {}
+) => {
+  // const { totalCookies = 0, lastCookieScan = null } = domain;
   const { subscription } = user;
   const lastScanDate = lastCookieScan
     ? dayjs(lastCookieScan).format("DD/MM/YYYY")
@@ -51,6 +56,7 @@ export const generateCards = (domain = {}, banner = {}, user = {}) => {
           "Tu banner está configurado correctamente."
         : "Todavía no tienes un banner creado, haz clic en el botón para configurarlo.",
       buttonTitle: banner.title ? "Editar banner" : "Crear banner",
+      buttonTitleSecondary: banner.title ? "Borrar banner" : null,
       bgcolor: banner.title ? "#E6F4FF" : "#F9E6FF",
     },
     {

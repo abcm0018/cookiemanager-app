@@ -11,7 +11,14 @@ import { DomainLayout } from "../layout";
 
 export const DomainDetailsPage = () => {
   const { id } = useParams();
-  const { domains, errorMessage, startLoadingDomains } = useDomainStore();
+  const {
+    domains,
+    errorMessage,
+    startLoadingDomains,
+    startGettingDomainById,
+    startLoadingBanner,
+    activeDomain,
+  } = useDomainStore();
   const { user } = useAuthStore();
 
   const [loading, setLoading] = useState(true); // estado de carga
@@ -43,15 +50,10 @@ export const DomainDetailsPage = () => {
   }, [domains.length, startLoadingDomains]);
 
   useEffect(() => {
-    // Si los dominios ya están cargados, encuentra el dominio correspondiente
-    if (!loading && domains.length > 0) {
-      const currentDomain = domains.find(
-        (element) => element.id === parseInt(id, 10)
-      );
-      setDomain(currentDomain);
-    }
-    // startLoadingDomains();
-  }, [loading, id, domains]);
+    startGettingDomainById(id);
+    startLoadingBanner(id);
+    setDomain(activeDomain);
+  }, [id]);
 
   useEffect(() => {
     // Guardar el valor de activeTab en el localStorage cada vez que cambie
@@ -102,7 +104,7 @@ export const DomainDetailsPage = () => {
             <Grid2 container spacing={2}>
               <Grid2 size={8} alignContent="center">
                 <Button size="small" startIcon={<ArrowBack />} href="/domains">
-                  DETALLES | {domain.name}
+                  DETALLES | {activeDomain.name}
                 </Button>
               </Grid2>
               <Grid2

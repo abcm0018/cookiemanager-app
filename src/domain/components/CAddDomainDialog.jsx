@@ -16,17 +16,14 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import { addDomainForm } from "../utils";
-import { useNavigate } from "react-router-dom";
+import { addDomainForm } from "../utils/addDomainForm";
 
 export const CAddDomainDialog = ({
   openAddDomainDialog,
   handleCloseAddDomainDialog,
 }) => {
   const estado = "Activo";
-  const { startSavingDomain, errorMessage } = useDomainStore();
-
-  const navigate = useNavigate();
+  const { startSavingDomain, errorMessage, domains } = useDomainStore();
 
   const {
     domainName,
@@ -35,14 +32,20 @@ export const CAddDomainDialog = ({
     domainContactEmail,
     domainCountryOrigin,
     onInputChange: onCreateDomainChange,
+    onResetForm,
   } = useForm(addDomainForm);
+
+  const handleCloseAndReset = () => {
+    onResetForm();
+    handleCloseAddDomainDialog();
+  };
 
   const onCreateDomainSubmit = (event) => {
     event.preventDefault();
 
     const persistRoot = localStorage.getItem("persist:root");
 
-    if (persistRoot) {
+    if (domains) {
       //Lo convertimos a string
       const parsedData = JSON.parse(persistRoot);
 
@@ -52,10 +55,10 @@ export const CAddDomainDialog = ({
 
       // Se obtiene el plan de subscripcion del usuario y el número de dominios que tiene
       const userPlanType = auth.user.subscription;
-      const userDomains = auth.user.domains || [];
+      // const userDomains = auth.user.domains || [];
 
       // Obtenemos el número total de dominios
-      const numberDomainsUser = userDomains.length;
+      const numberDomains = domains.length;
 
       // Obtenemos el array de subscripciones del localStorage
       const subscriptionsList = subscriptions.subscriptions;
@@ -70,30 +73,26 @@ export const CAddDomainDialog = ({
         const maxAllowedDomains = userPlanDetails.maxDomains;
 
         // Comprobamos si el usuario ha superado el número de dominios del plan
-        if (numberDomainsUser >= maxAllowedDomains) {
+        if (maxAllowedDomains > numberDomains) {
+          startSavingDomain({
+            name: domainName,
+            description: domainDescription,
+            status: estado,
+            owner: domainOwner,
+            contactEmail: domainContactEmail,
+            countryOrigin: domainCountryOrigin,
+          });
+        } else {
           Swal.fire({
             icon: "error",
             title: "Límite de dominios alcanzado",
             text: `Tu plan (${userPlanType}) permite un máximo de ${maxAllowedDomains} dominio(s). 
                   Para agregar más dominios, actualiza tu suscripción.`,
-            confirmButtonText: "Actualizar suscripción",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              navigate("/manage-subscriptions");
-            }
+            confirmButtonText: "Cerrar",
           });
         }
       }
     }
-
-    startSavingDomain({
-      name: domainName,
-      description: domainDescription,
-      status: estado,
-      owner: domainOwner,
-      contactEmail: domainContactEmail,
-      countryOrigin: domainCountryOrigin,
-    });
   };
 
   useEffect(() => {
@@ -108,12 +107,12 @@ export const CAddDomainDialog = ({
         fullWidth
         maxWidth="lg"
         open={openAddDomainDialog}
-        onClose={handleCloseAddDomainDialog}
+        onClose={handleCloseAndReset}
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
             onCreateDomainSubmit(event);
-            handleCloseAddDomainDialog();
+            handleCloseAndReset();
           },
         }}
       >
@@ -188,7 +187,7 @@ export const CAddDomainDialog = ({
           <Button
             variant="outlined"
             sx={{ bgcolor: "primary.main", color: "white" }}
-            onClick={handleCloseAddDomainDialog}
+            onClick={handleCloseAndReset}
           >
             Cancelar
           </Button>

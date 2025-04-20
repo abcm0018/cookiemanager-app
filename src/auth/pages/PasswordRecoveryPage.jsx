@@ -85,7 +85,7 @@ export const PasswordRecoveryPage = () => {
             underline="none"
             sx={{ color: "secondary.main" }}
           >
-            O inciar sesión en tu cuenta
+            O iniciar sesión en tu cuenta
           </Link>
         </Grid2>
       </form>

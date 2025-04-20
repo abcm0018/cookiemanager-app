@@ -12,19 +12,24 @@ import {
 
 export const DomainTabs = ({ user, domain, setActiveTab }) => {
   // Recuperamos el índice del tab desde localStorage, si existe
-  const storedTabIndex = localStorage.getItem(`activeTabIndex-${domain.id}`);
+  const activeDomainId = localStorage.getItem("activeDomainId");
+  const storedTabIndex = localStorage.getItem(
+    `activeTabIndex-${activeDomainId}`
+  );
   const [currentTabIndex, setCurrentTabIndex] = useState(
     storedTabIndex ? parseInt(storedTabIndex, 10) : 0
   );
 
+  // const [currentTabIndex, setCurrentTabIndex] = useState(0);
+
   // Guardamos el índice del tab activo en el localStorage cuando cambia
   useEffect(() => {
     // Para persistir el Tab actual
-    localStorage.setItem(`activeTabIndex-${domain.id}`, currentTabIndex);
+    localStorage.setItem(`activeTabIndex-${activeDomainId}`, currentTabIndex);
 
     // Para controlar la visibilidad del botón Añadir Cookie
     setActiveTab(currentTabIndex);
-  }, [currentTabIndex, setActiveTab, domain.id]);
+  }, [currentTabIndex, setActiveTab, activeDomainId]);
 
   const handleChange = (event, tabIndex) => {
     console.log(tabIndex);

@@ -9,8 +9,9 @@ import {
 import { DomainTable } from "./DomainTable";
 import { HeadSection } from "./HeadSection";
 import { useEffect, useState } from "react";
-import { useDomainStore } from "../../hooks";
+import { useDomainStore, useSubscriptionStore } from "../../hooks";
 import { Loader } from "./Loader";
+import { CNoDomain } from "./CNoDomain";
 
 export const MainSection = () => {
   const [page, setPage] = useState(0);
@@ -20,9 +21,11 @@ export const MainSection = () => {
 
   const { domains, isLoadingDomains, startLoadingDomains } = useDomainStore();
   const user = JSON.parse(localStorage.getItem("currentUser"));
+  const { startLoadingSubscriptions } = useSubscriptionStore();
 
   useEffect(() => {
     startLoadingDomains();
+    startLoadingSubscriptions();
   }, []);
 
   useEffect(() => {
@@ -74,28 +77,35 @@ export const MainSection = () => {
           />
         </Box>
         <Box sx={{ mt: 5 }}>
-          <TableContainer component={Paper}>
-            <DomainTable
-              domains={filteredDomains.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )}
-              user={user}
-            />
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={domains.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage="Filas por página:"
-            labelDisplayedRows={({ from, to, count }) =>
-              `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`
-            }
-          />
+          {domains.length === 0 ? (
+            <CNoDomain />
+          ) : (
+            <>
+              {" "}
+              <TableContainer component={Paper}>
+                <DomainTable
+                  domains={filteredDomains.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )}
+                  user={user}
+                />
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={domains.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage="Filas por página:"
+                labelDisplayedRows={({ from, to, count }) =>
+                  `${from}-${to} de ${count !== -1 ? count : `más de ${to}`}`
+                }
+              />
+            </>
+          )}
         </Box>
       </Container>
     </Grid2>

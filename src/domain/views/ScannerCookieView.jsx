@@ -5,6 +5,7 @@ import { useDomainStore } from "../../hooks";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { CNoCookieScan } from "../components/CNoCookieScan";
 
 export const ScannerCookieView = ({ onDetailClick }) => {
   const { id } = useParams();
@@ -62,13 +63,19 @@ export const ScannerCookieView = ({ onDetailClick }) => {
           </Typography>
         </Box>
         <Box component="div" sx={{ mt: 2 }}>
-          <TableContainer component={Paper}>
-            <CookieScanTable
-              key={domain.dateCreation}
-              domain={domain}
-              onDetailClick={onDetailClick}
-            />
-          </TableContainer>
+          {domain.lastCookieScan === null ? (
+            <CNoCookieScan />
+          ) : (
+            <>
+              <TableContainer component={Paper}>
+                <CookieScanTable
+                  key={domain.dateCreation}
+                  domain={domain}
+                  onDetailClick={onDetailClick}
+                />
+              </TableContainer>
+            </>
+          )}
         </Box>
       </Box>
     </Grid2>

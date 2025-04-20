@@ -6,6 +6,7 @@ import { useAuthStore } from "../../hooks";
 
 export const CManageSubscription = ({ handleCancelSubscription }) => {
   const { user } = useAuthStore();
+  localStorage.setItem("updateSubscriptionPreviousPage", "users");
 
   return (
     <>
@@ -30,7 +31,7 @@ export const CManageSubscription = ({ handleCancelSubscription }) => {
           {user.subscription}
         </Typography>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Link to="/subscription" style={{ textDecoration: "none" }}>
+          <Link to="/manage-subscriptions" style={{ textDecoration: "none" }}>
             <Button
               variant="contained"
               sx={{

@@ -12,8 +12,10 @@ export const CardDetail = ({
   title = "",
   description = "",
   buttonTitle = "",
+  secondaryButtonTitle = "",
   bgcolor = "#F5F5F7",
   onButtonClick,
+  onSecondaryButtonClick,
 }) => {
   return (
     <Card
@@ -40,7 +42,17 @@ export const CardDetail = ({
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions sx={{ justifyContent: "flex-end" }}>
+      <CardActions sx={{ justifyContent: "space-between" }}>
+        {secondaryButtonTitle && (
+          <Button
+            size="small"
+            variant="outlined"
+            color="error"
+            onClick={onSecondaryButtonClick}
+          >
+            {secondaryButtonTitle}
+          </Button>
+        )}
         <Button
           size="small"
           sx={{
@@ -65,6 +77,8 @@ CardDetail.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   buttonTitle: PropTypes.string,
+  secondaryButtonTitle: PropTypes.string,
   bgcolor: PropTypes.string,
   onButtonClick: PropTypes.func,
+  onSecondaryButtonClick: PropTypes.func,
 };

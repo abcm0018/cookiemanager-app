@@ -1,12 +1,25 @@
 import { Box, Button, Container, Grid2 } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
+import { useUserStore } from "../../hooks";
 
 export const HeadSection = () => {
-  // Recuperamos el id del dominio desde localStorage, si existe
-  const storedDomainId = localStorage.getItem("activeDomainId");
+  // Recuperamos el usuario
+  const { user } = useUserStore();
 
-  // Definimos la ruta de redirección
-  const redirectTo = storedDomainId ? `/domains/${storedDomainId}` : "/domains";
+  // Recuperamos la página desde la cual se desencadena la acción de actualizar plan
+  const previousUpdateSubscriptionPage = localStorage.getItem(
+    "updateSubscriptionPreviousPage"
+  );
+  const activeDomainId = localStorage.getItem("activeDomainId");
+
+  let redirectTo = "";
+
+  if (previousUpdateSubscriptionPage === "domains") {
+    // Definimos la ruta de redirección
+    redirectTo = `/domains/${activeDomainId}`;
+  } else {
+    redirectTo = `/users/${user.name}`;
+  }
 
   return (
     <>

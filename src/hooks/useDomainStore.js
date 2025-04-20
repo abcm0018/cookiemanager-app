@@ -9,6 +9,7 @@ import {
   onLoadDomainBanner,
   onAddNewBanner,
   onUpdateBanner,
+  onDeleteBanner,
   onLoadCookieStatistics,
   onLoadScriptBanner,
 } from "../store/domain/domainSlice";
@@ -21,8 +22,10 @@ export const useDomainStore = () => {
     isLoadingDomains,
     isLoadingCookieBanner,
     isLoadingScriptBanner,
+    isLoadingActiveDomain,
     statistics,
     domains,
+    activeDomain,
     banner,
     script,
     errorMessage,
@@ -118,7 +121,7 @@ export const useDomainStore = () => {
     }
   };
 
-  const starGettingDomainById = async (id) => {
+  const startGettingDomainById = async (id) => {
     try {
       const { data } = await cookieManagerApi.get(`/domains/${id}`);
       console.log(data);
@@ -234,6 +237,19 @@ export const useDomainStore = () => {
 
       // Retornamos null en caso de error.
       return null;
+    }
+  };
+
+  const startDeletingBanner = async (bannerId) => {
+    try {
+      await cookieManagerApi.delete(`/banner/${bannerId}`);
+
+      // Despacha la acción para eliminar el dominio del estado local
+      dispatch(onDeleteBanner(bannerId));
+    } catch (error) {
+      console.error("Error al eliminar el dominio:", error);
+      const errorMsg = error.response?.data?.msg || "Error desconocido";
+      Swal.fire("Error al eliminar", errorMsg, "error");
     }
   };
 
@@ -360,21 +376,28 @@ export const useDomainStore = () => {
 
   const startLoadingScript = async (domainId) => {
     console.log("Valor de domainId:", domainId);
+    let dataError = {};
     try {
       const { data } = await cookieManagerApi.get(
         `/domains/${domainId}/script-banner`
       );
+      dataError = data;
       console.log("Datos recibidos:", data);
       dispatch(onLoadScriptBanner(data));
       return data;
     } catch (error) {
       console.log("Error al cargar los datos del script: ", error);
       console.log(error);
-      Swal.fire(
-        "Error al obtener los datos del script",
-        error.response.data.msg,
-        "error"
-      );
+      if (
+        dataError != "Error dominio no tiene asociado un banner" &&
+        error.status != 500
+      ) {
+        Swal.fire(
+          "Error al obtener los datos del script",
+          error.response.data.msg,
+          "error"
+        );
+      }
     }
   };
 
@@ -383,7 +406,9 @@ export const useDomainStore = () => {
     isLoadingDomains,
     isLoadingCookieBanner,
     isLoadingScriptBanner,
+    isLoadingActiveDomain,
     domains,
+    activeDomain,
     banner,
     script,
     statistics,
@@ -396,8 +421,9 @@ export const useDomainStore = () => {
     startLoadingBanner,
     startSavingBanner,
     startUpdatingBanner,
+    startDeletingBanner,
     startLoadingStatistics,
-    starGettingDomainById,
+    startGettingDomainById,
     startExportingCookies,
     startDownloadFile,
     startLoadingScript,

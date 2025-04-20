@@ -35,6 +35,7 @@ export const CookieTable = ({ cookies = [] }) => {
     },
     { id: "action", label: "Acción" },
   ];
+  console.log(cookies);
 
   const { startDeletingCookie } = useCookieStore();
 
@@ -45,6 +46,7 @@ export const CookieTable = ({ cookies = [] }) => {
   const [orderBy, setOrderBy] = useState("name");
 
   const [filteredCookies, setFilteredCookies] = useState(cookies);
+  console.log(filteredCookies);
 
   const [openEditCookieDialog, setOpenEditCookieDialog] = useState(false);
   const [openInfoCookieDialog, setOpenInfoCookieDialog] = useState(false);
