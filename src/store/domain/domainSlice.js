@@ -128,10 +128,16 @@ export const domainSlice = createSlice({
       state.script = payload;
     },
 
+    onClearStatistics: (state) => {
+      state.statistics = [];
+      state.isLoadingCookieStatistics = true;
+    },
+
     onClearDomains: (state) => {
       state.domains = [];
       state.banner = {};
       state.script = {};
+      state.statistics = [];
       state.activeDomain = {};
       state.isLoadingDomains = true;
       state.isLoadingCookieBanner = true;

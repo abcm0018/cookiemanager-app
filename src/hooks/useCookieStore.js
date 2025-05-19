@@ -55,7 +55,7 @@ export const useCookieStore = () => {
         }
       );
       dispatch(onAddNewCookie(data));
-      //Devolvemos la cookie creada para usarla en el componente si fuera necesarip
+      //Devolvemos la cookie creada para usarla en el componente si fuera necesario
       return data;
     } catch (error) {
       console.error("Error al crear la cookie:", error);

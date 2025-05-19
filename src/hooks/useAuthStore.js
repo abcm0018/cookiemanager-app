@@ -93,8 +93,10 @@ export const useAuthStore = () => {
         password,
       });
       console.log(response);
+      return response;
     } catch (error) {
       console.log(error.response?.data || error.message);
+      dispatch(onLogout(error.response.data?.error.violations[0] || ""));
     }
   };
 

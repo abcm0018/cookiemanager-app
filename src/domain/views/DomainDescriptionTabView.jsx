@@ -40,6 +40,29 @@ export const DomainDescriptionTabView = ({
   };
 
   const handleDeleteDomain = (domainId) => {
+    if (!activeDomain || activeDomain.id !== domainId) {
+      Swal.fire(
+        "Error",
+        "No se encontró el dominio activo a eliminar.",
+        "error"
+      );
+      return;
+    }
+
+    if (activeDomain.status === "Activo") {
+      Swal.fire({
+        title: "Dominio activo",
+        text: "El dominio está activo. Cámbialo a inactivo antes de eliminarlo.",
+        icon: "warning",
+        confirmButtonText: "Volver",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/domains");
+        }
+      });
+      return;
+    }
+
     Swal.fire({
       title: "Estás a punto de eliminar un dominio, ¿Estás seguro?",
       text: "Esta acción no podrá ser revertida",
@@ -48,11 +71,12 @@ export const DomainDescriptionTabView = ({
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         startDeletingDomain(domainId);
         Swal.fire({
-          title: "Dominio eliminado",
+          title: "Dominio Eliminado",
           text: "El dominio ha sido eliminado correctamente.",
           icon: "success",
         });
@@ -106,7 +130,7 @@ export const DomainDescriptionTabView = ({
         setCurrentTabIndex(5);
         break;
       case "Borrar dominio":
-        handleDeleteDomain(domain.id);
+        handleDeleteDomain(activeDomain.id);
         break;
       default:
         setCurrentTabIndex(0);

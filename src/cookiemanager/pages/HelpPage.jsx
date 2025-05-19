@@ -1,3 +1,10 @@
+import { MainSectionHelp } from "../components/MainSectionHelp";
+import { HomeLayout } from "../layout/HomeLayout";
+
 export const HelpPage = () => {
-  return <div>HelpPage</div>;
+  return (
+    <HomeLayout>
+      <MainSectionHelp />
+    </HomeLayout>
+  );
 };

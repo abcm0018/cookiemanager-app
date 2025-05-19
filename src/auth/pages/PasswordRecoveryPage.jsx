@@ -1,5 +1,5 @@
 import { Button, Grid2, Link, TextField } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layout";
 import { useAuthStore, useForm } from "../../hooks";
 import { useEffect } from "react";
@@ -9,19 +9,69 @@ import { recoveryFormFields } from "../utils/recoveryFormField";
 export const PasswordRecoveryPage = () => {
   const { startRecoveryPassword, errorMessage } = useAuthStore();
 
+  const navigate = useNavigate();
+
   const {
     recoveryEmail,
     recoveryPassword,
+    confirmPassword,
     onInputChange: onInputRecoveryChange,
   } = useForm(recoveryFormFields);
 
   // Para enviar los datos del formulario
   const recoverySubmit = (event) => {
     event.preventDefault();
-    startRecoveryPassword({
-      email: recoveryEmail,
-      password: recoveryPassword,
-    });
+    if (recoveryPassword === confirmPassword) {
+      startRecoveryPassword({
+        email: recoveryEmail,
+        password: recoveryPassword,
+      })
+        .then((response) => {
+          if (response?.status === 200) {
+            Swal.fire({
+              title: "Contraseña actualizada",
+              text: "Tu contraseña ha sido cambiada correctamente. Ahora puedes iniciar sesión.",
+              icon: "success",
+              confirmButtonText: "Ir a login",
+              timer: 5000,
+            }).then(() => {
+              navigate("/auth/login");
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error en el cambio de contraseña:", error); // Verificación de error
+
+          // Verifica si el error es un 400 (Bad Request) y si contiene el mensaje específico
+          if (error.response && error.response.status === 400) {
+            // Verificar la estructura del error
+            const violations = error.response.data?.violations;
+
+            if (violations && violations.length > 0) {
+              // Si hay violaciones, mostrar el mensaje de la primera violación
+              const violationMessage = violations[0];
+              Swal.fire({
+                title: "Error al cambiar contraseña",
+                text: violationMessage,
+                icon: "error",
+              });
+            } else {
+              // Si no hay violaciones, mostrar un mensaje genérico
+              Swal.fire({
+                title: "Error al cambiar contraseña",
+                text: "Hubo un problema al intentar actualizar tu contraseña.",
+                icon: "error",
+              });
+            }
+          }
+        });
+    } else {
+      Swal.fire({
+        title: "Las contraseñas no coinciden",
+        text: "La nueva contraseña y su confirmación deben de ser iguales",
+        icon: "error",
+      });
+    }
   };
 
   useEffect(() => {
@@ -58,6 +108,19 @@ export const PasswordRecoveryPage = () => {
               placeholder="Nueva contraseña"
               name="recoveryPassword"
               value={recoveryPassword}
+              fullWidth
+              size="medium"
+              required
+              onChange={onInputRecoveryChange}
+            />
+          </Grid2>
+          <Grid2 size={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Confirmar contraseña"
+              type="password"
+              placeholder="Confirm contraseña"
+              name="confirmPassword"
+              value={confirmPassword}
               fullWidth
               size="medium"
               required

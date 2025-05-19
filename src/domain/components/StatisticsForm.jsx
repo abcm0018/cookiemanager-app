@@ -67,7 +67,7 @@ export const StatisticsForm = () => {
   });
 
   const handleCloseDialog = () => {
-    setOpenDialog(false); // Cierra el Dialog
+    setOpenDialog(false);
   };
 
   const handleClearFilters = () => {

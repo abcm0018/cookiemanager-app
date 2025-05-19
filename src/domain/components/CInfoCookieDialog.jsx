@@ -97,7 +97,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Samesite:
                 </Typography>{" "}
-                {cookie.samesite}
+                {cookie.sameSite}
               </Typography>
             </Box>
           </Grid2>

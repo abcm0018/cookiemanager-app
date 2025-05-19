@@ -46,6 +46,20 @@ export const DomainTable = ({ domains = [] }) => {
   };
 
   const handleDeleteDomain = (domainId) => {
+    // Obtener el dominio actual del estado
+    const domain = domains.find((d) => d.id === domainId);
+    if (!domain) {
+      Swal.fire("Error", "No se encontró el dominio a eliminar.", "error");
+      return;
+    }
+    if (domain.status === "Activo") {
+      Swal.fire(
+        "Dominio activo",
+        "El dominio está activo. Cámbialo a inactivo antes de eliminarlo.",
+        "warning"
+      );
+      return;
+    }
     Swal.fire({
       title: "Estás a punto de eliminar un dominio, ¿Estás seguro?",
       text: "Esta acción no podrá ser revertida",
