@@ -7,6 +7,7 @@ export const CDialogUserForm = ({
   email,
   company,
   onEditUserChange,
+  errors = {},
 }) => {
   return (
     <Box>
@@ -22,6 +23,8 @@ export const CDialogUserForm = ({
             type="text"
             sx={{ width: 378, mr: 2 }}
             onChange={onEditUserChange}
+            error={!!errors.name}
+            helperText={errors.name}
           />
           <TextField
             autoFocus
@@ -33,6 +36,8 @@ export const CDialogUserForm = ({
             type="text"
             sx={{ width: 378 }}
             onChange={onEditUserChange}
+            error={!!errors.surname}
+            helperText={errors.surname}
           />
         </Box>
         <Box sx={{ width: 775, mt: 2 }}>
@@ -44,8 +49,11 @@ export const CDialogUserForm = ({
             label="Correo electrónico"
             value={email}
             type="text"
+            disabled
             sx={{ width: 378, mr: 2 }}
             onChange={onEditUserChange}
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <TextField
             autoFocus
@@ -57,6 +65,8 @@ export const CDialogUserForm = ({
             type="text"
             sx={{ width: 378 }}
             onChange={onEditUserChange}
+            error={!!errors.company}
+            helperText={errors.company}
           />
         </Box>
       </Grid2>
@@ -70,4 +80,5 @@ CDialogUserForm.propTypes = {
   email: PropTypes.string.isRequired,
   company: PropTypes.string.isRequired,
   onEditUserChange: PropTypes.func.isRequired,
+  errors: PropTypes.object,
 };

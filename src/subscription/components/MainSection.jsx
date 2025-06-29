@@ -34,6 +34,13 @@ export const MainSection = () => {
   if (isLoadingSubscriptions) {
     return <Loader />;
   }
+
+  // Filtramos solo los dominios activos
+  const activeUserDomains = (user.domains || []).filter(
+    (domain) => domain.status === "Activo"
+  );
+  const activeDomains = activeUserDomains ? activeUserDomains.length : 0;
+
   return (
     <>
       <HeadSection />
@@ -52,7 +59,11 @@ export const MainSection = () => {
           >
             <SubscriptionHeader currentPlan={user.subscription} />
             <Grid2>
-              <CardsSubscription subscriptions={subscriptions} />
+              <CardsSubscription
+                subscriptions={subscriptions}
+                currentPlan={user.subscription}
+                activeDomains={activeDomains}
+              />
             </Grid2>
           </Box>
         </Container>

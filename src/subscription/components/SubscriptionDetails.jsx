@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -17,6 +18,7 @@ export const SubscriptionDetails = ({
   maxDomains = 0,
   buttonTitle = "Actualizar",
   handleUpdateSubscription,
+  isCurrentPlan = false,
 }) => {
   return (
     <Grid2>
@@ -24,13 +26,14 @@ export const SubscriptionDetails = ({
         sx={{
           minWidth: 275,
           width: 300,
-          bgcolor: "#F5F7F8",
+          height: 325,
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          minHeight: 250,
           boxShadow: 3,
           borderRadius: 2,
+          bgcolor: isCurrentPlan ? "#E0F7FA" : "#F5F7F8", // Un color diferente si es el plan actual
+          border: isCurrentPlan ? "2px solid #00BCD4" : "none", // Borde opcional para destacar aún más
         }}
       >
         <CardContent>
@@ -49,7 +52,11 @@ export const SubscriptionDetails = ({
             variant="h5"
             sx={{ pt: 2, color: "text.primary", fontWeight: "bold" }}
           >
-            {price} €uros/mes
+            {parseFloat(price).toLocaleString("es-ES", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{" "}
+            €uros/mes
           </Typography>
           <Divider sx={{ my: 2 }} />
           <Typography
@@ -59,21 +66,40 @@ export const SubscriptionDetails = ({
             <li>El número máximo de dominios permitidos es: {maxDomains}</li>
           </Typography>
         </CardContent>
-        <CardActions sx={{ justifyContent: "center", p: 2, pt: 0 }}>
-          <Button
-            size="medium"
-            fullWidth
-            sx={{
-              bgcolor: "secondary.main",
-              color: "white",
-              mt: -3,
-            }}
-            variant="contained"
-            onClick={handleUpdateSubscription}
-          >
-            {buttonTitle}
-          </Button>
-        </CardActions>
+        {handleUpdateSubscription && (
+          <CardActions sx={{ justifyContent: "center", p: 2, pt: 0 }}>
+            <Button
+              size="medium"
+              fullWidth
+              sx={{
+                bgcolor: "secondary.main",
+                color: "white",
+                borderColor: "secondary.main",
+                mt: -3,
+              }}
+              variant="contained"
+              onClick={handleUpdateSubscription}
+            >
+              {buttonTitle}
+            </Button>
+          </CardActions>
+        )}
+        {!handleUpdateSubscription && (
+          <Box sx={{ p: 0.5, pt: 0 }}>
+            <Button
+              size="medium"
+              fullWidth
+              variant="outlined"
+              disabled
+              sx={{
+                mt: -3,
+                visibility: "hidden",
+              }}
+            >
+              {buttonTitle}
+            </Button>
+          </Box>
+        )}
       </Card>
     </Grid2>
   );
@@ -85,5 +111,6 @@ SubscriptionDetails.propTypes = {
   price: PropTypes.string.isRequired,
   maxDomains: PropTypes.number.isRequired,
   buttonTitle: PropTypes.string.isRequired,
-  handleUpdateSubscription: PropTypes.func.isRequired,
+  handleUpdateSubscription: PropTypes.func,
+  isCurrentPlan: PropTypes.bool,
 };

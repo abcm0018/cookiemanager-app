@@ -6,6 +6,7 @@ import add from "../../assets/img/addCookie.png";
 import info from "../../assets/img/infoCookie.png";
 import filtroCookie from "../../assets/img/filtroCookie.png";
 import filtradoCookie from "../../assets/img/filtradoCookie.png";
+import exportarCookies from "../../assets/img/exportarCookies.png";
 
 export const Cookies = () => {
   return (
@@ -44,7 +45,7 @@ export const Cookies = () => {
       <Box
         component="img"
         src={noCookies}
-        alt="Tabla de cookies"
+        alt="Vista sin cookies"
         sx={{
           width: 500,
           display: "block",
@@ -83,7 +84,7 @@ export const Cookies = () => {
         <Box
           component="img"
           src={filtradoCookie}
-          alt="Filtrado de cookies"
+          alt="Aplicar filtros a la tabla de cookies"
           sx={{
             width: 500,
             display: "block",
@@ -99,6 +100,19 @@ export const Cookies = () => {
           Esta función está disponible a través del botón{" "}
           <em>Exportar cookies</em>.
         </Typography>
+        <Box
+          component="img"
+          src={exportarCookies}
+          alt="Botón de exportar cookies"
+          sx={{
+            width: 500,
+            display: "block",
+            mx: "auto",
+            ml: 35,
+            textAlign: "center",
+            borderRadius: 2,
+          }}
+        />
       </Box>
       <Box sx={{ mt: 3 }}>
         <Typography variant="h6" gutterBottom>
@@ -151,7 +165,7 @@ export const Cookies = () => {
         <Box
           component="img"
           src={edit}
-          alt="Tabla de cookies"
+          alt="Editar cookie"
           sx={{
             width: 500,
             display: "block",
@@ -186,7 +200,7 @@ export const Cookies = () => {
             <Box
               component="img"
               src={add}
-              alt="Tabla de cookies"
+              alt="Añadir de cookies"
               sx={{
                 width: 500,
                 display: "block",

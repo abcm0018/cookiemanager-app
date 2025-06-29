@@ -14,7 +14,7 @@ import {
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layout";
 import { useAuthStore, useForm, useSubscriptionStore } from "../../hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { registerFormField } from "../utils";
 
@@ -22,6 +22,9 @@ export const RegisterPage = () => {
   const navigate = useNavigate();
   const { startRegister, errorMessage } = useAuthStore();
   const { subscriptions, startLoadingSubscriptions } = useSubscriptionStore();
+
+  const [errors, setErrors] = useState({});
+  const cleanString = (str) => str.trim().replace(/\s+/g, " ");
 
   const {
     registerName,
@@ -34,16 +37,74 @@ export const RegisterPage = () => {
     onInputChange: onRegisterInputChange,
   } = useForm(registerFormField);
 
+  const validateFields = () => {
+    const newErrors = {};
+
+    const specialCharRegex = /^[^a-zA-Z0-9]/;
+    const startsWithNumber = /^[0-9]/; // empieza por número
+    const allDigits = /^\d+$/; // solo números
+
+    if (!registerName.trim()) {
+      newErrors.registerName = "* Campo obligatorio";
+    } else if (startsWithNumber.test(registerName)) {
+      newErrors.registerName = "* El campo no puede empezar por un número";
+    } else if (specialCharRegex.test(registerName)) {
+      newErrors.registerName =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (allDigits.test(registerName)) {
+      newErrors.registerName =
+        "* El campo no puede estar compuesto solo por números";
+    } else if (registerName.trim().length < 3) {
+      newErrors.registerName = "El nombre debe tener al menos 3 caracteres";
+    }
+
+    if (!registerSurname.trim()) {
+      newErrors.registerSurname = "* Campo obligatorio";
+    } else if (startsWithNumber.test(registerSurname)) {
+      newErrors.registerSurname = "* El campo no puede empezar por un número";
+    } else if (specialCharRegex.test(registerSurname)) {
+      newErrors.registerSurname =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (allDigits.test(registerSurname)) {
+      newErrors.registerSurname =
+        "* El campo no puede estar compuesto solo por números";
+    } else if (registerSurname.trim().length < 3) {
+      newErrors.registerSurname =
+        "Los apellidos deben tener al menos 3 caracteres";
+    }
+
+    if (!registerEmail.trim()) newErrors.registerEmail = "* Campo obligatorio";
+    if (!registerCompany.trim()) {
+      newErrors.registerCompany = "* Campo obligatorio";
+    } else if (registerCompany.trim().length < 3) {
+      newErrors.registerCompany =
+        "La compañía debe tener al menos 3 caracteres";
+    } else if (specialCharRegex.test(registerCompany.trim())) {
+      newErrors.registerCompany =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(registerCompany.trim())) {
+      newErrors.registerCompany = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(registerCompany.trim())) {
+      newErrors.registerCompany =
+        "* El campo no puede estar compuesto solo por números";
+    }
+    if (!registerPlan.trim()) newErrors.registerPlan = "* Campo obligatorio";
+    if (!registerPassword.trim())
+      newErrors.registerPassword = "* Campo obligatorio";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // Para enviar los datos del formulario
   const registerSubmit = (event) => {
     event.preventDefault();
-
+    if (!validateFields()) return false;
     startRegister({
-      name: registerName,
-      surname: registerSurname,
-      email: registerEmail,
-      password: registerPassword,
-      company: registerCompany,
+      name: cleanString(registerName),
+      surname: cleanString(registerSurname),
+      email: cleanString(registerEmail),
+      password: cleanString(registerPassword),
+      company: cleanString(registerCompany),
       subscriptionPlan: registerPlan,
       termsAccept: registerTerms,
     })
@@ -58,6 +119,7 @@ export const RegisterPage = () => {
           }).then(() => {
             navigate("/auth/login");
           });
+          return true;
         }
       })
       .catch((error) => {
@@ -96,6 +158,8 @@ export const RegisterPage = () => {
               required
               sx={{ mr: 3.25 }}
               onChange={onRegisterInputChange}
+              error={!!errors.registerName}
+              helperText={errors.registerName}
             />
             <TextField
               label="Apellidos"
@@ -106,6 +170,8 @@ export const RegisterPage = () => {
               size="medium"
               required
               onChange={onRegisterInputChange}
+              error={!!errors.registerSurname}
+              helperText={errors.registerSurname}
             />
           </Grid2>
         </Grid2>
@@ -120,6 +186,8 @@ export const RegisterPage = () => {
             size="medium"
             required
             onChange={onRegisterInputChange}
+            error={!!errors.registerEmail}
+            helperText={errors.registerEmail}
           />
           <TextField
             label="Contraseña"
@@ -132,6 +200,8 @@ export const RegisterPage = () => {
             required
             sx={{ mt: 1 }}
             onChange={onRegisterInputChange}
+            error={!!errors.registerPassword}
+            helperText={errors.registerPassword}
           />
           <TextField
             label="Compañía"
@@ -144,6 +214,8 @@ export const RegisterPage = () => {
             required
             sx={{ mt: 1 }}
             onChange={onRegisterInputChange}
+            error={!!errors.registerCompany}
+            helperText={errors.registerCompany}
           />
           <FormControl fullWidth sx={{ mt: 1 }} size="medium">
             <InputLabel id="select-label">Plan</InputLabel>
@@ -152,6 +224,8 @@ export const RegisterPage = () => {
               name="registerPlan"
               value={registerPlan}
               onChange={onRegisterInputChange}
+              error={!!errors.registerPlan}
+              helperText={errors.registerPlan}
             >
               {subscriptions.map((subscription) => (
                 <MenuItem

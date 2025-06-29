@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useDomainStore, useForm } from "../../hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { CDialogForm } from "./CDialogForm";
 import { editDomainForm } from "../utils";
@@ -41,6 +41,9 @@ export const CEditDomainDialog = ({
     setFormState,
   } = useForm(editDomainForm);
 
+  const [errors, setErrors] = useState({});
+  const cleanString = (str) => str.trim().replace(/\s+/g, " ");
+
   // Prellenar los datos del formulario cuando el diálogo se abre
   useEffect(() => {
     if (openEditDomainDialog && domainToEdit) {
@@ -52,21 +55,71 @@ export const CEditDomainDialog = ({
         domainContactEmail: domainToEdit.contactEmail,
         domainCountryOrigin: domainToEdit.countryOrigin,
       });
+      setErrors({});
     }
   }, [openEditDomainDialog, domainToEdit, setFormState]);
 
+  const validateFields = () => {
+    const newErrors = {};
+    const specialCharRegex = /^[^a-zA-Z0-9]/;
+    const startsWithNumber = /^[0-9]/;
+    const allDigits = /^\d+$/;
+
+    if (!domainDescription.trim()) {
+      newErrors.domainDescription = "* Campo obligatorio";
+    } else if (domainDescription.trim().length < 4) {
+      newErrors.domainDescription =
+        "* La descripción debe tener al menos 4 caracteres";
+    } else if (specialCharRegex.test(domainDescription.trim())) {
+      newErrors.domainDescription =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(domainDescription.trim())) {
+      newErrors.domainDescription = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(domainDescription.trim())) {
+      newErrors.domainDescription =
+        "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!domainOwner.trim()) {
+      newErrors.domainOwner = "* Campo obligatorio";
+    } else if (domainOwner.trim().length < 3) {
+      newErrors.domainOwner =
+        "* El nombre del propietario debe tener al menos 3 caracteres";
+    } else if (specialCharRegex.test(domainOwner.trim())) {
+      newErrors.domainOwner =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(domainOwner.trim())) {
+      newErrors.domainOwner = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(domainOwner.trim())) {
+      newErrors.domainOwner =
+        "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!domainContactEmail.trim()) {
+      newErrors.domainContactEmail = "* Campo obligatorio";
+    }
+
+    if (!domainCountryOrigin.trim()) {
+      newErrors.domainCountryOrigin = "* Campo obligatorio";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const onUpdateDomainSubmit = (event) => {
     event.preventDefault();
+    if (!validateFields()) return false;
     startUpdatingDomain({
       id: domainToEdit.id,
       name: domainToEdit.name,
-      description: domainDescription,
-      status: domainStatus,
-      owner: domainOwner,
-      contactEmail: domainContactEmail,
-      countryOrigin: domainCountryOrigin,
+      description: cleanString(domainDescription),
+      status: cleanString(domainStatus),
+      owner: cleanString(domainOwner),
+      contactEmail: cleanString(domainContactEmail),
+      countryOrigin: cleanString(domainCountryOrigin),
     });
     navigate(`/domains/${domainToEdit.id}`);
+    return true;
   };
 
   useEffect(() => {
@@ -85,8 +138,10 @@ export const CEditDomainDialog = ({
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
-            onUpdateDomainSubmit(event);
-            handleCloseEditDomainDialog();
+            // onUpdateDomainSubmit(event);
+            // handleCloseEditDomainDialog();
+            const success = onUpdateDomainSubmit(event);
+            if (success) handleCloseEditDomainDialog();
           },
         }}
       >
@@ -111,6 +166,8 @@ export const CEditDomainDialog = ({
             domainCountryOrigin={domainCountryOrigin}
             domainDescription={domainDescription}
             onEditDomainChange={onEditDomainChange}
+            errors={errors}
+            isEditMode={true}
           />
           <FormControl sx={{ width: 775, mt: 1 }} size="medium">
             <InputLabel id="select-status-label">Estado</InputLabel>

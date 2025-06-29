@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useDomainStore, useForm } from "../../hooks";
 import { addBannerForm } from "../utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { CBannerForm } from "./CBannerForm";
 export const CAddBannerDialog = ({
@@ -19,6 +19,10 @@ export const CAddBannerDialog = ({
   handleCloseAddBannerDialog,
 }) => {
   const { startSavingBanner, errorMessage } = useDomainStore();
+
+  const [errors, setErrors] = useState({});
+
+  const cleanString = (str) => str.trim().replace(/\s+/g, " ");
 
   const legislation = "GDPR";
   const legislationDescription =
@@ -38,23 +42,87 @@ export const CAddBannerDialog = ({
 
   const handleCloseAndReset = () => {
     onResetForm();
+    setErrors({});
     handleCloseAddBannerDialog();
+  };
+
+  const validateFields = () => {
+    const newErrors = {};
+
+    const specialCharRegex = /^[^a-zA-Z0-9]/; // Detecta si empieza por carácter no alfanumérico
+    const onlyOneNumberRegex = /^(?!.*\d.*\d).*$/; // Máximo un número
+    const welcomeMinLength = 50;
+    const startsWithNumber = /^[0-9]/; // empieza por número
+    const allDigits = /^\d+$/; // solo números
+
+    if (!title.trim()) {
+      newErrors.title = "* Campo obligatorio";
+    } else if (title.trim().length < 3) {
+      newErrors.title = "* El título debe tener al menos 3 caracteres";
+    } else if (!onlyOneNumberRegex.test(title.trim())) {
+      newErrors.title = "* El título solo puede contener un número";
+    } else if (specialCharRegex.test(title.trim())) {
+      newErrors.title = "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(title.trim())) {
+      newErrors.title = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(title.trim())) {
+      newErrors.title = "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!cookieDeclaration.trim()) {
+      newErrors.cookieDeclaration =
+        "* La declaración de cookies es obligatoria";
+    } else if (cookieDeclaration.trim().length < welcomeMinLength) {
+      newErrors.cookieDeclaration = `* La declaración debe tener al menos ${welcomeMinLength} caracteres`;
+    } else if (specialCharRegex.test(cookieDeclaration.trim())) {
+      newErrors.cookieDeclaration =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(cookieDeclaration.trim())) {
+      newErrors.cookieDeclaration = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(cookieDeclaration.trim())) {
+      newErrors.cookieDeclaration =
+        "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!consentType.trim()) newErrors.consentType = "* Campo obligatorio";
+
+    if (!lang.trim()) newErrors.lang = "* Campo obligatorio";
+
+    if (!companyLogo.trim()) {
+      newErrors.companyLogo = "* Campo obligatorio";
+    } else if (companyLogo.trim().length < 3) {
+      newErrors.companyLogo =
+        "* El nombre del propietario debe tener al menos 3 caracteres";
+    } else if (specialCharRegex.test(companyLogo.trim())) {
+      newErrors.companyLogo =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(companyLogo.trim())) {
+      newErrors.companyLogo = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(companyLogo.trim())) {
+      newErrors.companyLogo =
+        "* El campo no puede estar compuesto solo por números";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const onCreateBannerSubmit = (event) => {
     event.preventDefault();
+    if (!validateFields()) return false;
     startSavingBanner({
       id: parseInt(id, 10),
-      title: title,
-      cookieDeclaration: cookieDeclaration,
-      consentType: consentType,
-      lang: lang,
-      companyLogo: companyLogo,
+      title: cleanString(title),
+      cookieDeclaration: cleanString(cookieDeclaration),
+      consentType: cleanString(consentType),
+      lang: cleanString(lang),
+      companyLogo: cleanString(companyLogo),
       legislation: legislation,
       legislationDescription: legislationDescription,
       cookiePolicy: cookiePolicy,
       privacyPolicy: privacyPolicy,
     });
+    return true;
   };
 
   useEffect(() => {
@@ -72,8 +140,10 @@ export const CAddBannerDialog = ({
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
-            onCreateBannerSubmit(event);
-            handleCloseAndReset();
+            // onCreateBannerSubmit(event);
+            // handleCloseAndReset();
+            const success = onCreateBannerSubmit(event);
+            if (success) handleCloseAndReset();
           },
         }}
       >
@@ -101,6 +171,7 @@ export const CAddBannerDialog = ({
             cookiePolicy={cookiePolicy}
             privacyPolicy={privacyPolicy}
             onAddBannerChange={onAddBannerChange}
+            errors={errors}
           />
         </DialogContent>
         <DialogActions sx={{ pl: 8, pr: 8, pb: 3 }}>

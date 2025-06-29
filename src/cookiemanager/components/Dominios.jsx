@@ -24,7 +24,7 @@ export const Dominios = () => {
         <li style={{ listStyleType: "disc" }}>
           <Typography variant="body1">
             <strong>Código:</strong> Cada dominio recibe un identificador único
-            , necesario para su integración con CookieManager.
+            ,necesario para su integración con CookieManager.
           </Typography>
         </li>
         <li style={{ listStyleType: "disc" }}>
@@ -72,7 +72,7 @@ export const Dominios = () => {
       <Box
         component="img"
         src={noDominio}
-        alt="Mis dominios"
+        alt="Vista del usuario sin dominios"
         sx={{
           width: 500,
           display: "block",
@@ -87,7 +87,7 @@ export const Dominios = () => {
           Agregar dominio
         </Typography>
         <Typography variant="body1">
-          Para incorporar un nuevo dominio a su cuenta, diríjase a la sección
+          Para incorporar un nuevo dominio a su cuenta, diríjase a la sección{" "}
           <em>Mis dominios</em>. Desde allí, podrá iniciar un proceso guiado que
           le permitirá ingresar el dominio para cumplir con las normativas de
           privacidad.
@@ -105,6 +105,14 @@ export const Dominios = () => {
             borderRadius: 2,
           }}
         />
+        <Typography>
+          <strong>Nota:</strong> en función del plan de suscripción activo,
+          existe un límite en la cantidad de dominios que se pueden registrar.
+          Si ya ha alcanzado ese límite, el botón de “Añadir dominio” dejará de
+          mostrarse automáticamente, impidiendo la creación de nuevos dominios
+          hasta que se elimine uno existente o se actualice el plan de
+          suscripción del usuario.
+        </Typography>
       </Box>
       <Box sx={{ mt: 0.5 }}>
         <Typography variant="h6" gutterBottom>
@@ -171,27 +179,27 @@ export const Dominios = () => {
         <Stack component="ul" spacing={2} sx={{ pl: 3 }}>
           <li style={{ listStyleType: "disc" }}>
             <Typography variant="body1">
-              <strong>Suscripción:</strong> Muestra el plan activo y permite
+              <strong>Suscripción:</strong> muestra el plan activo y permite
               actualizarlo a uno superior si se desea.
             </Typography>
           </li>
           <li style={{ listStyleType: "disc" }}>
             <Typography variant="body1">
-              <strong>Cookies:</strong> Visualiza el total de cookies y gestiona
+              <strong>Cookies:</strong> visualiza el total de cookies y gestiona
               aquellas que necesitan categorización o se configuran antes del
               consentimiento.
             </Typography>
           </li>
           <li style={{ listStyleType: "disc" }}>
             <Typography variant="body1">
-              <strong>Escaneo de cookies:</strong> Muestra los resultados del
+              <strong>Escaneo de cookies:</strong> muestra los resultados del
               último análisis, incluyendo fecha, cantidad de cookies y páginas
               evaluadas. Permite iniciar un nuevo escaneo manual.
             </Typography>
           </li>
           <li style={{ listStyleType: "disc" }}>
             <Typography variant="body1">
-              <strong>Utilización:</strong> Monitorea las sesiones totales en el
+              <strong>Utilización:</strong> monitorea las sesiones totales en el
               periodo mensual.
             </Typography>
           </li>
@@ -203,7 +211,7 @@ export const Dominios = () => {
           </li>
           <li style={{ listStyleType: "disc" }}>
             <Typography variant="body1">
-              <strong>Eliminar dominio:</strong> Elimina permanentemente un
+              <strong>Eliminar dominio:</strong> elimina permanentemente un
               dominio, siempre que esté marcado como inactivo.
             </Typography>
           </li>
@@ -228,8 +236,11 @@ export const Dominios = () => {
         </Typography>
         <Typography variant="body1">
           En esta sección podrá consultar su plan de suscripción actual, con
-          detalles como el número máximo de dominios activos. Si desea ajustar
-          el servicio a sus necesidades, puede hacerlo fácilmente desde el botón
+          detalles como el número máximo de dominios activos. El plan activo se
+          muestra destacado visualmente para facilitar su identificación, y en
+          él el botón <em>Actualizar suscripción </em> no está disponible para
+          evitar confusión. Si desea ajustar el servicio a sus necesidades,
+          puede hacerlo fácilmente desde el botón{" "}
           <em>Actualizar suscripción </em>.
         </Typography>
         <Box
@@ -253,7 +264,7 @@ export const Dominios = () => {
         <Typography variant="body1">
           Visualice la cantidad total de cookies vinculadas a su dominio, ya
           sean identificadas automáticamente o añadidas de forma manual. Para
-          gestionarlas o asignarles una categoría, diríjase a la sección
+          gestionarlas o asignarles una categoría, diríjase a la sección{" "}
           <em>Administrar cookies</em> dentro de la pestaña correspondiente.
         </Typography>
       </Box>
@@ -275,8 +286,7 @@ export const Dominios = () => {
         </Typography>
         <Typography variant="body1">
           Esta sección le permite hacer seguimiento del uso de su dominio,
-          mostrando tanto la cantidad de sesiones en cada escaneo{" "}
-          <em>Ver informes</em>.
+          mostrando la cantidad de sesiones en el período mensual.
         </Typography>
       </Box>
       <Box sx={{ mt: 4 }}>
@@ -296,9 +306,10 @@ export const Dominios = () => {
         </Typography>
         <Typography variant="body1">
           Al seleccionar esta opción, puede borrar permanentemente un dominio de
-          su cuenta. Tenga en cuenta que esta acción es irreversible y eliminará
-          todos los datos asociados al dominio, incluidos banners y cookies
-          configuradas.
+          su cuenta. Para poder eliminarlo, este debe encontrarse en estado
+          “Inactivo”. Tenga en cuenta que esta acción es irreversible y
+          eliminará todos los datos asociados al dominio, incluidos banners y
+          cookies configuradas.
         </Typography>
       </Box>
     </>

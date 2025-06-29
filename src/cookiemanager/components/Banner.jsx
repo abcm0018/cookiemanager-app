@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import addBanner from "../../assets/img/addBanner.png";
 import editBanner from "../../assets/img/editBanner.png";
+import noBanner from "../../assets/img/noBanner.png";
 
 export const Banner = () => {
   return (
@@ -33,7 +34,7 @@ export const Banner = () => {
         <Box
           component="img"
           src={addBanner}
-          alt="Añadir dominio"
+          alt="Añadir banner de consentimiento"
           sx={{
             width: 500,
             display: "block",
@@ -59,7 +60,29 @@ export const Banner = () => {
         <Box
           component="img"
           src={editBanner}
-          alt="Editar banner"
+          alt="Editar banner de consentimiento"
+          sx={{
+            width: 500,
+            display: "block",
+            mx: "auto",
+            ml: 35,
+            textAlign: "center",
+            borderRadius: 2,
+          }}
+        />
+        <Typography>
+          En caso de que el dominio no cuente con un banner de consentimiento
+          creado, y el usuario acceda directamente a la pestaña “Editar banner”,
+          se mostrará una tarjeta informativa con el siguiente mensaje: “Aún no
+          has creado ningún banner de consentimiento”, acompañado de una
+          sugerencia de acción: “Para crear uno, ve a la pestaña de “Ver
+          detalles” y pulsa el botón de “Crear banner” en la tarjeta
+          correspondiente”
+        </Typography>
+        <Box
+          component="img"
+          src={noBanner}
+          alt="Pantalla donde se muestra que no hay banner de consentimiento"
           sx={{
             width: 500,
             display: "block",

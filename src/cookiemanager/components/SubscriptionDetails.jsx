@@ -18,7 +18,7 @@ export const SubscriptionDetails = ({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          minHeight: 250,
+          height: 275,
           boxShadow: 3,
           borderRadius: 2,
         }}
@@ -39,7 +39,11 @@ export const SubscriptionDetails = ({
             variant="h5"
             sx={{ pt: 2, color: "text.primary", fontWeight: "bold" }}
           >
-            {price} €uros/mes
+            {parseFloat(price).toLocaleString("es-ES", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}{" "}
+            €uros/mes
           </Typography>
           <Divider sx={{ my: 2 }} />
           <Typography

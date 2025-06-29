@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 import {
   Box,
   FormControl,
@@ -17,7 +19,7 @@ export const CCategoriesSettingsField = () => {
           <Typography variant="h6" color="secondary.main">
             Categorías
           </Typography>
-          <Typography variant="body2">
+          <Typography variant="body2" color="primary.main">
             Aquí puedes gestionar qué categorías se muestran en la declaración
             de cookies y cómo se comporta cada una.
           </Typography>
@@ -26,7 +28,7 @@ export const CCategoriesSettingsField = () => {
           <Box component="div" sx={{ width: 484, mr: 3 }}>
             <FormControl fullWidth size="medium">
               <InputLabel id="necesarias-label-id">Necesarias</InputLabel>
-              <Select label="necesarias">
+              <Select label="necesarias" value="activas">
                 <MenuItem value="activas">Siempre visibles</MenuItem>
                 <MenuItem value="desactivadas">Opcionales</MenuItem>
               </Select>
@@ -35,7 +37,7 @@ export const CCategoriesSettingsField = () => {
           <Box component="div" sx={{ width: 484 }}>
             <FormControl fullWidth size="medium">
               <InputLabel id="opcionales-label-id">Opcionales</InputLabel>
-              <Select label="Opcionales">
+              <Select label="Opcionales" value="activas">
                 <MenuItem value="activas">Siempre visibles</MenuItem>
                 <MenuItem value="desactivadas">Opcionales</MenuItem>
               </Select>
@@ -44,7 +46,7 @@ export const CCategoriesSettingsField = () => {
           <Box component="div" sx={{ width: 484, mt: 2 }}>
             <FormControl fullWidth size="medium">
               <InputLabel id="terceros-label-id">Terceros</InputLabel>
-              <Select label="Terceros">
+              <Select label="Terceros" value="activas">
                 <MenuItem value="activas">Siempre visibles</MenuItem>
                 <MenuItem value="desactivadas">Opcionales</MenuItem>
               </Select>
@@ -54,4 +56,9 @@ export const CCategoriesSettingsField = () => {
       </FormGroup>
     </Grid2>
   );
+};
+
+CCategoriesSettingsField.propTypes = {
+  lang: PropTypes.string,
+  onEditBannerChange: PropTypes.func,
 };

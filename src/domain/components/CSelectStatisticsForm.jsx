@@ -38,6 +38,7 @@ export const CSelectStatisticsForm = ({
             <InputLabel>Categoría de cookie</InputLabel>
             <Select
               name="category"
+              label="Categoría de cookie"
               value={category}
               onChange={onStatisticsInputChange}
             >
@@ -53,6 +54,7 @@ export const CSelectStatisticsForm = ({
           <FormControl fullWidth size="medium">
             <InputLabel>País de acceso</InputLabel>
             <Select
+              label="País de acceso"
               name="country"
               value={country}
               onChange={onStatisticsInputChange}
@@ -72,6 +74,7 @@ export const CSelectStatisticsForm = ({
             <InputLabel>Idioma</InputLabel>
             <Select
               name="language"
+              label="Idioma"
               value={language}
               onChange={onStatisticsInputChange}
             >
@@ -100,6 +103,7 @@ export const CSelectStatisticsForm = ({
             <InputLabel>Tipo de plataforma</InputLabel>
             <Select
               name="platform"
+              label="Tipo de plataforma"
               value={platform}
               onChange={onStatisticsInputChange}
             >
@@ -115,6 +119,7 @@ export const CSelectStatisticsForm = ({
             <InputLabel>Estado de aceptación</InputLabel>
             <Select
               name="state"
+              label="Estado de aceptación"
               value={state}
               onChange={onStatisticsInputChange}
             >

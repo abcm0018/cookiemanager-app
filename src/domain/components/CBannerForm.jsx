@@ -21,6 +21,7 @@ export const CBannerForm = ({
   cookiePolicy,
   privacyPolicy,
   onAddBannerChange,
+  errors = {},
 }) => {
   return (
     <>
@@ -37,28 +38,41 @@ export const CBannerForm = ({
               type="text"
               sx={{ width: 378, mr: 2 }}
               onChange={onAddBannerChange}
+              error={!!errors.title}
+              helperText={errors.title}
             />
-            <TextField
-              autoFocus
-              required
-              id="cookie-declaration"
-              label="Declaración de Cookies"
-              name="cookieDeclaration"
-              value={cookieDeclaration}
-              type="text"
-              sx={{ width: 378 }}
-              onChange={onAddBannerChange}
-            />
+            <FormControl>
+              <InputLabel id="consent-type-label">
+                Tipo de Consentimiento
+              </InputLabel>
+              <Select
+                id="consent-type"
+                label="Tipo de Consentimiento"
+                name="consentType"
+                value={consentType}
+                onChange={onAddBannerChange}
+                sx={{ width: 378 }}
+                required
+                error={!!errors.consentType}
+                helperText={errors.consentType}
+              >
+                <MenuItem value="Explicit">Explícito</MenuItem>
+                <MenuItem value="Implied">Implícito</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
           <Box sx={{ width: 775, mt: 2 }}>
             <TextField
               id="company-logo"
-              label="Compañía*"
+              label="Compañía"
               name="companyLogo"
               value={companyLogo}
               type="text"
+              required
               sx={{ width: 378, mr: 2 }}
               onChange={onAddBannerChange}
+              error={!!errors.companyLogo}
+              helperText={errors.companyLogo}
             />
 
             <FormControl sx={{ width: 378 }} size="medium">
@@ -69,6 +83,9 @@ export const CBannerForm = ({
                 name="lang"
                 value={lang}
                 onChange={onAddBannerChange}
+                required
+                error={!!errors.lang}
+                helperText={errors.lang}
               >
                 <MenuItem value="DE">Alemán</MenuItem>
                 <MenuItem value="ES">Español</MenuItem>
@@ -80,21 +97,21 @@ export const CBannerForm = ({
             </FormControl>
           </Box>
           <Box spacing={2} sx={{ width: 775, mt: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel id="consent-type-label">
-                Tipo de Consentimiento
-              </InputLabel>
-              <Select
-                id="consent-type"
-                label="Tipo de Consentimiento"
-                name="consentType"
-                value={consentType}
-                onChange={onAddBannerChange}
-              >
-                <MenuItem value="Explicit">Explícito</MenuItem>
-                <MenuItem value="Implied">Implícito</MenuItem>
-              </Select>
-            </FormControl>
+            <TextField
+              autoFocus
+              required
+              fullWidth
+              multiline
+              rows={4}
+              id="cookie-declaration"
+              label="Declaración de Cookies"
+              name="cookieDeclaration"
+              value={cookieDeclaration}
+              type="text"
+              onChange={onAddBannerChange}
+              error={!!errors.cookieDeclaration}
+              helperText={errors.cookieDeclaration}
+            />
           </Box>
         </Grid2>
       </Box>
@@ -137,4 +154,5 @@ CBannerForm.propTypes = {
   cookiePolicy: PropTypes.string.isRequired,
   privacyPolicy: PropTypes.string.isRequired,
   onAddBannerChange: PropTypes.func.isRequired,
+  errors: PropTypes.object,
 };

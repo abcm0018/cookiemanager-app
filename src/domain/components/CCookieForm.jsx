@@ -21,6 +21,8 @@ export const CCookieForm = ({
   httpOnly,
   secure,
   onAddCookieChange,
+  isEditMode = false,
+  errors = {},
 }) => {
   return (
     <>
@@ -37,15 +39,21 @@ export const CCookieForm = ({
               type="text"
               sx={{ width: 378, mr: 2 }}
               onChange={onAddCookieChange}
+              disabled={isEditMode}
+              error={!!errors.name}
+              helperText={errors.name}
             />
             <FormControl sx={{ width: 378 }} size="medium">
               <InputLabel id="select-category-label">Categoría</InputLabel>
               <Select
                 id="cookie-category"
+                required
                 label="Categoría"
                 onChange={onAddCookieChange}
                 name="category"
                 value={category}
+                error={!!errors.category}
+                helperText={errors.category}
               >
                 <MenuItem value="Essential">Esencial</MenuItem>
                 <MenuItem value="Optional">Opcional</MenuItem>
@@ -64,6 +72,8 @@ export const CCookieForm = ({
               type="text"
               onChange={onAddCookieChange}
               sx={{ width: 378, mr: 2 }}
+              error={!!errors.type}
+              helperText={errors.type}
             />
             <TextField
               autoFocus
@@ -75,6 +85,8 @@ export const CCookieForm = ({
               onChange={onAddCookieChange}
               type="text"
               sx={{ width: 378 }}
+              error={!!errors.provider}
+              helperText={errors.provider}
             />
           </Box>
           <Box sx={{ width: 775, mt: 1 }}>
@@ -88,9 +100,12 @@ export const CCookieForm = ({
               type="text"
               sx={{ width: 378, mr: 2 }}
               onChange={onAddCookieChange}
+              error={!!errors.duration}
+              helperText={errors.duration}
             />
             <TextField
               autoFocus
+              required
               id="cookie-description"
               name="description"
               label="Descripción"
@@ -98,6 +113,8 @@ export const CCookieForm = ({
               type="text"
               sx={{ width: 378 }}
               onChange={onAddCookieChange}
+              error={!!errors.description}
+              helperText={errors.description}
             />
           </Box>
         </Grid2>
@@ -115,9 +132,12 @@ export const CCookieForm = ({
             <InputLabel id="select-httpOnly-label">httpOnly</InputLabel>
             <Select
               label="httpOnly"
+              required
               onChange={onAddCookieChange}
               name="httpOnly"
               value={httpOnly}
+              error={!!errors.httpOnly}
+              helperText={errors.httpOnly}
             >
               <MenuItem value="S">Sí</MenuItem>
               <MenuItem value="N">No</MenuItem>
@@ -131,9 +151,12 @@ export const CCookieForm = ({
             <InputLabel id="select-secure-label">Secure</InputLabel>
             <Select
               label="Secure"
+              required
               onChange={onAddCookieChange}
               name="secure"
               value={secure}
+              error={!!errors.secure}
+              helperText={errors.secure}
             >
               <MenuItem value="S">Segura</MenuItem>
               <MenuItem value="N">Insegura</MenuItem>
@@ -149,9 +172,12 @@ export const CCookieForm = ({
             <InputLabel id="select-samesite-label">Samesite</InputLabel>
             <Select
               label="Samesite"
+              required
               onChange={onAddCookieChange}
               name="sameSite"
               value={sameSite}
+              error={!!errors.sameSite}
+              helperText={errors.sameSite}
             >
               <MenuItem value="Strict">Strict</MenuItem>
               <MenuItem value="Lax">Lax</MenuItem>
@@ -179,4 +205,6 @@ CCookieForm.propTypes = {
   httpOnly: PropTypes.string,
   secure: PropTypes.string,
   onAddCookieChange: PropTypes.func,
+  isEditMode: PropTypes.bool,
+  errors: PropTypes.object,
 };

@@ -20,6 +20,8 @@ export const CookieListView = () => {
     isLoadingActiveDomain,
   } = useDomainStore();
 
+  const isInactive = activeDomain?.status === "Inactivo";
+
   useEffect(() => {
     if (isLoadingActiveDomain) {
       startGettingDomainById(id);
@@ -33,7 +35,7 @@ export const CookieListView = () => {
 
   useEffect(() => {
     startLoadingCookies(activeDomain.id);
-  }, [activeDomain.id]);
+  }, []);
 
   useEffect(() => {
     if (errorMessage !== undefined) {
@@ -53,7 +55,7 @@ export const CookieListView = () => {
         <Grid2 item xs={12}>
           <CHeaderCookieList descripcion={descripcion} />
           <TableContainer component={Paper} sx={{ mt: 2 }}>
-            <CookieTable cookies={cookies} />
+            <CookieTable cookies={cookies} isInactive={isInactive} />
           </TableContainer>
           <Box sx={{ mt: 4, display: "flex", justifyContent: "flex-end" }}>
             <Button

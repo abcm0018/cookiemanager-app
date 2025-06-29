@@ -43,7 +43,7 @@ export const Cuenta = () => {
         <Box
           component="img"
           src={perfil}
-          alt="Perfil usuario"
+          alt="Perfil de usuario"
           sx={{
             width: 500,
             display: "block",

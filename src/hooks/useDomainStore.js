@@ -12,8 +12,17 @@ import {
   onDeleteBanner,
   onLoadCookieStatistics,
   onLoadScriptBanner,
+  onClearDomains,
 } from "../store/domain/domainSlice";
 import Swal from "sweetalert2";
+import {
+  onAddUserDomain,
+  onClearCookies,
+  onClearSubscriptions,
+  onLogout,
+  onRemoveUserDomain,
+  onUpdateUserDomain,
+} from "../store";
 
 export const useDomainStore = () => {
   const dispatch = useDispatch();
@@ -68,12 +77,14 @@ export const useDomainStore = () => {
 
       // Despachamos el dominio recién creado
       dispatch(onAddNewDomain(data));
+      dispatch(onAddUserDomain(data));
 
       // Devolvemos el dominio creado para usarlo en el componente si fuera necesario
       return data;
     } catch (error) {
       console.error(error);
       const errorMessage = error.response?.data?.msg || "Error desconocido";
+
       Swal.fire("Error al crear el dominio", errorMessage, "error");
 
       // Retornamos null en caso de error.
@@ -102,6 +113,7 @@ export const useDomainStore = () => {
       });
       console.log(data);
       dispatch(onUpdateDomain(data));
+      dispatch(onUpdateUserDomain(data));
     } catch (error) {
       console.log(error);
       Swal.fire("Error al actualizar", error.response.data.msg, "error");
@@ -114,6 +126,7 @@ export const useDomainStore = () => {
 
       // Despacha la acción para eliminar el dominio del estado local
       dispatch(onDeleteDomain(domainId));
+      dispatch(onRemoveUserDomain(domainId));
     } catch (error) {
       console.error("Error al eliminar el dominio:", error);
       const errorMsg = error.response?.data?.msg || "Error desconocido";
@@ -233,6 +246,7 @@ export const useDomainStore = () => {
     } catch (error) {
       console.error("Error al actualizar el banner:", error);
       const errorMessage = error.response?.data?.msg || "Error desconocido";
+
       Swal.fire("Error al actualizar el banner", errorMessage, "error");
 
       // Retornamos null en caso de error.
@@ -261,6 +275,7 @@ export const useDomainStore = () => {
     fechaHasta,
     plataforma,
     pais,
+    idioma,
   }) => {
     try {
       const { data } = await cookieManagerApi.get(
@@ -273,6 +288,7 @@ export const useDomainStore = () => {
             fechaHasta: fechaHasta,
             plataforma: plataforma,
             pais: pais,
+            idioma: idioma,
           },
         }
       );
@@ -388,7 +404,13 @@ export const useDomainStore = () => {
     } catch (error) {
       console.log("Error al cargar los datos del script: ", error);
       console.log(error);
-      if (
+      if (error.response?.status === 401) {
+        localStorage.clear();
+        dispatch(onLogout());
+        dispatch(onClearDomains());
+        dispatch(onClearCookies());
+        dispatch(onClearSubscriptions());
+      } else if (
         dataError != "Error dominio no tiene asociado un banner" &&
         error.status != 500
       ) {

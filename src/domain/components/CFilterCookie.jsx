@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { Box, Chip, Slider, TextField, Typography } from "@mui/material";
 
 export const CFilterCookie = ({
+  categorias,
   cookies = [],
   searchTerm,
   setSearchTerm,
@@ -20,7 +21,6 @@ export const CFilterCookie = ({
   selectedSamesite,
   setSelectedSamesite,
 }) => {
-  const categorias = [...new Set(cookies.map((cookie) => cookie.category))];
   const proveedores = [...new Set(cookies.map((cookie) => cookie.provider))];
 
   // Solo mostramos valores válidos de SameSite
@@ -210,6 +210,7 @@ export const CFilterCookie = ({
 };
 
 CFilterCookie.propTypes = {
+  categorias: PropTypes.array.isRequired,
   cookies: PropTypes.array.isRequired,
   searchTerm: PropTypes.string.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
@@ -227,4 +228,5 @@ CFilterCookie.propTypes = {
   setSelectedSecure: PropTypes.func.isRequired,
   selectedSamesite: PropTypes.array.isRequired,
   setSelectedSamesite: PropTypes.func.isRequired,
+  translateCategory: PropTypes.func.isRequired,
 };

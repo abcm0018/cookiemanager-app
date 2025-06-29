@@ -16,12 +16,12 @@ export const ScannerCookieView = ({ onDetailClick }) => {
 
   // Cargar dominios al montar el componente
   useEffect(() => {
-    if (domains.length === 0) {
-      startLoadingDomains().then(() => setLoading(false));
-    } else {
-      setLoading(false); // Si ya hay dominios cargados, no es necesario recargar
-    }
-  }, [domains.length, startLoadingDomains]);
+    //if (domains.length === 0) {
+    startLoadingDomains().then(() => setLoading(false));
+    // } else {
+    //   setLoading(false); // Si ya hay dominios cargados, no es necesario recargar
+    // }
+  }, []);
 
   useEffect(() => {
     // Si los dominios ya están cargados, encuentra el dominio correspondiente
@@ -57,16 +57,16 @@ export const ScannerCookieView = ({ onDetailClick }) => {
   return (
     <Grid2 container sx={{ pb: 5, pt: 4, pl: 10, pr: 10 }}>
       <Box sx={{ width: 990 }}>
-        <Box component="div">
-          <Typography variant="h6" sx={{ color: "primary.main" }}>
-            Escaneo de cookies
-          </Typography>
-        </Box>
         <Box component="div" sx={{ mt: 2 }}>
-          {domain.lastCookieScan === null ? (
+          {!domain.lastCookieScan ? (
             <CNoCookieScan />
           ) : (
             <>
+              <Box component="div">
+                <Typography variant="h6" sx={{ color: "primary.main" }}>
+                  Escaneo de cookies
+                </Typography>
+              </Box>
               <TableContainer component={Paper}>
                 <CookieScanTable
                   key={domain.dateCreation}

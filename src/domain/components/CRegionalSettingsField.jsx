@@ -15,6 +15,7 @@ export const CRegionalSettingsField = ({
   consentType,
   cookieDeclaration,
   onEditBannerChange,
+  errors = {},
 }) => {
   return (
     <Grid2 container direction="column" sx={{ mt: 2 }}>
@@ -23,7 +24,7 @@ export const CRegionalSettingsField = ({
           <Typography variant="h6" color="secondary.main">
             Configuración regional
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
+          <Typography variant="body2" color="primary.main" sx={{ mb: 2 }}>
             Ajuste el comportamiento de CookieManager y los marcos normativos
             según la ubicación de los usuarios. Tienes la opción de modificar el
             tipo de diálogo, el consentimiento, el marco legal y el diseño del
@@ -38,7 +39,10 @@ export const CRegionalSettingsField = ({
             label="Tipo de consentimiento"
             name="consentType"
             value={consentType}
+            required
             onChange={onEditBannerChange}
+            error={!!errors.consentType}
+            helperText={errors.consentType}
           >
             <MenuItem value="Explicit">Explícito</MenuItem>
             <MenuItem value="Implied">Implícito</MenuItem>
@@ -55,6 +59,8 @@ export const CRegionalSettingsField = ({
           placeholder="Escribe tu mensaje de bienvenida aquí..."
           size="medium"
           required
+          error={!!errors.cookieDeclaration}
+          helperText={errors.cookieDeclaration}
         />
       </FormGroup>
     </Grid2>
@@ -65,4 +71,5 @@ CRegionalSettingsField.propTypes = {
   consentType: PropTypes.string,
   cookieDeclaration: PropTypes.string,
   onEditBannerChange: PropTypes.func,
+  errors: PropTypes.object,
 };

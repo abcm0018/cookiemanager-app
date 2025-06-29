@@ -24,6 +24,8 @@ export const DomainDetailsPage = () => {
   const [loading, setLoading] = useState(true); // estado de carga
   const [domain, setDomain] = useState(null);
 
+  const isInactive = activeDomain?.status === "Inactivo";
+
   // Este estado se está controlando en el componente
   // DomainTabs que centraliza la funcionalidad de saber
   // en cada momento qué Tab está activa
@@ -33,6 +35,14 @@ export const DomainDetailsPage = () => {
   const [openAddCookieDialog, setOpenAddCookieDialog] = useState(false);
 
   const handleOpenAddCookie = () => {
+    if (isInactive) {
+      Swal.fire({
+        title: "Acción no permitida",
+        text: "El dominio está inactivo. Actívalo para usar esta función.",
+        icon: "warning",
+      });
+      return;
+    }
     setOpenAddCookieDialog(true);
   };
 
@@ -53,7 +63,7 @@ export const DomainDetailsPage = () => {
     startGettingDomainById(id);
     startLoadingBanner(id);
     setDomain(activeDomain);
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     // Guardar el valor de activeTab en el localStorage cada vez que cambie
@@ -112,7 +122,7 @@ export const DomainDetailsPage = () => {
                 size={4}
                 alignContent="center"
                 sx={{
-                  display: activeTab === 4 ? "flex" : "none",
+                  display: activeTab === 4 && !isInactive ? "flex" : "none",
                   transition: "opacity 0.3s",
                 }}
               >
@@ -131,6 +141,7 @@ export const DomainDetailsPage = () => {
               user={user}
               domain={domain}
               setActiveTab={setActiveTab}
+              isInactive={isInactive}
             />
           </Box>
           <CAddCookieDialog

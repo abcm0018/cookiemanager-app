@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDomainStore, useForm } from "../../hooks";
 import Swal from "sweetalert2";
 import { CDialogForm } from "./CDialogForm";
@@ -35,13 +35,78 @@ export const CAddDomainDialog = ({
     onResetForm,
   } = useForm(addDomainForm);
 
+  const [errors, setErrors] = useState({});
+
+  const cleanString = (str) => str.trim().replace(/\s+/g, " ");
+
   const handleCloseAndReset = () => {
     onResetForm();
+    setErrors({});
     handleCloseAddDomainDialog();
+  };
+
+  const validateFields = () => {
+    const newErrors = {};
+    const specialCharRegex = /^[^a-zA-Z0-9]/;
+    const startsWithNumber = /^[0-9]/;
+    const allDigits = /^\d+$/;
+
+    if (!domainName.trim()) {
+      newErrors.domainName = "* Campo obligatorio";
+    } else {
+      const domainRegex = /^(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+      if (!domainRegex.test(domainName.trim())) {
+        newErrors.domainName =
+          "* El nombre de dominio no es válido. Ej: www.ejemplo.com o ejemplo.com";
+      }
+    }
+
+    if (!domainDescription.trim()) {
+      newErrors.domainDescription = "* Campo obligatorio";
+    } else if (domainDescription.trim().length < 4) {
+      newErrors.domainDescription =
+        "* La descripción debe tener al menos 4 caracteres";
+    } else if (specialCharRegex.test(domainDescription.trim())) {
+      newErrors.domainDescription =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(domainDescription.trim())) {
+      newErrors.domainDescription = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(domainDescription.trim())) {
+      newErrors.domainDescription =
+        "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!domainOwner.trim()) {
+      newErrors.domainOwner = "* Campo obligatorio";
+    } else if (domainOwner.trim().length < 3) {
+      newErrors.domainOwner =
+        "* El nombre del propietario debe tener al menos 3 caracteres";
+    } else if (specialCharRegex.test(domainOwner.trim())) {
+      newErrors.domainOwner =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(domainOwner.trim())) {
+      newErrors.domainOwner = "* El campo no puede empezar por un número";
+    } else if (allDigits.test(domainOwner.trim())) {
+      newErrors.domainOwner =
+        "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!domainContactEmail.trim()) {
+      newErrors.domainContactEmail = "* Campo obligatorio";
+    }
+
+    if (!domainCountryOrigin.trim()) {
+      newErrors.domainCountryOrigin = "* Campo obligatorio";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const onCreateDomainSubmit = (event) => {
     event.preventDefault();
+
+    if (!validateFields()) return false;
 
     const persistRoot = localStorage.getItem("persist:root");
 
@@ -75,13 +140,14 @@ export const CAddDomainDialog = ({
         // Comprobamos si el usuario ha superado el número de dominios del plan
         if (maxAllowedDomains > numberDomains) {
           startSavingDomain({
-            name: domainName,
-            description: domainDescription,
+            name: cleanString(domainName),
+            description: cleanString(domainDescription),
             status: estado,
-            owner: domainOwner,
-            contactEmail: domainContactEmail,
-            countryOrigin: domainCountryOrigin,
+            owner: cleanString(domainOwner),
+            contactEmail: cleanString(domainContactEmail),
+            countryOrigin: cleanString(domainCountryOrigin),
           });
+          return true;
         } else {
           Swal.fire({
             icon: "error",
@@ -111,8 +177,10 @@ export const CAddDomainDialog = ({
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
-            onCreateDomainSubmit(event);
-            handleCloseAndReset();
+            // onCreateDomainSubmit(event);
+            // handleCloseAndReset();
+            const success = onCreateDomainSubmit(event);
+            if (success) handleCloseAndReset();
           },
         }}
       >
@@ -137,6 +205,7 @@ export const CAddDomainDialog = ({
             domainContactEmail={domainContactEmail}
             domainCountryOrigin={domainCountryOrigin}
             onEditDomainChange={onCreateDomainChange}
+            errors={errors}
           />
           <Box sx={{ width: 775, mt: 3 }}>
             <Typography variant="h6" sx={{ mt: 2 }}>

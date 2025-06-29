@@ -107,6 +107,7 @@ export const useCookieStore = () => {
       Swal.fire("Error al actualizar la cookie", errorMsg, "error");
     }
   };
+
   return {
     //Propiedades
     isLoadingCookies,

@@ -12,6 +12,7 @@ import { CMoreInfoDialog } from "./CDialogMoreInfo";
 import { CScriptDialog } from "./CScriptDialog";
 import { useParams } from "react-router-dom";
 import { useDomainStore } from "../../hooks";
+import Swal from "sweetalert2";
 
 export const CCardImplementation = ({
   title = "",
@@ -26,8 +27,16 @@ export const CCardImplementation = ({
   isConsentManagement = false,
 }) => {
   const { id } = useParams();
-  const { script, startLoadingScript, startDownloadFile, banner } =
-    useDomainStore();
+  const {
+    activeDomain,
+    script,
+    startLoadingBanner,
+    startLoadingScript,
+    startDownloadFile,
+    banner,
+  } = useDomainStore();
+
+  const isInactive = activeDomain?.status === "Inactivo";
 
   const [openScriptDialog, setOpenScriptDialog] = useState(false);
   const [openMoreInfoDialog, setOpenMoreInfoDialog] = useState(false);
@@ -39,6 +48,14 @@ export const CCardImplementation = ({
   };
 
   const handleScriptClick = () => {
+    if (isInactive) {
+      Swal.fire({
+        title: "Acción no permitida",
+        text: "El dominio está inactivo. Actívalo para usar esta función.",
+        icon: "warning",
+      });
+      return;
+    }
     if (isConsentManagement) {
       setOpenScriptDialog(true);
     }
@@ -57,10 +74,19 @@ export const CCardImplementation = ({
   };
 
   const handleDownloadClick = () => {
+    if (isInactive) {
+      Swal.fire({
+        title: "Acción no permitida",
+        text: "El dominio está inactivo. Actívalo para usar esta función.",
+        icon: "warning",
+      });
+      return;
+    }
     startDownloadFile(banner.id);
   };
 
   useEffect(() => {
+    startLoadingBanner(id);
     startLoadingScript(id);
   }, [id]);
 

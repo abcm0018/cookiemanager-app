@@ -9,7 +9,11 @@ import {
 import { DomainTable } from "./DomainTable";
 import { HeadSection } from "./HeadSection";
 import { useEffect, useState } from "react";
-import { useDomainStore, useSubscriptionStore } from "../../hooks";
+import {
+  useDomainStore,
+  useSubscriptionStore,
+  useUserStore,
+} from "../../hooks";
 import { Loader } from "./Loader";
 import { CNoDomain } from "./CNoDomain";
 
@@ -20,9 +24,12 @@ export const MainSection = () => {
   const [filteredDomains, setFilteredDomains] = useState([]);
 
   const { domains, isLoadingDomains, startLoadingDomains } = useDomainStore();
-  const user = JSON.parse(localStorage.getItem("currentUser"));
-  const { startLoadingSubscriptions } = useSubscriptionStore();
+  //const user = JSON.parse(localStorage.getItem("currentUser"));
+  const { user } = useUserStore();
+  const { subscriptions, isLoadingSubscriptions, startLoadingSubscriptions } =
+    useSubscriptionStore();
 
+  console.log(user);
   useEffect(() => {
     startLoadingDomains();
     startLoadingSubscriptions();
@@ -41,7 +48,11 @@ export const MainSection = () => {
     }
   }, [searchTerm, domains]);
 
-  if (isLoadingDomains) {
+  if (
+    isLoadingDomains ||
+    isLoadingSubscriptions ||
+    subscriptions.length === 0
+  ) {
     return <Loader />;
   }
 
@@ -62,6 +73,17 @@ export const MainSection = () => {
     console.log("Búsqueda enviada:", searchTerm);
   };
 
+  // Buscar el plan del usuario dentro de los disponibles
+  const activeSubscription = subscriptions.find(
+    (sub) => sub.planType === user.subscription
+  );
+
+  const maxDomains = activeSubscription.maxDomains;
+  const numberDomains = domains.length;
+  console.log(numberDomains);
+  const canAddDomain = numberDomains < maxDomains;
+  console.log(canAddDomain);
+
   return (
     <Grid2
       container
@@ -74,10 +96,11 @@ export const MainSection = () => {
             searchTerm={searchTerm}
             onSearchChange={handleSearchChange}
             onSearchSubmit={handleSearchSubmit}
+            canAddDomain={canAddDomain}
           />
         </Box>
         <Box sx={{ mt: 5 }}>
-          {domains.length === 0 ? (
+          {numberDomains === 0 ? (
             <CNoDomain />
           ) : (
             <>

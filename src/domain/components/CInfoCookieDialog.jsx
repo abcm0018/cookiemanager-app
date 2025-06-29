@@ -10,6 +10,19 @@ export const CInfoCookieDialog = ({
   if (!cookie) {
     return <p>No se encontró la cookie con ID {cookie.id}.</p>;
   }
+  // Función para actualizar la categoría
+  const translateCategory = (category) => {
+    switch (category) {
+      case "Essential":
+        return "Esencial";
+      case "Optional":
+        return "Opcional";
+      case "Third":
+        return "Tercero";
+      default:
+        return category; // Devuelve el valor original si no hay traducción
+    }
+  };
   return (
     <DialogLayout
       open={openInfoCookieDialog}
@@ -47,7 +60,7 @@ export const CInfoCookieDialog = ({
                 <Typography component="span" fontWeight="bold" variant="body1">
                   Categoría:
                 </Typography>{" "}
-                {cookie.category}
+                {translateCategory(cookie.category)}
               </Typography>
             </Box>
           </Grid2>

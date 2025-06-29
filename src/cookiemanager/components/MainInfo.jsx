@@ -7,6 +7,7 @@ import {
   ImageListItem,
   Typography,
 } from "@mui/material";
+import home from "../../assets/img/cb-welcome-image.png";
 
 export const MainInfo = () => {
   return (
@@ -89,11 +90,7 @@ export const MainInfo = () => {
             <Grid2>
               <ImageList sx={{ width: 550 }} cols={1}>
                 <ImageListItem>
-                  <img
-                    src="src/assets/img/cb-welcome-image.svg"
-                    alt="welcome-image"
-                    loading="lazy"
-                  />
+                  <img src={home} alt="welcome-image" loading="lazy" />
                 </ImageListItem>
               </ImageList>
             </Grid2>

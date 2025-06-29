@@ -52,6 +52,7 @@ export const StatisticsForm = () => {
       plataforma: platform,
       pais: country,
       categoria: category,
+      idioma: language,
     });
   };
 

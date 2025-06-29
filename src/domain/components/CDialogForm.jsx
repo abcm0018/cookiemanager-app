@@ -16,6 +16,8 @@ export const CDialogForm = ({
   domainContactEmail,
   domainCountryOrigin,
   onEditDomainChange,
+  isEditMode = false,
+  errors = {},
 }) => {
   return (
     <Box>
@@ -31,6 +33,9 @@ export const CDialogForm = ({
             type="text"
             sx={{ width: 378, mr: 2 }}
             onChange={onEditDomainChange}
+            disabled={isEditMode}
+            error={!!errors.domainName}
+            helperText={errors.domainName}
           />
           <TextField
             autoFocus
@@ -42,6 +47,8 @@ export const CDialogForm = ({
             type="text"
             sx={{ width: 378 }}
             onChange={onEditDomainChange}
+            error={!!errors.domainOwner}
+            helperText={errors.domainOwner}
           />
         </Box>
         <Box sx={{ width: 775, mt: 1 }}>
@@ -55,6 +62,8 @@ export const CDialogForm = ({
             label="Correo electrónico"
             type="email"
             sx={{ width: 378, mr: 2 }}
+            error={!!errors.domainContactEmail}
+            helperText={errors.domainContactEmail}
             onChange={onEditDomainChange}
           />
           <FormControl sx={{ width: 378 }} size="medium">
@@ -64,6 +73,8 @@ export const CDialogForm = ({
               label="País"
               name="domainCountryOrigin"
               value={domainCountryOrigin}
+              error={!!errors.domainCountryOrigin}
+              helperText={errors.domainCountryOrigin}
               onChange={onEditDomainChange}
             >
               <MenuItem value="DE">Alemania</MenuItem>
@@ -86,6 +97,8 @@ export const CDialogForm = ({
             fullWidth
             multiline
             rows={4}
+            error={!!errors.domainDescription}
+            helperText={errors.domainDescription}
             onChange={onEditDomainChange}
           />
         </Box>
@@ -95,10 +108,12 @@ export const CDialogForm = ({
 };
 
 CDialogForm.propTypes = {
-  domainName: PropTypes.string,
-  domainDescription: PropTypes.string,
-  domainOwner: PropTypes.string,
-  domainContactEmail: PropTypes.string,
-  domainCountryOrigin: PropTypes.string,
-  onEditDomainChange: PropTypes.func,
+  domainName: PropTypes.string.isRequired,
+  domainDescription: PropTypes.string.isRequired,
+  domainOwner: PropTypes.string.isRequired,
+  domainContactEmail: PropTypes.string.isRequired,
+  domainCountryOrigin: PropTypes.string.isRequired,
+  onEditDomainChange: PropTypes.func.isRequired,
+  isEditMode: PropTypes.bool,
+  errors: PropTypes.object,
 };

@@ -8,7 +8,7 @@ export const Informes = () => {
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        Informe
+        Informes
       </Typography>
       <Typography variant="body1" sx={{ mb: 3 }}>
         La pestaña <em>Informe</em> proporciona una visión general del
@@ -24,7 +24,7 @@ export const Informes = () => {
       <Stack component="ul" spacing={2} sx={{ pl: 3 }}>
         <li style={{ listStyleType: "disc" }}>
           <Typography variant="body1">
-            Categoría: Esencial, Opcional o Terceros.
+            Categoría: Esenciales, Opcionales o Terceros.
           </Typography>
         </li>
         <li>
@@ -51,7 +51,7 @@ export const Informes = () => {
       <Box
         component="img"
         src={informe}
-        alt="Pantalla de inicio de sesión"
+        alt="Pantalla acerca de informes"
         sx={{
           width: 500,
           display: "block",
@@ -71,7 +71,7 @@ export const Informes = () => {
       <Box
         component="img"
         src={grafico}
-        alt="Pantalla de inicio de sesión"
+        alt="Gráfico aplicando filtros"
         sx={{
           width: 500,
           display: "block",
@@ -90,7 +90,7 @@ export const Informes = () => {
       <Box
         component="img"
         src={noFiltro}
-        alt="Pantalla de inicio de sesión"
+        alt="Pantalla de informes sin filtros"
         sx={{
           width: 500,
           display: "block",
@@ -112,7 +112,7 @@ export const Informes = () => {
       <Box
         component="img"
         src={graficoSin}
-        alt="Pantalla de inicio de sesión"
+        alt="Gráfico sin aplicar filtros"
         sx={{
           width: 500,
           display: "block",

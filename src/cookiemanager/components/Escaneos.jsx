@@ -21,7 +21,7 @@ export const Escaneos = () => {
       <Box
         component="img"
         src={escaneo}
-        alt="Pantalla de inicio de sesión"
+        alt="Pantalla de escaneo de cookies"
         sx={{
           width: 500,
           display: "block",
@@ -42,7 +42,7 @@ export const Escaneos = () => {
       <Box
         component="img"
         src={noEscaneo}
-        alt="Pantalla de inicio de sesión"
+        alt="Pantalla donde se muestra que no hay escaneo"
         sx={{
           width: 500,
           display: "block",

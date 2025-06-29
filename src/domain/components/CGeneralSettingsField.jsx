@@ -13,6 +13,7 @@ export const CGeneralSettingsField = ({
   title,
   companyLogo,
   onEditBannerChange,
+  errors = {},
 }) => {
   return (
     <Grid2 container sx={{ mt: 2 }}>
@@ -49,6 +50,8 @@ export const CGeneralSettingsField = ({
               placeholder="Título"
               size="medium"
               required
+              error={!!errors.title}
+              helperText={errors.title}
             />
           </Grid2>
           <Grid2 sx={{ width: 484 }}>
@@ -62,6 +65,8 @@ export const CGeneralSettingsField = ({
               placeholder="Compañía"
               size="medium"
               required
+              error={!!errors.companyLogo}
+              helperText={errors.companyLogo}
             />
           </Grid2>
         </Grid2>
@@ -74,4 +79,5 @@ CGeneralSettingsField.propTypes = {
   title: PropTypes.string,
   companyLogo: PropTypes.string,
   onEditBannerChange: PropTypes.func,
+  errors: PropTypes.object,
 };

@@ -7,23 +7,26 @@ import {
 } from "../store/auth/authSlice";
 import { persistor } from "../store/store";
 import cookieManagerApi from "../api/cookieManagerApi";
-import { cookieSlice, domainSlice, subscriptionSlice } from "../store";
+import { onClearCookies, onClearDomains, onClearSubscriptions } from "../store";
 
 export const useAuthStore = () => {
   const { status, user, errorMessage } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const startLogin = async ({ email, password }) => {
-    console.log({ email, password });
-
     dispatch(onChecking());
     try {
       const { data } = await cookieManagerApi.post("/auth/login", {
         email,
         password,
       });
-      console.log(data);
+      console.log("[Auth] Login exitoso:", data);
+
+      // Guarda primero el refreshToken, luego el accessToken
+      localStorage.setItem("refreshToken", "Bearer " + data.refreshToken);
       localStorage.setItem("token", "Bearer " + data.token);
+      console.log("[Auth] Tokens guardados en localStorage");
+
       dispatch(
         onLogin({
           email: data.user.email,
@@ -36,7 +39,7 @@ export const useAuthStore = () => {
         })
       );
     } catch (error) {
-      console.log(error);
+      console.log("[Auth] Error en login:", error);
       // Error genérico
       dispatch(onLogout("Credenciales inválidos"));
       setTimeout(() => {
@@ -102,13 +105,22 @@ export const useAuthStore = () => {
 
   const checkAuthToken = async () => {
     const token = localStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken");
 
-    if (!token) return dispatch(onLogout());
+    // Si no hay tokens, logout inmediato
+    if (!token || !refreshToken) {
+      console.log("[Auth] No hay tokens disponibles, logout");
+      return dispatch(onLogout());
+    }
 
     try {
-      const { data } = await cookieManagerApi.get("/refreshToken");
-      localStorage.setItem("token", "Bearer " + data.token);
-      console.log({ UserWithRefreshToken: data });
+      // Usamos el endpoint refreshToken que sabemos que existe
+      // y devuelve tanto el token como la información del usuario
+      const { data } = await cookieManagerApi.get("/auth/refreshToken");
+      console.log("[Auth] Usuario autenticado:", data);
+
+      // El interceptor ya se encarga de actualizar el token en localStorage
+      // Solo necesitamos actualizar el estado del usuario
       dispatch(
         onLogin({
           email: data.user.email,
@@ -121,9 +133,17 @@ export const useAuthStore = () => {
         })
       );
     } catch (error) {
-      console.log(error);
-      localStorage.clear();
-      dispatch(onLogout());
+      console.log("[Auth] Error verificando autenticación:", error);
+
+      // Si el interceptor no pudo manejar el error (ej: refresh token expirado)
+      if (error.response?.status === 401) {
+        localStorage.clear();
+        dispatch(onLogout());
+      } else {
+        // Para otros errores, también logout por seguridad
+        localStorage.clear();
+        dispatch(onLogout());
+      }
     }
   };
 
@@ -137,9 +157,9 @@ export const useAuthStore = () => {
       localStorage.clear();
 
       // Limpia los estados de cookies y domains
-      dispatch(domainSlice.actions.onClearDomains());
-      dispatch(cookieSlice.actions.onClearCookies());
-      dispatch(subscriptionSlice.actions.onClearSubscriptions());
+      dispatch(onClearDomains());
+      dispatch(onClearCookies());
+      dispatch(onClearSubscriptions());
 
       // Actualiza el estado de la aplicación
       dispatch(onLogout());

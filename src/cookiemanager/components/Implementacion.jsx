@@ -18,7 +18,7 @@ export const Implementacion = () => {
       <Box
         component="img"
         src={implementacion}
-        alt="Pantalla de inicio de sesión"
+        alt="Pantalla de implementación"
         sx={{
           width: 500,
           display: "block",

@@ -34,7 +34,7 @@ export const CGeneralInformation = () => {
 
         if (numberActiveDomains > maxAllowedStarterDomains) {
           Swal.fire({
-            icon: "error",
+            icon: "warning",
             title: "No puedes cancelar la suscripción",
             text: `Para cancelar tu suscripción, debes tener máximo ${maxAllowedStarterDomains} dominio activo.`,
             confirmButtonText: "Administrar dominios",

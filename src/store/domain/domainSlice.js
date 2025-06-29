@@ -41,6 +41,7 @@ export const domainSlice = createSlice({
       state.isLoadingActiveDomain = false;
       state.activeDomain = payload;
       state.banner = payload.banner;
+      console.log("DomainSlice::onGetDomainById:", payload);
       state.script = payload.script;
       state.errorDomainMessage = payload;
     },
@@ -58,6 +59,7 @@ export const domainSlice = createSlice({
       // código para eliminar un dominio
       state.isLoadingDomains = false;
       state.domains = state.domains.filter((domain) => domain.id !== domainId);
+      state.activeDomain = {};
     },
 
     // Acción para actualizar la información del dominio
@@ -71,6 +73,11 @@ export const domainSlice = createSlice({
 
       if (index !== -1) {
         state.domains[index] = payload;
+      }
+
+      // También actualizar el dominio activo si coincide
+      if (state.activeDomain?.id === payload.id) {
+        state.activeDomain = payload;
       }
     },
 

@@ -19,7 +19,7 @@ export const Autenticacion = () => {
       {/* Entrar */}
       <Box>
         <Typography variant="h6" gutterBottom>
-          Iniciar sesión
+          Inicio de sesión
         </Typography>
         <Typography variant="body1" sx={{ mb: 3 }}>
           Accede con tus credenciales desde la página de login. Una vez

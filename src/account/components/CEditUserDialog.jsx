@@ -13,7 +13,7 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useUserStore } from "../../hooks";
 import { updateUserForm } from "../utils";
 import Swal from "sweetalert2";
@@ -25,6 +25,9 @@ export const CEditUserDialog = ({
   handleCloseEditUserDialog,
 }) => {
   const { startUpdatingUser, errorMessage } = useUserStore();
+
+  const [errors, setErrors] = useState({});
+  const cleanString = (str) => str.trim().replace(/\s+/g, " ");
 
   const {
     name,
@@ -44,17 +47,72 @@ export const CEditUserDialog = ({
         email: userToEdit.email,
         company: userToEdit.company,
       });
+      setErrors({});
     }
   }, [openEditUserDialog, userToEdit, setFormState]);
 
+  const validateFields = () => {
+    const newErrors = {};
+
+    const specialCharRegex = /^[^a-zA-Z0-9]/;
+    const startsWithNumber = /^[0-9]/; // empieza por número
+    const allDigits = /^\d+$/; // solo números
+
+    if (!name.trim()) {
+      newErrors.name = "* Campo obligatorio";
+    } else if (name.trim().length < 3) {
+      newErrors.name = "* El nombre debe tener al menos 3 caracteres";
+    } else if (startsWithNumber.test(name)) {
+      newErrors.name = "* El campo no puede empezar por un número";
+    } else if (specialCharRegex.test(name)) {
+      newErrors.name = "* El campo no puede empezar por un carácter especial";
+    } else if (allDigits.test(name)) {
+      newErrors.name = "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!surname.trim()) {
+      newErrors.surname = "* Campo obligatorio";
+    } else if (surname.trim().length < 3) {
+      newErrors.surname = "* El nombre debe tener al menos 3 caracteres";
+    } else if (startsWithNumber.test(surname)) {
+      newErrors.surname = "* El campo no puede empezar por un número";
+    } else if (specialCharRegex.test(surname)) {
+      newErrors.surname =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (allDigits.test(surname)) {
+      newErrors.surname =
+        "* El campo no puede estar compuesto solo por números";
+    }
+
+    if (!company.trim()) {
+      newErrors.company = "* Campo obligatorio";
+    } else if (company.trim().length < 3) {
+      newErrors.company =
+        "* El nombre del propietario debe tener al menos 3 caracteres";
+    } else if (specialCharRegex.test(company.trim())) {
+      newErrors.company =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (startsWithNumber.test(company.trim())) {
+      newErrors.company =
+        "* El campo no puede empezar por un carácter especial";
+    } else if (allDigits.test(company.trim())) {
+      newErrors.company =
+        "* El campo no puede estar compuesto solo por números";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const onUserSubmit = (event) => {
     event.preventDefault();
+    if (!validateFields()) return false;
     startUpdatingUser({
-      name: name,
-      surname: surname,
-      email: email,
-      company: company,
+      name: cleanString(name),
+      surname: cleanString(surname),
+      email: cleanString(email),
+      company: cleanString(company),
     });
+    return true;
   };
 
   useEffect(() => {
@@ -73,8 +131,10 @@ export const CEditUserDialog = ({
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
-            onUserSubmit(event);
-            handleCloseEditUserDialog();
+            // onUserSubmit(event);
+            // handleCloseEditUserDialog();
+            const success = onUserSubmit(event);
+            if (success) handleCloseEditUserDialog();
           },
         }}
       >
@@ -86,9 +146,10 @@ export const CEditUserDialog = ({
           <CDialogUserForm
             name={name}
             surname={surname}
-            email={email}
+            email={userToEdit.email}
             company={company}
             onEditUserChange={onUserChange}
+            errors={errors}
           />
           <Box>
             <Typography variant="h6" sx={{ mt: 2 }}>

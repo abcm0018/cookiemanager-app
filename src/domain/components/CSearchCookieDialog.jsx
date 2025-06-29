@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CFilterCookie } from "./CFilterCookie";
 
 export const CSearchCookieDialog = ({
@@ -18,15 +18,59 @@ export const CSearchCookieDialog = ({
   openFilterCookieDialog,
   handleCloseFilterCookieDialog,
   setFilteredCookies,
+  translateCategory,
 }) => {
-  // Convertir la duración a días
-  const parseDuration = (duration) => {
-    const match = duration.match(/(\d+)/);
-    const value = match ? parseInt(match[0]) : NaN;
+  // Define el orden personalizado para las categorías
+  const categoryOrder = ["Esencial", "Opcional", "Tercero"];
 
-    if (duration.includes("año")) return value * 365;
-    if (duration.includes("mes")) return value * 30;
-    if (duration.toLowerCase() === "sesión") return 0;
+  // Obtenemos las categorías únicas, las traducimos y luego las ordenamos
+  // Pasamos 'categorias' directamente a CFilterCookie
+  const categorias = useMemo(() => {
+    const uniqueTranslatedCategories = [
+      ...new Set(cookies.map((cookie) => translateCategory(cookie.category))),
+    ];
+
+    return uniqueTranslatedCategories.sort((a, b) => {
+      const indexA = categoryOrder.indexOf(a);
+      const indexB = categoryOrder.indexOf(b);
+
+      // Maneja casos en los que una categoría podría no estar en el orden predefinido
+      if (indexA === -1 && indexB === -1) {
+        return 0;
+      }
+      if (indexA === -1) {
+        return 1;
+      }
+      if (indexB === -1) {
+        return -1;
+      }
+
+      return indexA - indexB;
+    });
+  }, []);
+
+  const parseDuration = (duration) => {
+    const trimmed = duration.trim().toLowerCase();
+
+    // Permitir solo "sesión" sin número
+    if (trimmed === "sesión" || trimmed === "sesion") return 0;
+
+    // Rechazar casos como "1 sesión", "2 sesion", etc.
+    if (/\d+\s*(sesión|sesion)/i.test(trimmed)) return NaN;
+
+    const match = trimmed.match(/(\d+)/);
+    const value = match ? parseInt(match[0], 10) : NaN;
+
+    if (trimmed.includes("año") || trimmed.includes("años")) return value * 365;
+    if (trimmed.includes("mes") || trimmed.includes("meses")) return value * 30;
+    if (
+      trimmed.includes("día") ||
+      trimmed.includes("dias") ||
+      trimmed.includes("días") ||
+      trimmed.includes("dia")
+    )
+      return value;
+
     return NaN;
   };
 
@@ -34,10 +78,8 @@ export const CSearchCookieDialog = ({
     .map((cookie) => parseDuration(cookie.duration))
     .filter((duration) => !isNaN(duration));
 
-  console.log(validDurations);
   const minDuration = validDurations.length ? Math.min(...validDurations) : 0;
   const maxDuration = validDurations.length ? Math.max(...validDurations) : 365;
-  console.log(maxDuration);
 
   // Estados para los filtros
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,20 +90,23 @@ export const CSearchCookieDialog = ({
   const [selectedSecure, setSelectedSecure] = useState(null);
   const [selectedSamesite, setSelectedSamesite] = useState([]);
 
-  // Para setear la duración y que no aplique el filtro
+  // Solo actualizar duration cuando se abre el diálogo o cambian los cookies
   useEffect(() => {
-    setDuration([minDuration, maxDuration]);
-  }, [minDuration, maxDuration]);
+    if (openFilterCookieDialog) {
+      setDuration([minDuration, maxDuration]);
+    }
+  }, [openFilterCookieDialog, minDuration, maxDuration]);
 
-  // Filtrar cookies según los criterios
-  useEffect(() => {
+  // Nueva función para aplicar filtros solo al enviar el formulario
+  const handleApplyFilters = (event) => {
+    event.preventDefault();
     const filtered = cookies.filter((cookie) => {
       const matchName = searchTerm
         ? cookie.name.toLowerCase().includes(searchTerm.toLowerCase())
         : true;
       const matchCategory =
         selectedCategories.length === 0 ||
-        selectedCategories.includes(cookie.category);
+        selectedCategories.includes(translateCategory(cookie.category));
       const matchProvider =
         selectedProviders.length === 0 ||
         selectedProviders.includes(cookie.provider);
@@ -88,18 +133,9 @@ export const CSearchCookieDialog = ({
         matchSamesite
       );
     });
-
     setFilteredCookies(filtered);
-  }, [
-    searchTerm,
-    selectedCategories,
-    selectedProviders,
-    duration,
-    cookies,
-    selectedHttpOnly,
-    selectedSecure,
-    selectedSamesite,
-  ]);
+    handleCloseFilterCookieDialog();
+  };
 
   // Función para limpiar filtros
   const clearFilters = () => {
@@ -129,15 +165,12 @@ export const CSearchCookieDialog = ({
           onClose={handleCloseFilterCookieDialog}
           PaperProps={{
             component: "form",
-            onSubmit: (event) => {
-              event.preventDefault();
-              handleCloseFilterCookieDialog();
-            },
+            onSubmit: handleApplyFilters,
           }}
         >
           <DialogTitle sx={{ pl: 8, pr: 8 }}>
             <IconButton
-              onClick={handleCloseWithReset}
+              onClick={handleCloseFilterCookieDialog}
               sx={{
                 position: "absolute",
                 right: 8,
@@ -175,6 +208,8 @@ export const CSearchCookieDialog = ({
               setSelectedSecure={setSelectedSecure}
               selectedSamesite={selectedSamesite}
               setSelectedSamesite={setSelectedSamesite}
+              categorias={categorias}
+              translateCategory={translateCategory}
             />
           </DialogContent>
           <DialogActions sx={{ pl: 8, pr: 8, pb: 3 }}>
@@ -190,6 +225,17 @@ export const CSearchCookieDialog = ({
             >
               Aplicar filtros
             </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                bgcolor: "primary.main",
+                color: "white",
+                borderColor: "primary.main",
+              }}
+              onClick={handleCloseWithReset}
+            >
+              Limpiar filtros
+            </Button>
           </DialogActions>
         </Dialog>
       </Box>
@@ -202,4 +248,5 @@ CSearchCookieDialog.propTypes = {
   openFilterCookieDialog: PropTypes.bool.isRequired,
   handleCloseFilterCookieDialog: PropTypes.func.isRequired,
   setFilteredCookies: PropTypes.func.isRequired,
+  translateCategory: PropTypes.func.isRequired,
 };

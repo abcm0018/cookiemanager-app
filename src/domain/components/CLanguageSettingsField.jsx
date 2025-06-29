@@ -10,7 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 
-export const CLanguageSettingsField = ({ lang, onEditBannerChange }) => {
+export const CLanguageSettingsField = ({
+  lang,
+  onEditBannerChange,
+  errors = {},
+}) => {
   return (
     <Grid2 container direction="column" sx={{ mt: 2 }}>
       <FormGroup>
@@ -18,16 +22,20 @@ export const CLanguageSettingsField = ({ lang, onEditBannerChange }) => {
           <Typography variant="h6" color="secondary.main">
             Idiomas
           </Typography>
-          <Typography variant="body2">Elija el idioma por defecto</Typography>
+          <Typography variant="body2" color="primary.main">
+            Elija el idioma por defecto
+          </Typography>
         </Box>
         <Box sx={{ mt: 2 }}>
           <FormControl fullWidth>
-            <InputLabel id="select-label-idioma">Idiomas</InputLabel>
+            <InputLabel>Idioma</InputLabel>
             <Select
-              labelId="select-label-idioma"
+              label="Idioma"
               name="lang"
               value={lang}
               onChange={onEditBannerChange}
+              error={!!errors.lang}
+              helperText={errors.lang}
             >
               <MenuItem value="DE">Alemán</MenuItem>
               <MenuItem value="ES">Español</MenuItem>
@@ -46,4 +54,5 @@ export const CLanguageSettingsField = ({ lang, onEditBannerChange }) => {
 CLanguageSettingsField.propTypes = {
   lang: PropTypes.string,
   onEditBannerChange: PropTypes.func,
+  errors: PropTypes.object,
 };

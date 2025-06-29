@@ -29,6 +29,8 @@ export const DomainDescriptionTabView = ({
 
   const navigate = useNavigate();
 
+  const isInactive = activeDomain.status === "Inactivo";
+
   const handleOpenAddBanner = () => {
     console.log("Abriendo el diálogo para añadir banner");
     setOpenAddBannerDialog(true);
@@ -55,10 +57,6 @@ export const DomainDescriptionTabView = ({
         text: "El dominio está activo. Cámbialo a inactivo antes de eliminarlo.",
         icon: "warning",
         confirmButtonText: "Volver",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/domains");
-        }
       });
       return;
     }
@@ -80,11 +78,20 @@ export const DomainDescriptionTabView = ({
           text: "El dominio ha sido eliminado correctamente.",
           icon: "success",
         });
+        navigate("/domains");
       }
     });
   };
 
   const handleDeleteBanner = (bannerId) => {
+    if (isInactive) {
+      Swal.fire(
+        "Acción no permitida",
+        "El dominio está inactivo. Actívalo para usar esta función.",
+        "warning"
+      );
+      return;
+    }
     Swal.fire({
       title: "Estás a punto de eliminar un banner, ¿Estás seguro?",
       text: "Esta acción no podrá ser revertida",
@@ -106,6 +113,14 @@ export const DomainDescriptionTabView = ({
   };
 
   const handleButtonClick = (buttonTitle) => {
+    if (isInactive && ["Crear banner"].includes(buttonTitle)) {
+      Swal.fire({
+        title: "Acción no permitida",
+        text: "El dominio está inactivo. Actívalo para usar esta función.",
+        icon: "warning",
+      });
+      return;
+    }
     switch (buttonTitle) {
       case "Actualizar plan":
         localStorage.setItem("updateSubscriptionPreviousPage", "domains");
@@ -139,7 +154,7 @@ export const DomainDescriptionTabView = ({
 
   useEffect(() => {
     startLoadingBanner(id); // Carga el banner al cambiar de dominio
-  }, [id, startLoadingBanner]);
+  }, []);
 
   useEffect(() => {
     if (!isLoadingCookieBanner && banner) {
@@ -172,6 +187,7 @@ export const DomainDescriptionTabView = ({
           secondaryButtonTitle={card.buttonTitleSecondary}
           onButtonClick={() => handleButtonClick(card.buttonTitle)}
           onSecondaryButtonClick={() => handleDeleteBanner(banner?.id)}
+          disabled={card.buttonTitle === "Editar banner" && isInactive}
         />
       ))}
       <CAddBannerDialog

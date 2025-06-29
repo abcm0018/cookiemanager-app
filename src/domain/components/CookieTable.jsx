@@ -15,14 +15,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { CEditCookieDialog } from "./CEditCookieDialog";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CInfoCookieDialog } from "./CInfoCookieDialog";
 import Swal from "sweetalert2";
 import { useCookieStore } from "../../hooks/useCookieStore";
 import { CSearchCookieDialog } from "./CSearchCookieDialog";
 import { TableCookieLayout } from "../layout/TableCookieLayout";
 
-export const CookieTable = ({ cookies = [] }) => {
+export const CookieTable = ({ cookies = [], isInactive = false }) => {
   const headers = [
     { id: "name", label: "Nombre" },
     { id: "category", label: "Categoría" },
@@ -46,7 +46,10 @@ export const CookieTable = ({ cookies = [] }) => {
   const [orderBy, setOrderBy] = useState("name");
 
   const [filteredCookies, setFilteredCookies] = useState(cookies);
-  console.log(filteredCookies);
+
+  useEffect(() => {
+    setFilteredCookies(cookies);
+  }, [cookies]);
 
   const [openEditCookieDialog, setOpenEditCookieDialog] = useState(false);
   const [openInfoCookieDialog, setOpenInfoCookieDialog] = useState(false);
@@ -87,6 +90,14 @@ export const CookieTable = ({ cookies = [] }) => {
 
   // Establecemos la cookie a editar
   const handleOpenEditCookie = (cookie) => {
+    if (isInactive) {
+      Swal.fire({
+        title: "Acción no permitida",
+        text: "El dominio está inactivo. Actívalo para usar esta función.",
+        icon: "warning",
+      });
+      return;
+    }
     setOpenEditCookieDialog(true);
     setCookieToEdit(cookie);
   };
@@ -117,6 +128,14 @@ export const CookieTable = ({ cookies = [] }) => {
   };
 
   const handleDeleteCookie = (cookieId) => {
+    if (isInactive) {
+      Swal.fire({
+        title: "Acción no permitida",
+        text: "El dominio está inactivo. Actívalo para usar esta función.",
+        icon: "warning",
+      });
+      return;
+    }
     Swal.fire({
       title: "Estás a punto de eliminar una cookie, ¿Estás seguro?",
       text: "Esta acción no podrá ser revertida",
@@ -135,6 +154,20 @@ export const CookieTable = ({ cookies = [] }) => {
         });
       }
     });
+  };
+
+  // Función para actualizar la categoría
+  const translateCategory = (category) => {
+    switch (category) {
+      case "Essential":
+        return "Esencial";
+      case "Optional":
+        return "Opcional";
+      case "Third":
+        return "Tercero";
+      default:
+        return category; // Devuelve el valor original si no hay traducción
+    }
   };
 
   return (
@@ -156,7 +189,10 @@ export const CookieTable = ({ cookies = [] }) => {
           Lista de cookies
         </Typography>
         <IconButton sx={{ color: "black" }}>
-          <FilterListIcon onClick={() => handleFilterCookie()} />
+          <FilterListIcon
+            translateCategory={translateCategory}
+            onClick={() => handleFilterCookie()}
+          />
         </IconButton>
       </Toolbar>
 
@@ -218,7 +254,9 @@ export const CookieTable = ({ cookies = [] }) => {
                   }}
                   padding="none"
                 >
-                  <Typography variant="body1">{category}</Typography>
+                  <Typography variant="body1">
+                    {translateCategory(category)}
+                  </Typography>
                 </TableCell>
                 <TableCell
                   sx={{
@@ -320,6 +358,7 @@ export const CookieTable = ({ cookies = [] }) => {
         openFilterCookieDialog={openFilterCookieDialog}
         handleCloseFilterCookieDialog={handleCloseFilterCookieDialog}
         setFilteredCookies={setFilteredCookies}
+        translateCategory={translateCategory}
       />
       <CInfoCookieDialog
         openInfoCookieDialog={openInfoCookieDialog}
@@ -337,4 +376,5 @@ export const CookieTable = ({ cookies = [] }) => {
 
 CookieTable.propTypes = {
   cookies: PropTypes.array,
+  isInactive: PropTypes.bool,
 };
